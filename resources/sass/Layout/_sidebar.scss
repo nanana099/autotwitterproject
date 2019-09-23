@@ -1,0 +1,16 @@
+#sidebar {
+  margin-top: $space-l;
+  margin-bottom: $space-l;
+
+  padding: $space-m;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 95%;
+  background: #eeeeee;
+  @include mq("md") {
+    width: 20%;
+    margin-top: $space-8l;
+    margin-bottom: $space-8l;
+  }
+}

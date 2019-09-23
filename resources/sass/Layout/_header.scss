@@ -1,0 +1,11 @@
+#header {
+  $header-padding: $space-m;
+
+  padding: $header-padding;
+  max-width: calc(#{$site-width-sp} + (2 * #{$header-padding}));
+  @include mq("lg") {
+    min-width: calc(#{$site-width-pc} + (2 * #{$header-padding}));
+  }
+  box-sizing: border-box;
+  background: $color-main;
+}

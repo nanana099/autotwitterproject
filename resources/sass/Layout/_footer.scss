@@ -1,0 +1,10 @@
+#footer {
+  $footer-padding: $space-m;
+
+  padding: $footer-padding;
+  @include mq("lg") {
+    min-width: calc(#{$site-width-pc} + (2 * #{$footer-padding}));
+  }
+  box-sizing: border-box;
+  background: $color-main;
+}
