@@ -38,6 +38,7 @@ Route::middleware(['auth'])->group(function () {
         return view('mypage.setting');
     })->name('mypage.setting');
 
+    Route::get('/account/get', 'AccountController@get')->name('account.get');
     Route::get('/account/add', 'AccountController@add')->name('account.add');
     Route::delete('/account/destroy', 'AccountController@destroy')->name('account.destroy');
 });

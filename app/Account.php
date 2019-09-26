@@ -13,4 +13,9 @@ class Account extends Model
     {
         return $this->belongsTo('App\User');
     }
+
+    public function accountSetting()
+    {
+        return $this->hasOne('App\AccountSetting');
+    }
 }

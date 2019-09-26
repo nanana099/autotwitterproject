@@ -71,6 +71,7 @@ class TwitterAccount
     }
     public function getAccountInfo(string $screen_name)
     {
+        // users/lookup
     }
     public function getFollowerList(string $user_id)
     {
