@@ -24,6 +24,20 @@
     <div id="app">
         @include('components.header')
 
+        <!-- フラッシュメッセージ -->
+        @if (session('flash_message_success'))
+        <div class="p-flash_message p-flash_message--success">
+            {{ session('flash_message_success') }}
+        </div>
+        @endif
+         <!-- フラッシュメッセージ -->
+         @if (session('flash_message_error'))
+         <div class="p-flash_message p-flash_message--error">
+             {{ session('flash_message_error') }}
+         </div>
+         @endif
+         
+        
         <div class="c-container c-justify-content-center">
             <div id="main">
                 @yield('content')

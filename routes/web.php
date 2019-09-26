@@ -1,4 +1,5 @@
 <?php
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,44 +13,32 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('mypage.monitor');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/mypage', function () {
-    if (Auth::check()) {
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/mypage', function () {
         return view('mypage.monitor');
-    }else{
-        return redirect()->route('login');
-    }
-})->name('mypage.monitor');
+    })->name('mypage.monitor');
 
-
-Route::get('/mypage/reserve', function () {
-    if (Auth::check()) {
+    Route::get('/mypage/reserve', function () {
         return view('mypage.reserve');
-    }else{
-        return redirect()->route('login');
-    }
-})->name('mypage.reserve');
+    })->name('mypage.reserve');
 
-
-
-Route::get('/mypage/account', function () {
-    if (Auth::check()) {
+    Route::get('/mypage/account', function () {
         return view('mypage.account');
-    }else{
-        return redirect()->route('login');
-    }
-})->name('mypage.account');
+    })->name('mypage.account');
 
-Route::get('/mypage/setting', function () {
-    if (Auth::check()) {
+    Route::get('/mypage/setting', function () {
         return view('mypage.setting');
-    }else{
-        return redirect()->route('login');
-    }
-})->name('mypage.setting');
+    })->name('mypage.setting');
+
+    Route::get('/account/add', 'AccountController@add')->name('account.add');
+    Route::delete('/account/destroy', 'AccountController@destroy')->name('account.destroy');
+});
+Route::get('/account/callback', 'AccountController@callback');

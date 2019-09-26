@@ -593,3 +593,20 @@ body {
   color: #ffffff;
 }
 
+.p-flash_message {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.p-flash_message--success {
+  background: #00e882;
+  color: #ffffff;
+}
+
+.p-flash_message--error {
+  background: #dc4834;
+  color: #ffffff;
+}
+

@@ -4,7 +4,7 @@ namespace App\Http\Services;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 
-// １つのTwitterアカウントのオブジェクト
+// Twitterアカウントのオブジェクト
 class TwitterAccount
 {
     /** @var int Twitterアカウントのuser_id */
@@ -28,6 +28,10 @@ class TwitterAccount
         );
     }
 
+    /**
+     * つぶやきを投稿する
+     * @param string $msg
+     */
     public function getScreenName()
     {
         return $this->screen_name;

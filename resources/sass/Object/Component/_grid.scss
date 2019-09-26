@@ -275,3 +275,17 @@
 .p-copy {
   color: #ffffff;
 }
+.p-flash_message {
+  display: flex;
+  justify-content: center;
+  padding-top: $space-l;
+  padding-bottom: $space-l;
+  &--success {
+    background: #00e882;
+    color: #ffffff;
+  }
+  &--error {
+    background: $danger;
+    color: #ffffff;
+  }
+}

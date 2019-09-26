@@ -2,10 +2,10 @@
 
 namespace App\Http\Services;
 
-use Illuminate\Support\Facades\Input;
 use Abraham\TwitterOAuth\TwitterOAuth;
+use Illuminate\Support\Facades\Request;
 
-// Twitterアカウントにアプリの連携を認証させるためのクラス
+// Twitterアカウントのアプリ認証を行うためのクラス
 class TwitterAuth
 {
     /**
@@ -40,7 +40,6 @@ class TwitterAuth
         // myTodo:認証済みなら、認証画面にアクセスさせない？(アクセストークンが再発行されるかも？)
 
         $twitter = new TwitterOAuth(self::getApiKey(), self::getApiSecretKey());
-    
         //リクエストトークン取得
         $request_token = $twitter->oauth('oauth/request_token', array('oauth_callback' => self::getCallbackUrl()));
             
@@ -60,11 +59,11 @@ class TwitterAuth
     {
         // myTodo:ユーザーが認証をキャンセルした場合（＝deniedという値がクエリ文字列に入る）の処理
 
-        if (!empty(Input::get('oauth_token')) && !empty(Input::get('oauth_verifier'))) {
+        if (!empty(Request::get('oauth_token')) && !empty(Request::get('oauth_verifier'))) {
             // 「連携アプリを認証」をクリックして帰ってきた時
 
-            $oauth_token = Input::get('oauth_token');
-            $oauth_verifier = Input::get('oauth_verifier');
+            $oauth_token = Request::get('oauth_token');
+            $oauth_verifier = Request::get('oauth_verifier');
 
             //インスタンス生成
             $twitter = new TwitterOAuth(
@@ -76,7 +75,7 @@ class TwitterAuth
 
             //アクセストークン取得
             return $twitter->oauth('oauth/access_token', array('oauth_token' => $oauth_token, 'oauth_verifier' => $oauth_verifier));
-        } elseif (!empty(Input::get("denied"))) {
+        } elseif (!empty(Request::get("denied"))) {
             // 「キャンセル」をクリックして帰ってきた時
             exit ;
         }
