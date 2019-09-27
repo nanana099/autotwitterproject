@@ -2213,6 +2213,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (res) {
         _this.setting = res.data[0];
+        if (res.data[0].target_accounts !== "") _this.targetAccounts = res.data[0].target_accounts.split(",");
       })["catch"](function (error) {
         _this.isError = true;
       });
