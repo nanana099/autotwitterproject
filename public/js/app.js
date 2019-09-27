@@ -2281,7 +2281,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (res) {
         _this4.setting = res.data[0];
-        _this4.targetAccounts = res.data[0].target_accounts.split(",");
+        if (res.data[0].target_accounts !== "") _this4.targetAccounts = res.data[0].target_accounts.split(",");
       })["catch"](function (error) {
         _this4.isError = true;
       });

@@ -275,7 +275,8 @@ export default {
           })
           .then(res => {
             this.setting = res.data[0];
-            this.targetAccounts = res.data[0].target_accounts.split(",");
+            if (res.data[0].target_accounts !== "")
+              this.targetAccounts = res.data[0].target_accounts.split(",");
           })
           .catch(error => {
             this.isError = true;
