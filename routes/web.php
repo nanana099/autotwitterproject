@@ -43,5 +43,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/account/destroy', 'AccountController@destroy')->name('account.destroy');
     Route::get('/account/setting', 'AccountController@getSetting')->name('account.setting.get');
     Route::post('/account/setting', 'AccountController@postSetting')->name('account.setting.post');
+    Route::get('/account/tweet', 'AccountController@getTweet')->name('account.tweet.get');
+    Route::post('/account/tweet', 'AccountController@postTweet')->name('account.tweet.post');
 });
 Route::get('/account/callback', 'AccountController@callback');

@@ -21,6 +21,7 @@ window.Vue = require('vue');
 
 Vue.component('account-list', require('./components/AccountList.vue').default);
 Vue.component('account-setting-screen', require('./components/AccountSettingScreen.vue').default);
+Vue.component('reserve-tweet--screen', require('./components/ReserveTweetScreen.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

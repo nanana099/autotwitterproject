@@ -18,4 +18,9 @@ class Account extends Model
     {
         return $this->hasOne('App\AccountSetting');
     }
+
+    public function reservedTweets()
+    {
+        return $this->hasMany('App\ReservedTweet');
+    }
 }

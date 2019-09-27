@@ -7,6 +7,7 @@ use App\Http\Services\TwitterAuth;
 use App\User;
 use App\Account;
 use App\AccountSetting;
+use App\ReservedTweet;
 use Illuminate\Support\Facades\Auth;
 
 class AccountController extends Controller
@@ -80,11 +81,20 @@ class AccountController extends Controller
     }
     public function postSetting(Request $request)
     {
-        if(empty($request['target_accounts'])){
+        if (empty($request['target_accounts'])) {
             $request['target_accounts'] = '';
         }
         $setting = Auth::user()->accounts()->find($request['account_id'])->accountSetting;
         $setting->fill($request->all())->save();
+        return response()->json('hoge');
+    }
+    public function postTweet(Request $request)
+    {
+        $account_id = $request['account_id'] ;
+        $request['content'] ;
+        $request['submit_date'];
+        Auth::user()->accounts()->find($account_id)->reservedTweets()->save(new ReservedTweet($request->all()));
+        // $tweet = new ReservedTweet($request->all());
         return response()->json('hoge');
     }
 }

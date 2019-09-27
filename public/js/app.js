@@ -2313,6 +2313,105 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReserveTweetScreen.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReserveTweetScreen.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    "account-select-box": _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      accounts: [],
+      content: '',
+      date: ''
+    };
+  },
+  created: function created() {
+    var _this = this;
+
+    axios.get("/account/get", {}).then(function (res) {
+      _this.accounts = res.data;
+      var targetId;
+
+      if (true) {
+        // 選択中のアカウントがある
+        targetId = localStorage.selectedId;
+      } else {} // axios
+      //   .get("/account/setting", {
+      //     params: {
+      //       account_id: targetId
+      //     }
+      //   })
+      //   .then(res => {
+      //     this.setting = res.data[0];
+      //     if (res.data[0].target_accounts !== "")
+      //       this.targetAccounts = res.data[0].target_accounts.split(",");
+      //   })
+      //   .catch(error => {
+      //     this.isError = true;
+      //   });
+
+    })["catch"](function (error) {
+      _this.isError = true;
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/bootstrap/dist/js/bootstrap.js":
 /*!*****************************************************!*\
   !*** ./node_modules/bootstrap/dist/js/bootstrap.js ***!
@@ -38132,6 +38231,108 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReserveTweetScreen.vue?vue&type=template&id=6da18de8&":
+/*!*********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/ReserveTweetScreen.vue?vue&type=template&id=6da18de8& ***!
+  \*********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "p-select-account" }, [
+      _c(
+        "label",
+        { staticClass: "p-select-account__label", attrs: { for: "" } },
+        [
+          _vm._v("\n      操作中のアカウント：\n      "),
+          _c("account-select-box", {
+            attrs: { accounts: _vm.accounts },
+            on: { changeAccount: _vm.onChangeAccount }
+          })
+        ],
+        1
+      )
+    ]),
+    _vm._v(" "),
+    _c("h2", { staticClass: "c-title" }, [_vm._v("自動ツイート予約")]),
+    _vm._v(" "),
+    _vm._m(0)
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "c-row" }, [
+      _c("form", { staticClass: "p-tweet-form", attrs: { action: "" } }, [
+        _c("textarea", {
+          staticClass: "p-tweet-form__textarea",
+          attrs: { name: "", id: "" }
+        }),
+        _vm._v(" "),
+        _c("span", { staticClass: "p-tweet-form__count js-show-count" }, [
+          _vm._v("140/140字")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "c-justify-content-between" }, [
+          _c("label", { attrs: { for: "" } }, [
+            _vm._v("\n          投稿予定日時：\n          "),
+            _c("input", { attrs: { type: "date", name: "date", id: "" } }),
+            _vm._v(" "),
+            _c("input", { attrs: { type: "time", name: "time", id: "" } })
+          ]),
+          _vm._v(" "),
+          _c("button", { staticClass: "c-btn c-btn--primary c-btn--large" }, [
+            _vm._v("予約")
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("h2", { staticClass: "c-title" }, [_vm._v("予約済みツイート")]),
+      _vm._v(" "),
+      _c("div", { staticClass: "p-reserve-history" }, [
+        _c("form", { attrs: { action: "" } }, [
+          _c("p", { staticClass: "p-reserve-history__str" }, [
+            _vm._v("\n          今日はいいてんきだ。\n          "),
+            _c("br"),
+            _vm._v("あしたもいいてんきにあるといいｆだいふぁ\n        ")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "c-justify-content-between" }, [
+            _c("span", { staticClass: "p-reserve-history__str" }, [
+              _vm._v("投稿予定日時：2019/09/12 13:00")
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "c-justify-content-end" }, [
+            _c("button", { staticClass: "c-btn c-btn--primary" }, [
+              _vm._v("編集")
+            ]),
+            _vm._v(" "),
+            _c("button", { staticClass: "c-btn c-btn--danger" }, [
+              _vm._v("削除")
+            ])
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js":
 /*!********************************************************************!*\
   !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
@@ -50295,6 +50496,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 Vue.component('account-list', __webpack_require__(/*! ./components/AccountList.vue */ "./resources/js/components/AccountList.vue")["default"]);
 Vue.component('account-setting-screen', __webpack_require__(/*! ./components/AccountSettingScreen.vue */ "./resources/js/components/AccountSettingScreen.vue")["default"]);
+Vue.component('reserve-tweet--screen', __webpack_require__(/*! ./components/ReserveTweetScreen.vue */ "./resources/js/components/ReserveTweetScreen.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -50705,6 +50907,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeleteAccountButton_vue_vue_type_template_id_df73588e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DeleteAccountButton_vue_vue_type_template_id_df73588e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/ReserveTweetScreen.vue":
+/*!********************************************************!*\
+  !*** ./resources/js/components/ReserveTweetScreen.vue ***!
+  \********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ReserveTweetScreen_vue_vue_type_template_id_6da18de8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReserveTweetScreen.vue?vue&type=template&id=6da18de8& */ "./resources/js/components/ReserveTweetScreen.vue?vue&type=template&id=6da18de8&");
+/* harmony import */ var _ReserveTweetScreen_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReserveTweetScreen.vue?vue&type=script&lang=js& */ "./resources/js/components/ReserveTweetScreen.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ReserveTweetScreen_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ReserveTweetScreen_vue_vue_type_template_id_6da18de8___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ReserveTweetScreen_vue_vue_type_template_id_6da18de8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/ReserveTweetScreen.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/ReserveTweetScreen.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************!*\
+  !*** ./resources/js/components/ReserveTweetScreen.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReserveTweetScreen_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./ReserveTweetScreen.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReserveTweetScreen.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReserveTweetScreen_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/ReserveTweetScreen.vue?vue&type=template&id=6da18de8&":
+/*!***************************************************************************************!*\
+  !*** ./resources/js/components/ReserveTweetScreen.vue?vue&type=template&id=6da18de8& ***!
+  \***************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReserveTweetScreen_vue_vue_type_template_id_6da18de8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./ReserveTweetScreen.vue?vue&type=template&id=6da18de8& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/ReserveTweetScreen.vue?vue&type=template&id=6da18de8&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReserveTweetScreen_vue_vue_type_template_id_6da18de8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReserveTweetScreen_vue_vue_type_template_id_6da18de8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
