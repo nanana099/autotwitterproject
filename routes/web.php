@@ -41,5 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/account/get', 'AccountController@get')->name('account.get');
     Route::get('/account/add', 'AccountController@add')->name('account.add');
     Route::delete('/account/destroy', 'AccountController@destroy')->name('account.destroy');
+    Route::get('/account/setting', 'AccountController@getSetting')->name('account.setting.get');
+    Route::post('/account/setting', 'AccountController@postSetting')->name('account.setting.post');
 });
 Route::get('/account/callback', 'AccountController@callback');

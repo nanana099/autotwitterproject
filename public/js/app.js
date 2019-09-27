@@ -1950,6 +1950,349 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountSelectBox.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountSelectBox.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      selectedId: ""
+    };
+  },
+  props: ["accounts"],
+  mounted: function mounted() {
+    if (localStorage.selectedId) {
+      this.selectedId = localStorage.selectedId;
+    }
+  },
+  watch: {
+    selectedId: function selectedId(newId) {
+      localStorage.selectedId = newId;
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountSettingScreen.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountSettingScreen.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    "account-select-box": _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      accounts: [],
+      setting: {},
+      targetAccounts: [],
+      addTargetName: "",
+      selectedAccount: []
+    };
+  },
+  methods: {
+    onChangeAccount: function onChangeAccount(id) {
+      var _this = this;
+
+      axios.get("/account/setting", {
+        params: {
+          account_id: id
+        }
+      }).then(function (res) {
+        _this.setting = res.data[0];
+      })["catch"](function (error) {
+        _this.isError = true;
+      });
+    },
+    saveSetting: function saveSetting() {
+      axios.post("/account/setting", {
+        id: this.setting.id,
+        keyword_follow: this.setting.keyword_follow,
+        keyword_favorite: this.setting.keyword_favorite,
+        days_inactive_user: this.setting.days_inactive_user,
+        days_unfollow_user: this.setting.days_unfollow_user,
+        num_max_unfollow_per_day: this.setting.num_max_unfollow_per_day,
+        num_user_start_unfollow: this.setting.num_user_start_unfollow,
+        bool_unfollow_inactive: this.setting.bool_unfollow_inactive,
+        account_id: this.setting.account_id,
+        target_accounts: this.targetAccounts.join(",")
+      }).then()["catch"]();
+    },
+    addTarget: function addTarget() {
+      var _this2 = this;
+
+      // 追加OKチェック
+      // mytodo: アカウントの存在チェック（ここまでやらなくてもよい？）
+      // 既に追加済みのアカウントは追加しない
+      if (this.addTargetName === "") {
+        return;
+      }
+
+      if (!this.targetAccounts.some(function (x) {
+        return x === _this2.addTargetName;
+      })) {
+        this.targetAccounts.push(this.addTargetName);
+        this.addTargetName = "";
+      }
+    },
+    deleteTarget: function deleteTarget() {
+      var _this3 = this;
+
+      this.selectedAccount;
+      var item;
+      this.selectedAccount.forEach(function (item) {
+        _this3.targetAccounts = _this3.targetAccounts.filter(function (element) {
+          return element !== item;
+        });
+      });
+    },
+    getSelectedAccount: function getSelectedAccount() {
+      return this.selectedAccount;
+    }
+  },
+  created: function created() {
+    var _this4 = this;
+
+    axios.get("/account/get", {}).then(function (res) {
+      _this4.accounts = res.data;
+      var targetId;
+
+      if (true) {
+        // 選択中のアカウントがある
+        targetId = localStorage.selectedId;
+      } else {}
+
+      axios.get("/account/setting", {
+        params: {
+          account_id: targetId
+        }
+      }).then(function (res) {
+        _this4.setting = res.data[0];
+        _this4.targetAccounts = res.data[0].target_accounts.split(",");
+      })["catch"](function (error) {
+        _this4.isError = true;
+      });
+    })["catch"](function (error) {
+      _this4.isError = true;
+    });
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DeleteAccountButton.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DeleteAccountButton.vue?vue&type=script&lang=js& ***!
@@ -37337,6 +37680,422 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountSelectBox.vue?vue&type=template&id=1048ce26&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountSelectBox.vue?vue&type=template&id=1048ce26& ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "select",
+    {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.selectedId,
+          expression: "selectedId"
+        }
+      ],
+      staticClass: "p-select-account__select",
+      attrs: { options: "accounts" },
+      on: {
+        change: [
+          function($event) {
+            var $$selectedVal = Array.prototype.filter
+              .call($event.target.options, function(o) {
+                return o.selected
+              })
+              .map(function(o) {
+                var val = "_value" in o ? o._value : o.value
+                return val
+              })
+            _vm.selectedId = $event.target.multiple
+              ? $$selectedVal
+              : $$selectedVal[0]
+          },
+          function($event) {
+            return _vm.$emit("changeAccount", _vm.selectedId)
+          }
+        ]
+      }
+    },
+    _vm._l(_vm.accounts, function(account) {
+      return _c(
+        "option",
+        { key: account.id, domProps: { value: account.id } },
+        [_vm._v(_vm._s(account.screen_name))]
+      )
+    }),
+    0
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountSettingScreen.vue?vue&type=template&id=0e54171a&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountSettingScreen.vue?vue&type=template&id=0e54171a& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "p-select-account" }, [
+      _c(
+        "label",
+        { staticClass: "p-select-account__label", attrs: { for: "" } },
+        [
+          _vm._v("\n      操作中のアカウント：\n      "),
+          _c("account-select-box", {
+            attrs: { accounts: _vm.accounts },
+            on: { changeAccount: _vm.onChangeAccount }
+          })
+        ],
+        1
+      )
+    ]),
+    _vm._v(" "),
+    _c("h2", { staticClass: "c-title" }, [_vm._v("設定")]),
+    _vm._v(" "),
+    _c("div", { staticClass: "c-row" }, [
+      _c("fieldset", { staticClass: "c-form-fieldset" }, [
+        _c("legend", [_vm._v("自動フォロー関連")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "c-form-group" }, [
+          _c(
+            "label",
+            {
+              staticClass: "c-form-group__label",
+              attrs: { for: "keyword-follow" }
+            },
+            [_vm._v("・フォローキーワード")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.setting.keyword_follow,
+                expression: "setting.keyword_follow"
+              }
+            ],
+            staticClass: "c-form-group__text",
+            attrs: {
+              id: "keyword-follow",
+              type: "text",
+              name: "keyword-follow",
+              autocomplete: "text",
+              autofocus: ""
+            },
+            domProps: { value: _vm.setting.keyword_follow },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.setting, "keyword_follow", $event.target.value)
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("span", {
+            staticClass: "invalid-feedback",
+            attrs: { role: "alert" }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "c-form-group" }, [
+          _c(
+            "label",
+            { staticClass: "c-form-group__label", attrs: { for: "email" } },
+            [_vm._v("・ターゲットアカウント")]
+          ),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selectedAccount,
+                  expression: "selectedAccount"
+                }
+              ],
+              staticClass: "c-form-group__select-multi u-mb-3",
+              attrs: { id: "list2", name: "list2", size: "5", multiple: "" },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.selectedAccount = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            _vm._l(_vm.targetAccounts, function(target) {
+              return _c(
+                "option",
+                { key: target, domProps: { value: target } },
+                [_vm._v(_vm._s(target))]
+              )
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "c-justify-content-end" }, [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v("\n            追加するアカウント名：\n            "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.addTargetName,
+                    expression: "addTargetName"
+                  }
+                ],
+                attrs: {
+                  id: "email",
+                  type: "email",
+                  name: "email",
+                  autocomplete: "email",
+                  autofocus: ""
+                },
+                domProps: { value: _vm.addTargetName },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.addTargetName = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "c-btn c-btn--primary",
+                on: { click: _vm.addTarget }
+              },
+              [_vm._v("追加")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "c-btn c-btn--danger",
+                on: { click: _vm.deleteTarget }
+              },
+              [_vm._v("削除")]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("fieldset", { staticClass: "c-form-fieldset" }, [
+        _c("legend", [_vm._v("自動アンフォロー関連")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "c-form-group" }, [
+          _c("label", { attrs: { for: "email" } }, [
+            _vm._v("\n          ・フォローしてから\n          "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.setting.days_unfollow_user,
+                  expression: "setting.days_unfollow_user"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                id: "",
+                type: "number",
+                name: "email",
+                autocomplete: "email",
+                autofocus: ""
+              },
+              domProps: { value: _vm.setting.days_unfollow_user },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(
+                    _vm.setting,
+                    "days_unfollow_user",
+                    $event.target.value
+                  )
+                }
+              }
+            }),
+            _vm._v(
+              "\n          日間、フォローが無かったらアンフォローする\n        "
+            )
+          ]),
+          _vm._v(" "),
+          _c("span", {
+            staticClass: "invalid-feedback",
+            attrs: { role: "alert" }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "c-form-group" }, [
+          _c("label", { attrs: { for: "unfollow-inactive" } }, [
+            _vm._v("\n          ・\n          "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.setting.bool_unfollow_inactive,
+                  expression: "setting.bool_unfollow_inactive"
+                }
+              ],
+              attrs: {
+                type: "checkbox",
+                name: "unfollow-inactive",
+                id: "unfollow-inactive"
+              },
+              domProps: {
+                checked: Array.isArray(_vm.setting.bool_unfollow_inactive)
+                  ? _vm._i(_vm.setting.bool_unfollow_inactive, null) > -1
+                  : _vm.setting.bool_unfollow_inactive
+              },
+              on: {
+                change: function($event) {
+                  var $$a = _vm.setting.bool_unfollow_inactive,
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = null,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 &&
+                        _vm.$set(
+                          _vm.setting,
+                          "bool_unfollow_inactive",
+                          $$a.concat([$$v])
+                        )
+                    } else {
+                      $$i > -1 &&
+                        _vm.$set(
+                          _vm.setting,
+                          "bool_unfollow_inactive",
+                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                        )
+                    }
+                  } else {
+                    _vm.$set(_vm.setting, "bool_unfollow_inactive", $$c)
+                  }
+                }
+              }
+            }),
+            _vm._v(
+              "\n          非アクティブのユーザーのフォローを外す\n        "
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("fieldset", { staticClass: "c-form-fieldset" }, [
+        _c("legend", [_vm._v("自動いいね関連")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "c-form-group" }, [
+          _c(
+            "label",
+            { staticClass: "c-form-group__label", attrs: { for: "email" } },
+            [_vm._v("・いいねキーワード")]
+          ),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.setting.keyword_favorite,
+                expression: "setting.keyword_favorite"
+              }
+            ],
+            staticClass: "c-form-group__text form-control",
+            attrs: {
+              id: "email",
+              type: "text",
+              name: "email",
+              autocomplete: "email",
+              autofocus: ""
+            },
+            domProps: { value: _vm.setting.keyword_favorite },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.setting, "keyword_favorite", $event.target.value)
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("span", {
+            staticClass: "invalid-feedback",
+            attrs: { role: "alert" }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "c-justify-content-end" }, [
+        _c(
+          "button",
+          {
+            staticClass: "c-btn c-btn--primary c-btn--large u-mr-2",
+            on: { click: _vm.saveSetting }
+          },
+          [_vm._v("保存")]
+        )
+      ])
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/DeleteAccountButton.vue?vue&type=template&id=df73588e&":
 /*!**********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/DeleteAccountButton.vue?vue&type=template&id=df73588e& ***!
@@ -49534,6 +50293,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('account-list', __webpack_require__(/*! ./components/AccountList.vue */ "./resources/js/components/AccountList.vue")["default"]);
+Vue.component('account-setting-screen', __webpack_require__(/*! ./components/AccountSettingScreen.vue */ "./resources/js/components/AccountSettingScreen.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -49737,6 +50497,144 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountList_vue_vue_type_template_id_695b9dd0___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountList_vue_vue_type_template_id_695b9dd0___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountSelectBox.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/AccountSelectBox.vue ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AccountSelectBox_vue_vue_type_template_id_1048ce26___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox.vue?vue&type=template&id=1048ce26& */ "./resources/js/components/AccountSelectBox.vue?vue&type=template&id=1048ce26&");
+/* harmony import */ var _AccountSelectBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AccountSelectBox.vue?vue&type=script&lang=js& */ "./resources/js/components/AccountSelectBox.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AccountSelectBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AccountSelectBox_vue_vue_type_template_id_1048ce26___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AccountSelectBox_vue_vue_type_template_id_1048ce26___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AccountSelectBox.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountSelectBox.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/AccountSelectBox.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSelectBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AccountSelectBox.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountSelectBox.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSelectBox_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountSelectBox.vue?vue&type=template&id=1048ce26&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/AccountSelectBox.vue?vue&type=template&id=1048ce26& ***!
+  \*************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSelectBox_vue_vue_type_template_id_1048ce26___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AccountSelectBox.vue?vue&type=template&id=1048ce26& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountSelectBox.vue?vue&type=template&id=1048ce26&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSelectBox_vue_vue_type_template_id_1048ce26___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSelectBox_vue_vue_type_template_id_1048ce26___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountSettingScreen.vue":
+/*!**********************************************************!*\
+  !*** ./resources/js/components/AccountSettingScreen.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AccountSettingScreen_vue_vue_type_template_id_0e54171a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSettingScreen.vue?vue&type=template&id=0e54171a& */ "./resources/js/components/AccountSettingScreen.vue?vue&type=template&id=0e54171a&");
+/* harmony import */ var _AccountSettingScreen_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AccountSettingScreen.vue?vue&type=script&lang=js& */ "./resources/js/components/AccountSettingScreen.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AccountSettingScreen_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AccountSettingScreen_vue_vue_type_template_id_0e54171a___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AccountSettingScreen_vue_vue_type_template_id_0e54171a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AccountSettingScreen.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountSettingScreen.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./resources/js/components/AccountSettingScreen.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSettingScreen_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AccountSettingScreen.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountSettingScreen.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSettingScreen_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountSettingScreen.vue?vue&type=template&id=0e54171a&":
+/*!*****************************************************************************************!*\
+  !*** ./resources/js/components/AccountSettingScreen.vue?vue&type=template&id=0e54171a& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSettingScreen_vue_vue_type_template_id_0e54171a___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AccountSettingScreen.vue?vue&type=template&id=0e54171a& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountSettingScreen.vue?vue&type=template&id=0e54171a&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSettingScreen_vue_vue_type_template_id_0e54171a___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountSettingScreen_vue_vue_type_template_id_0e54171a___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
