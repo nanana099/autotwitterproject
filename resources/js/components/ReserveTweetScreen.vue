@@ -7,53 +7,89 @@
       </label>
     </div>
     <h2 class="c-title">自動ツイート予約</h2>
+    <reserve-tweet-form @addedTweet="addTweetList"></reserve-tweet-form>
     <div class="c-row">
-      <form action class="p-tweet-form">
-        <textarea name id class="p-tweet-form__textarea"></textarea>
-        <span class="p-tweet-form__count js-show-count">140/140字</span>
-        <div class="c-justify-content-between">
-          <label for>
-            投稿予定日時：
-            <input type="date" name="date" id />
-            <input type="time" name="time" id />
-          </label>
-          <button class="c-btn c-btn--primary c-btn--large">予約</button>
-        </div>
-      </form>
-
       <h2 class="c-title">予約済みツイート</h2>
-      <div class="p-reserve-history">
-        <form action>
-          <p class="p-reserve-history__str">
-            今日はいいてんきだ。
-            <br />あしたもいいてんきにあるといいｆだいふぁ
-          </p>
-          <div class="c-justify-content-between">
-            <span class="p-reserve-history__str">投稿予定日時：2019/09/12 13:00</span>
-          </div>
-
-          <div class="c-justify-content-end">
-            <button class="c-btn c-btn--primary">編集</button>
-            <button class="c-btn c-btn--danger">削除</button>
-          </div>
-        </form>
-      </div>
+      <reserved-tweet-list v-model="tweets"></reserved-tweet-list>
     </div>
   </div>
 </template>
 
 <script>
 import AccountSelectBox from "./AccountSelectBox";
+import ReserveTweetForm from "./ReserveTweetForm";
+import ReservedTweetList from "./ReservedTweetList";
+
 export default {
   components: {
-    "account-select-box": AccountSelectBox
+    "account-select-box": AccountSelectBox,
+    "reserve-tweet-form": ReserveTweetForm,
+    "reserved-tweet-list": ReservedTweetList
   },
   data: function() {
     return {
       accounts: [],
-      content : '',
-      date : '',
+      tweets: []
     };
+  },
+  methods: {
+    onChangeAccount: function() {
+      axios
+        .get("/account/get", {})
+        .then(res => {
+          this.accounts = res.data;
+          let targetId;
+          if (true) {
+            // 選択中のアカウントがある
+            targetId = localStorage.selectedId;
+          } else {
+            // 選択中のアカウントがない
+            targetId = this.accounts[0]["id"];
+          }
+          axios
+            .get("/account/tweet", {
+              params: {
+                account_id: targetId
+              }
+            })
+            .then(res => {
+              // this.tweets = res.data;
+
+              // key番目から１つ削除
+              this.tweets.splice(0, this.tweets.length);
+
+              res.data.forEach(e => {
+                this.tweets.push(e);
+              });
+            })
+            .catch(error => {
+              this.isError = true;
+            });
+        })
+        .catch(error => {
+          this.isError = true;
+        });
+    },
+    addTweetList: function(tweet) {
+      this.tweets.push({
+        content: tweet.content,
+        submit_date: tweet.submit_date,
+        id: tweet.id
+      });
+    }
+  },
+  computed: {
+    start() {
+      // min-date に明日の9時を指定
+      const start = moment();
+      return start.format("YYYY-MM-DDTHH:mm:ss");
+    },
+    end() {
+      // max-date に min-date から3ヶ月後を指定
+      const start = moment(this.start);
+      const end = start.add(3, "months").endOf("day");
+      return end.format("YYYY-MM-DDTHH:mm:ss");
+    }
   },
   created: function() {
     axios
@@ -68,20 +104,21 @@ export default {
           // 選択中のアカウントがない
           targetId = this.accounts[0]["id"];
         }
-        // axios
-        //   .get("/account/setting", {
-        //     params: {
-        //       account_id: targetId
-        //     }
-        //   })
-        //   .then(res => {
-        //     this.setting = res.data[0];
-        //     if (res.data[0].target_accounts !== "")
-        //       this.targetAccounts = res.data[0].target_accounts.split(",");
-        //   })
-        //   .catch(error => {
-        //     this.isError = true;
-        //   });
+        axios
+          .get("/account/tweet", {
+            params: {
+              account_id: targetId
+            }
+          })
+          .then(res => {
+            // this.tweets = res.data;
+            res.data.forEach(e => {
+              this.tweets.push(e);
+            });
+          })
+          .catch(error => {
+            this.isError = true;
+          });
       })
       .catch(error => {
         this.isError = true;

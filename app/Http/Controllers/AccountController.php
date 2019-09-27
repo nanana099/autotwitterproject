@@ -88,13 +88,31 @@ class AccountController extends Controller
         $setting->fill($request->all())->save();
         return response()->json('hoge');
     }
+
+    public function getTweet(Request $request)
+    {
+        $account_id = $request['account_id'] ;
+        logger(Auth::user()->accounts()->find($account_id));
+        $tweets = Auth::user()->accounts()->find($account_id)->reservedTweets()->orderBy('submit_date','desc')->get();
+        return response()->json($tweets);
+    }
     public function postTweet(Request $request)
     {
         $account_id = $request['account_id'] ;
-        $request['content'] ;
-        $request['submit_date'];
-        Auth::user()->accounts()->find($account_id)->reservedTweets()->save(new ReservedTweet($request->all()));
+        $tweet_id = $request['id'];
+        logger($request);
+        $result = Auth::user()->accounts()->find($account_id)->reservedTweets()->updateOrcreate(['id' => $tweet_id], $request->all());
+        // Auth::user()->accounts()->find($account_id)->reservedTweets()->save(new ReservedTweet($request->all()));
         // $tweet = new ReservedTweet($request->all());
-        return response()->json('hoge');
+        return response()->json($result);
+    }
+    public function destroyTweet(Request $request)
+    {
+        $account_id = $request['account_id'] ;
+        $tweet_id = $request['id'];
+        logger($request);
+        logger(Auth::user()->accounts()->find($account_id));
+        $result = Auth::user()->accounts()->find($account_id)->reservedTweets()->find($tweet_id)->delete();
+        return response()->json($result);
     }
 }
