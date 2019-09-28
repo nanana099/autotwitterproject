@@ -22,6 +22,7 @@ class CreateAccountSettingsTable extends Migration
             $table->integer('num_max_unfollow_per_day')->default(1000);
             $table->integer('num_user_start_unfollow')->default(5000);
             $table->boolean('bool_unfollow_inactive')->default(false);
+            $table->text('target_accounts');
             $table->unsignedBigInteger('account_id');
             $table->timestamps();
 

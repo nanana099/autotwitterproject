@@ -57,29 +57,29 @@ export default {
       });
     },
     stopUnfollow: function() {
-      this.changeStatus("follow", false, () => {
+      this.changeStatus("unfollow", false, () => {
         this.accounsStatus.operation_status.is_unfollow = false;
       });
     },
     startUnfollow: function() {
-      this.changeStatus("follow", true, () => {
+      this.changeStatus("unfollow", true, () => {
         this.accounsStatus.operation_status.is_unfollow = true;
       });
     },
     stopFavorite: function() {
-      this.changeStatus("follow", false, () => {
+      this.changeStatus("favorite", false, () => {
         this.accounsStatus.operation_status.is_favorite = false;
       });
     },
     startFavorite: function() {
-      this.changeStatus("follow", true, () => {
+      this.changeStatus("favorite", true, () => {
         this.accounsStatus.operation_status.is_favorite = true;
       });
     },
     changeStatus: function(type, value, callback) {
       axios
         .post("/account/status", {
-          account_id: this.accounsStatus.operation_status.account_id,
+          operation_status_id: this.accounsStatus.operation_status.id,
           type: type,
           value: value
         })

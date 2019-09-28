@@ -41,7 +41,7 @@ class TwitterAuth
 
         $twitter = new TwitterOAuth(self::getApiKey(), self::getApiSecretKey());
         //リクエストトークン取得
-        $callbackUrl = 'http://127.0.0.1:8001/account/callback';
+        $callbackUrl = 'http://127.0.0.1:8000/account/callback';
         $request_token = $twitter->oauth('oauth/request_token', array('oauth_callback' => $callbackUrl));
         // $request_token = $twitter->oauth('oauth/request_token', array('oauth_callback' => self::getCallbackUrl()));
             

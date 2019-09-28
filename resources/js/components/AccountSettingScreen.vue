@@ -217,7 +217,7 @@ export default {
     saveSetting: function() {
       axios
         .post("/account/setting", {
-          id: this.setting.id,
+          account_setting_id: this.setting.id,
           keyword_follow: this.setting.keyword_follow,
           keyword_favorite: this.setting.keyword_favorite,
           days_inactive_user: this.setting.days_inactive_user,

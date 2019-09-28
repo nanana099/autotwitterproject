@@ -14,12 +14,14 @@ class CreateAccountTable extends Migration
     public function up()
     {
         Schema::create('accounts', function (Blueprint $table) {
-            $table->unsignedBigInteger('id');
+            $table->bigIncrements('id');
             $table->string('access_token');
+            $table->string('twitter_user_id')->unique();
+            $table->string('screen_name');
+            $table->text('image_url');
             $table->unsignedBigInteger('user_id');
             $table->timestamps();
 
-            $table->primary('id');
             $table->foreign('user_id')->references('id')->on('users');
         });
     }

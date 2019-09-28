@@ -1902,34 +1902,34 @@ __webpack_require__.r(__webpack_exports__);
     stopUnfollow: function stopUnfollow() {
       var _this3 = this;
 
-      this.changeStatus("follow", false, function () {
+      this.changeStatus("unfollow", false, function () {
         _this3.accounsStatus.operation_status.is_unfollow = false;
       });
     },
     startUnfollow: function startUnfollow() {
       var _this4 = this;
 
-      this.changeStatus("follow", true, function () {
+      this.changeStatus("unfollow", true, function () {
         _this4.accounsStatus.operation_status.is_unfollow = true;
       });
     },
     stopFavorite: function stopFavorite() {
       var _this5 = this;
 
-      this.changeStatus("follow", false, function () {
+      this.changeStatus("favorite", false, function () {
         _this5.accounsStatus.operation_status.is_favorite = false;
       });
     },
     startFavorite: function startFavorite() {
       var _this6 = this;
 
-      this.changeStatus("follow", true, function () {
+      this.changeStatus("favorite", true, function () {
         _this6.accounsStatus.operation_status.is_favorite = true;
       });
     },
     changeStatus: function changeStatus(type, value, callback) {
       axios.post("/account/status", {
-        account_id: this.accounsStatus.operation_status.account_id,
+        operation_status_id: this.accounsStatus.operation_status.id,
         type: type,
         value: value
       }).then(function (res) {
@@ -2333,7 +2333,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     saveSetting: function saveSetting() {
       axios.post("/account/setting", {
-        id: this.setting.id,
+        account_setting_id: this.setting.id,
         keyword_follow: this.setting.keyword_follow,
         keyword_favorite: this.setting.keyword_favorite,
         days_inactive_user: this.setting.days_inactive_user,
@@ -2532,7 +2532,7 @@ __webpack_require__.r(__webpack_exports__);
         content: this.content,
         submit_date: this.requestDate,
         account_id: localStorage.selectedId,
-        id: this.id
+        reserved_tweet_id: this.id
       }).then(function (res) {
         var content = _this.content;
         var submit_date = _this.requestDate;

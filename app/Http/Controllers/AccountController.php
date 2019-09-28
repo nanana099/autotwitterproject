@@ -9,6 +9,7 @@ use App\Account;
 use App\AccountSetting;
 use App\OperationStatus;
 use Illuminate\Support\Facades\Auth;
+use App\ReservedTweet;
 
 class AccountController extends Controller
 {
@@ -26,27 +27,25 @@ class AccountController extends Controller
     public function callback()
     {
         $accessToken = TwitterAuth::getAccessToken();
-        $account_id = $accessToken['user_id'];
-        $account = Account::find($account_id);
+        $twitter_user_id = $accessToken['user_id'];
+        $account = Account::where('twitter_user_id', $twitter_user_id)->get();
 
-        if (!empty($account) && $account['user_id'] !== Auth::id()) {
+        if (count($account) > 0 && $account[0]['user_id'] !== Auth::id()) {
             // すでにTwitterアカウントが他のユーザーによって登録済みの場合は不可
             return redirect()->route('mypage.account')->with('flash_message_error', 'Twitterアカウントが他のユーザにより登録済みのため、登録できませんでした。');
         } else {
             $accessTokenStr = json_encode($accessToken);
 
-            // アカウントのアイコン画像のURLが欲しいので、TwitterAPIを呼び出す
-            $account = new TwitterAccount($accessTokenStr);
-            $accountInfo = $account->getMyAccountInfo();
-            logger($accountInfo);
-            $screen_name = $accountInfo['screen_name'];
-            $image_url = $accountInfo['profile_image_url_https'];
+            $twitterAccount = new TwitterAccount($accessTokenStr);
+            $twitterAccountInfo = $twitterAccount->getMyAccountInfo();
+            $screen_name = $twitterAccountInfo['screen_name'];
+            $image_url = $twitterAccountInfo['profile_image_url_https'];
         
             // mytodo: アクセストークン暗号化
             // DBの各テーブルへ行を挿入
-            Account::updateOrCreate(['id' => $account_id], ['access_token' => $accessTokenStr,'user_id' => Auth::id(),'screen_name' => $screen_name, 'image_url' => $image_url]);
-            AccountSetting::updateOrCreate(['account_id' => $account_id,'target_accounts' => '']);
-            OperationStatus::updateOrCreate(['account_id' => $account_id]);
+            $hoge = Account::updateOrCreate(['twitter_user_id' => $twitter_user_id], ['access_token' => $accessTokenStr,'user_id' => Auth::id(),'screen_name' => $screen_name, 'image_url' => $image_url]);
+            AccountSetting::firstOrCreate(['account_id' => $hoge['id']], ['target_accounts' => '']);
+            OperationStatus::firstOrCreate(['account_id' =>$hoge['id']]);
 
             return redirect()->route('mypage.account')->with('flash_message_success', 'Twitterアカウントの登録に成功しました。');
         }
@@ -55,15 +54,14 @@ class AccountController extends Controller
     public function destroy(Request $request)
     {
         $account = Auth::user()->accounts()->find($request['id']);
-        $resultAry = array('result' => false);
-        if (empty($account)) {
-            return response()->json($resultAry);
-        }
-        if ($account->delete()) {
-            $resultAry['result'] = true;
-            return response()->json($resultAry);
+        if (true) {
+            $account->operationStatus->delete();
+            $account->accountSetting->delete();
+            $account->reservedTweets()->delete();
+            $account->delete();
+            return response()->json($account);
         } else {
-            return response()->json($resultAry);
+            return response()->json($account);
         }
     }
 
@@ -82,12 +80,19 @@ class AccountController extends Controller
     }
     public function postSetting(Request $request)
     {
+        // 空欄で送信されるとnullになる。DB上null非許容なので、空文字を入れておく。
         if (empty($request['target_accounts'])) {
             $request['target_accounts'] = '';
         }
-        $setting = Auth::user()->accounts()->find($request['account_id'])->accountSetting;
-        $setting->fill($request->all())->save();
-        return response()->json('hoge');
+        if (empty($request['keyword_follow'])) {
+            $request['keyword_follow'] = '';
+        }
+        if (empty($request['keyword_favorite'])) {
+            $request['keyword_favorite'] = '';
+        }
+
+        $setting = Auth::user()->accountAccountSetting()->find($request['account_setting_id']);
+        return response()->json($setting->fill($request->all())->save());
     }
 
     public function getTweet(Request $request)
@@ -100,8 +105,7 @@ class AccountController extends Controller
     public function postTweet(Request $request)
     {
         $account_id = $request['account_id'] ;
-        $tweet_id = $request['id'];
-        logger($request);
+        $tweet_id = $request['reserved_tweet_id'];
         $result = Auth::user()->accounts()->find($account_id)->reservedTweets()->updateOrcreate(['id' => $tweet_id], $request->all());
         return response()->json($result);
     }
@@ -115,8 +119,6 @@ class AccountController extends Controller
         return response()->json($result);
     }
 
-
-
     public function getStatus(Request $request)
     {
         $status = Auth::user()->accounts()->with('operationStatus')->get();
@@ -126,13 +128,9 @@ class AccountController extends Controller
     {
         $type = $request['type'];
         $value = $request['value'];
-        $account_id = $request['account_id'];
-        logger($request);
-        logger(Auth::user()->accounts()->find($account_id));
-
-        $status = Auth::user()->accounts->find($account_id)->operationStatus;
-
-        $data = array('account_id' => $account_id);
+        $operation_status_id = $request['operation_status_id'];
+        $status = Auth::user()->accountOperationStatus()->find($operation_status_id);
+        $data = array();
         switch ($type) {
             case 'follow':
                 $data['is_follow'] = $value;
@@ -144,13 +142,6 @@ class AccountController extends Controller
                 $data['is_favorite'] = $value;
                 break;
         }
-
         return response()->json($status->fill($data)->save());
-        // if (empty($request['target_accounts'])) {
-        //     $request['target_accounts'] = '';
-        // }
-        // $setting = Auth::user()->accounts()->find($request['account_id'])->accountSetting;
-        // $setting->fill($request->all())->save();
-        // return response()->json('hoge');
     }
 }

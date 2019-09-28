@@ -48,7 +48,7 @@ export default {
           content: this.content,
           submit_date: this.requestDate,
           account_id: localStorage.selectedId,
-          id: this.id
+          reserved_tweet_id: this.id
         })
         .then(res => {
           let content = this.content;

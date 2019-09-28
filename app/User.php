@@ -42,4 +42,17 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Account');
     }
+
+    public function accountOperationStatus()
+    {
+        return $this->hasOneThrough('App\OperationStatus', 'App\Account');
+    }
+
+    public function accountAccountSetting(){
+        return  $this->hasManyThrough('App\AccountSetting','App\Account');
+    }
+
+    public function accountReservedTweets(){
+        return  $this->hasManyThrough('App\ReservedTweet','App\Account');
+    }
 }

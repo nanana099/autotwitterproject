@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Account extends Model
 {
     // protected $guarded = ['id'];
-    protected $fillable = ['id','access_token', 'user_id', 'screen_name', 'image_url'];
+    protected $fillable = ['twitter_user_id','access_token', 'user_id', 'screen_name', 'image_url'];
 
     public function user()
     {
@@ -18,7 +18,6 @@ class Account extends Model
     {
         return $this->hasOne('App\OperationStatus');
     }
-
 
     public function accountSetting()
     {
