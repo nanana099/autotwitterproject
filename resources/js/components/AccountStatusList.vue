@@ -1,11 +1,14 @@
 <template>
-  <ul class="p-monitor-list">
-    <account-status
-      v-for="accountStatus in accountStatuses"
-      :key="accountStatus.id"
-      :accounsStatus="accountStatus"
-    ></account-status>
-  </ul>
+  <div>
+    <ul class="p-monitor-list"  v-if="existsAccount">
+      <account-status
+        v-for="accountStatus in accountStatuses"
+        :key="accountStatus.id"
+        :accounsStatus="accountStatus"
+      ></account-status>
+    </ul>
+    <span class="p-message-1" v-else><i class="fas fa-info-circle u-mr-2"></i>自動化したいTwitterアカウントを追加してください</span>
+  </div>
 </template>
 
 <script>
@@ -23,10 +26,14 @@ export default {
     axios
       .get("/account/status")
       .then(res => {
-        console.log(res.data);
         this.accountStatuses = res.data;
       })
       .catch(error => {});
+  },
+  computed: {
+    existsAccount: function() {
+      return this.accountStatuses.length > 0;
+    }
   }
 };
 </script>

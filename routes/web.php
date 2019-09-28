@@ -22,7 +22,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/mypage', function () {
+    Route::get('/mypage/monitor', function () {
         return view('mypage.monitor');
     })->name('mypage.monitor');
 

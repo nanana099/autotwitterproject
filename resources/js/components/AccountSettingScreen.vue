@@ -7,24 +7,25 @@
       </label>
     </div>
     <h2 class="c-title">設定</h2>
-    <div class="c-row">
+    <section class="p-section">
       <fieldset class="c-form-fieldset">
         <legend>自動フォロー関連</legend>
         <div class="c-form-group">
           <label for="keyword-follow" class="c-form-group__label">・フォローキーワード</label>
-          <input
-            id="keyword-follow"
-            type="text"
-            class="c-form-group__text"
-            name="keyword-follow"
-            v-model="setting.keyword_follow"
-            autocomplete="text"
-            autofocus
-          />
-          <span class="invalid-feedback" role="alert"></span>
+          <input type="text" class="c-form-group__text" v-model="setting.keyword_follow" />
+          <span class="c-invalid-feedback" role="alert"></span>
         </div>
         <div class="c-form-group">
           <label for="email" class="c-form-group__label">・ターゲットアカウント</label>
+          <div class="u-m-2">
+            <input
+              type="text"
+              class="c-textbox--small"
+              v-model="addTargetName"
+              placeholder="例）@tanaka_taro123"
+            />
+            <button class="c-btn c-btn--primary" @click="addTarget">追加</button>
+          </div>
           <select
             id="list2"
             name="list2"
@@ -36,19 +37,6 @@
             <option v-for="target in targetAccounts" :value="target" :key="target">{{target}}</option>
           </select>
           <div class="c-justify-content-end">
-            <label for>
-              追加するアカウント名：
-              <input
-                id="email"
-                type="email"
-                class
-                name="email"
-                v-model="addTargetName"
-                autocomplete="email"
-                autofocus
-              />
-            </label>
-            <button class="c-btn c-btn--primary" @click="addTarget">追加</button>
             <button class="c-btn c-btn--danger" @click="deleteTarget">削除</button>
           </div>
         </div>
@@ -64,13 +52,11 @@
               class="form-control"
               name="email"
               v-model="setting.days_unfollow_user"
-              autocomplete="email"
-              autofocus
             />
             日間、フォローが無かったらアンフォローする
           </label>
 
-          <span class="invalid-feedback" role="alert"></span>
+          <span class="c-invalid-feedback" role="alert"></span>
         </div>
 
         <div class="c-form-group">
@@ -91,23 +77,19 @@
         <div class="c-form-group">
           <label for="email" class="c-form-group__label">・いいねキーワード</label>
           <input
-            id="email"
             type="text"
             class="c-form-group__text form-control"
-            name="email"
             v-model="setting.keyword_favorite"
-            autocomplete="email"
-            autofocus
           />
 
-          <span class="invalid-feedback" role="alert"></span>
+          <span class="c-invalid-feedback" role="alert"></span>
         </div>
       </fieldset>
 
       <div class="c-justify-content-end">
         <button class="c-btn c-btn--primary c-btn--large u-mr-2" @click="saveSetting">保存</button>
       </div>
-    </div>
+    </section>
   </div>
   <!-- <form action="">
         <fieldset class="c-form-fieldset">
@@ -118,7 +100,7 @@
                     class="c-form-group__text form-control" name="email"
                     value="" required autocomplete="email" autofocus>
 
-                <span class="invalid-feedback" role="alert">
+                <span class="c-invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
 
@@ -146,7 +128,7 @@
                         value="" required autocomplete="email" autofocus>
                     日間、フォローが無かったらアンフォローする</label>
 
-                <span class="invalid-feedback" role="alert">
+                <span class="c-invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
 
@@ -167,7 +149,7 @@
                     class="c-form-group__text form-control" name="email"
                     value="" required autocomplete="email" autofocus>
 
-                <span class="invalid-feedback" role="alert">
+                <span class="c-invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
                 </span>
 

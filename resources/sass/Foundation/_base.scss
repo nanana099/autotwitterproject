@@ -1,17 +1,17 @@
 html {
   font-size: 62.5%;
   font-family: $font-family-sans-serif;
-} 
+}
 body {
   font-size: $font-size-base;
   background: $color-base;
 }
 
 $breakpoints: (
-  'sm': 'screen and (min-width: 400px)',
-  'md': 'screen and (min-width: 768px)',
-  'lg': 'screen and (min-width: 1000px)',
-  'xl': 'screen and (min-width: 1200px)',
+  "sm": "screen and (min-width: 400px)",
+  "md": "screen and (min-width: 768px)",
+  "lg": "screen and (min-width: 1000px)",
+  "xl": "screen and (min-width: 1200px)"
 ) !default;
 
 @mixin mq($breakpoint: md) {

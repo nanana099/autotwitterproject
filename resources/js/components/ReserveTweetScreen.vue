@@ -1,17 +1,19 @@
 <template>
   <div>
-    <div class="p-select-account">
-      <label for class="p-select-account__label">
-        操作中のアカウント：
-        <account-select-box :accounts="accounts" @changeAccount="onChangeAccount"></account-select-box>
-      </label>
-    </div>
-    <h2 class="c-title">自動ツイート予約</h2>
-    <reserve-tweet-form @addedTweet="addTweetList"></reserve-tweet-form>
-    <div class="c-row">
+    <section class="p-section">
+      <div class="p-select-account">
+        <label for class="p-select-account__label">
+          操作中のアカウント：
+          <account-select-box :accounts="accounts" @changeAccount="onChangeAccount"></account-select-box>
+        </label>
+      </div>
+      <h2 class="c-title">自動ツイート予約</h2>
+      <reserve-tweet-form @addedTweet="addTweetList"></reserve-tweet-form>
+    </section>
+    <section class="p-section">
       <h2 class="c-title">予約済みツイート</h2>
       <reserved-tweet-list v-model="tweets"></reserved-tweet-list>
-    </div>
+    </section>
   </div>
 </template>
 

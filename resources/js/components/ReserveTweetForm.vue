@@ -1,10 +1,9 @@
 <template>
   <div>
     <textarea v-model="content" id class="p-tweet-form__textarea" />
-    <span class="p-tweet-form__count js-show-count">140/140字</span>
-    <div class="c-justify-content-between">
-      <label for>
-        投稿予定日時：
+    <div class="c-justify-content-between mb-2 c-align-item-start">
+      <div class="c-justify-content-start">
+        <label>投稿予定日時</label>
         <vue-ctkc-date-time-picker
           v-model="requestDate"
           :minute-interval="1"
@@ -12,7 +11,10 @@
           :overlay="true"
           :min-date="start"
         ></vue-ctkc-date-time-picker>
-      </label>
+      </div>
+      <span class="p-tweet-form__count js-show-count">140/140字</span>
+    </div>
+    <div class="c-justify-content-end">
       <button class="c-btn c-btn--primary c-btn--large" @click="reserveTweet">予約</button>
     </div>
   </div>

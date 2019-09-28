@@ -2,7 +2,6 @@
 
 @section('content')
 <account-setting-screen></account-setting-screen>
-
 @endsection
 
 @section('sidebar')

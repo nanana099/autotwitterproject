@@ -1,12 +1,17 @@
 <template>
-  <ul class="p-monitor-list">
-    <account-item
-      v-for="account in accounts"
-      :account="account"
-      :key="account.id"
-      @deleteAccount="onDeleteAccount"
-    ></account-item>
-  </ul>
+  <div>
+    
+    <ul class="p-monitor-list" v-if="existsAccount">
+      <account-item
+        v-for="account in accounts"
+        :account="account"
+        :key="account.id"
+        @deleteAccount="onDeleteAccount"
+      ></account-item>
+    </ul>
+    <span class="p-message-1" v-else><i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません</span>
+
+  </div>
 </template>
 
 <script>
@@ -34,9 +39,7 @@ export default {
           }
         })
         .then(res => {
-          console.log(res.data);
           if (!res.data["result"]) {
-            console.log(this.accounts);
             var index = this.accounts.indexOf(account);
             // key番目から１つ削除
             this.accounts.splice(index, 1);
@@ -52,25 +55,16 @@ export default {
       .get("/account/get", {})
       .then(res => {
         this.accounts = res.data;
-        console.log(this.accounts);
       })
       .catch(error => {
         this.isError = true;
       });
-    //     $accounts = array(
-    //       array(
-    //           'id' => 1,
-    //           'image' => 'https://iconbox.fun/wp/wp-content/uploads/106_h_24.svg',
-    //           'screen_name' => 'たなか１'
-    //       ),
-    //       array(
-    //           'id' => 2,
-    //           'image' => 'https://iconbox.fun/wp/wp-content/uploads/106_h_24.svg',
-    //           'screen_name' => 'たなか２'
-    //       ),
-    //   );
   },
-  computed: {}
+  computed: {
+    existsAccount: function() {
+      return this.accounts.length > 0;
+    }
+  }
 };
 </script>
  

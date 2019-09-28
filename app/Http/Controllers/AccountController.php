@@ -32,7 +32,7 @@ class AccountController extends Controller
 
         if (count($account) > 0 && $account[0]['user_id'] !== Auth::id()) {
             // すでにTwitterアカウントが他のユーザーによって登録済みの場合は不可
-            return redirect()->route('mypage.account')->with('flash_message_error', 'Twitterアカウントが他のユーザにより登録済みのため、登録できませんでした。');
+            return redirect()->route('mypage.monitor')->with('flash_message_error', 'Twitterアカウントが他のユーザにより登録済みのため、登録できませんでした。');
         } else {
             $accessTokenStr = json_encode($accessToken);
 
@@ -47,7 +47,7 @@ class AccountController extends Controller
             AccountSetting::firstOrCreate(['account_id' => $hoge['id']], ['target_accounts' => '']);
             OperationStatus::firstOrCreate(['account_id' =>$hoge['id']]);
 
-            return redirect()->route('mypage.account')->with('flash_message_success', 'Twitterアカウントの登録に成功しました。');
+            return redirect()->route('mypage.monitor')->with('flash_message_success', 'Twitterアカウントの登録に成功しました。');
         }
     }
 

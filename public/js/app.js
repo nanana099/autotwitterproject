@@ -1965,8 +1965,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1987,6 +1985,11 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccountItem__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountItem */ "./resources/js/components/AccountItem.vue");
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2022,11 +2025,7 @@ __webpack_require__.r(__webpack_exports__);
           id: account.id
         }
       }).then(function (res) {
-        console.log(res.data);
-
         if (!res.data["result"]) {
-          console.log(_this.accounts);
-
           var index = _this.accounts.indexOf(account); // key番目から１つ削除
 
 
@@ -2042,23 +2041,15 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get("/account/get", {}).then(function (res) {
       _this2.accounts = res.data;
-      console.log(_this2.accounts);
     })["catch"](function (error) {
       _this2.isError = true;
-    }); //     $accounts = array(
-    //       array(
-    //           'id' => 1,
-    //           'image' => 'https://iconbox.fun/wp/wp-content/uploads/106_h_24.svg',
-    //           'screen_name' => 'たなか１'
-    //       ),
-    //       array(
-    //           'id' => 2,
-    //           'image' => 'https://iconbox.fun/wp/wp-content/uploads/106_h_24.svg',
-    //           'screen_name' => 'たなか２'
-    //       ),
-    //   );
+    });
   },
-  computed: {}
+  computed: {
+    existsAccount: function existsAccount() {
+      return this.accounts.length > 0;
+    }
+  }
 });
 
 /***/ }),
@@ -2118,24 +2109,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2427,6 +2400,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2441,9 +2417,13 @@ __webpack_require__.r(__webpack_exports__);
     var _this = this;
 
     axios.get("/account/status").then(function (res) {
-      console.log(res.data);
       _this.accountStatuses = res.data;
     })["catch"](function (error) {});
+  },
+  computed: {
+    existsAccount: function existsAccount() {
+      return this.accountStatuses.length > 0;
+    }
   }
 });
 
@@ -2483,6 +2463,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_ctk_date_time_picker__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_ctk_date_time_picker__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vue_ctk_date_time_picker_dist_vue_ctk_date_time_picker_css__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css */ "./node_modules/vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css");
 /* harmony import */ var vue_ctk_date_time_picker_dist_vue_ctk_date_time_picker_css__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vue_ctk_date_time_picker_dist_vue_ctk_date_time_picker_css__WEBPACK_IMPORTED_MODULE_2__);
+//
+//
 //
 //
 //
@@ -2580,6 +2562,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
 /* harmony import */ var _ReserveTweetForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReserveTweetForm */ "./resources/js/components/ReserveTweetForm.vue");
 /* harmony import */ var _ReservedTweetList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ReservedTweetList */ "./resources/js/components/ReservedTweetList.vue");
+//
+//
 //
 //
 //
@@ -80628,34 +80612,32 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("li", { staticClass: "p-monitor-list__item" }, [
-    _c("div", { staticClass: "p-monitor-list__account-info" }, [
-      _c("img", {
-        staticClass: "p-monitor-list__img",
-        attrs: { src: _vm.account.image_url, alt: "アカウントアイコン" }
-      }),
+  return _c(
+    "li",
+    { staticClass: "p-monitor-list__item" },
+    [
+      _c("div", { staticClass: "p-monitor-list__account-info" }, [
+        _c("img", {
+          staticClass: "p-monitor-list__img",
+          attrs: { src: _vm.account.image_url, alt: "アカウントアイコン" }
+        }),
+        _vm._v(" "),
+        _c("span", { staticClass: "p-monito-list__user-name" }, [
+          _vm._v(_vm._s(_vm.account.screen_name))
+        ])
+      ]),
       _vm._v(" "),
-      _c("span", { staticClass: "p-monito-list__user-name" }, [
-        _vm._v(_vm._s(_vm.account.screen_name))
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "p-monitor-list__buttons" },
-      [
-        _c("delete-account-button", {
-          attrs: { account: _vm.account },
-          on: {
-            deleteAccount: function(account) {
-              _vm.$emit("deleteAccount", account)
-            }
+      _c("delete-account-button", {
+        attrs: { account: _vm.account },
+        on: {
+          deleteAccount: function(account) {
+            _vm.$emit("deleteAccount", account)
           }
-        })
-      ],
-      1
-    )
-  ])
+        }
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -80679,18 +80661,25 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "ul",
-    { staticClass: "p-monitor-list" },
-    _vm._l(_vm.accounts, function(account) {
-      return _c("account-item", {
-        key: account.id,
-        attrs: { account: account },
-        on: { deleteAccount: _vm.onDeleteAccount }
-      })
-    }),
-    1
-  )
+  return _c("div", [
+    _vm.existsAccount
+      ? _c(
+          "ul",
+          { staticClass: "p-monitor-list" },
+          _vm._l(_vm.accounts, function(account) {
+            return _c("account-item", {
+              key: account.id,
+              attrs: { account: account },
+              on: { deleteAccount: _vm.onDeleteAccount }
+            })
+          }),
+          1
+        )
+      : _c("span", { staticClass: "p-message-1" }, [
+          _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
+          _vm._v("Twitterアカウントが登録されていません")
+        ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -80798,7 +80787,7 @@ var render = function() {
     _vm._v(" "),
     _c("h2", { staticClass: "c-title" }, [_vm._v("設定")]),
     _vm._v(" "),
-    _c("div", { staticClass: "c-row" }, [
+    _c("section", { staticClass: "p-section" }, [
       _c("fieldset", { staticClass: "c-form-fieldset" }, [
         _c("legend", [_vm._v("自動フォロー関連")]),
         _vm._v(" "),
@@ -80822,13 +80811,7 @@ var render = function() {
               }
             ],
             staticClass: "c-form-group__text",
-            attrs: {
-              id: "keyword-follow",
-              type: "text",
-              name: "keyword-follow",
-              autocomplete: "text",
-              autofocus: ""
-            },
+            attrs: { type: "text" },
             domProps: { value: _vm.setting.keyword_follow },
             on: {
               input: function($event) {
@@ -80841,7 +80824,7 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("span", {
-            staticClass: "invalid-feedback",
+            staticClass: "c-invalid-feedback",
             attrs: { role: "alert" }
           })
         ]),
@@ -80852,6 +80835,39 @@ var render = function() {
             { staticClass: "c-form-group__label", attrs: { for: "email" } },
             [_vm._v("・ターゲットアカウント")]
           ),
+          _vm._v(" "),
+          _c("div", { staticClass: "u-m-2" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.addTargetName,
+                  expression: "addTargetName"
+                }
+              ],
+              staticClass: "c-textbox--small",
+              attrs: { type: "text", placeholder: "例）@tanaka_taro123" },
+              domProps: { value: _vm.addTargetName },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.addTargetName = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "c-btn c-btn--primary",
+                on: { click: _vm.addTarget }
+              },
+              [_vm._v("追加")]
+            )
+          ]),
           _vm._v(" "),
           _c(
             "select",
@@ -80893,45 +80909,6 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("div", { staticClass: "c-justify-content-end" }, [
-            _c("label", { attrs: { for: "" } }, [
-              _vm._v("\n            追加するアカウント名：\n            "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.addTargetName,
-                    expression: "addTargetName"
-                  }
-                ],
-                attrs: {
-                  id: "email",
-                  type: "email",
-                  name: "email",
-                  autocomplete: "email",
-                  autofocus: ""
-                },
-                domProps: { value: _vm.addTargetName },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.addTargetName = $event.target.value
-                  }
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "c-btn c-btn--primary",
-                on: { click: _vm.addTarget }
-              },
-              [_vm._v("追加")]
-            ),
-            _vm._v(" "),
             _c(
               "button",
               {
@@ -80960,13 +80937,7 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
-              attrs: {
-                id: "",
-                type: "number",
-                name: "email",
-                autocomplete: "email",
-                autofocus: ""
-              },
+              attrs: { id: "", type: "number", name: "email" },
               domProps: { value: _vm.setting.days_unfollow_user },
               on: {
                 input: function($event) {
@@ -80987,7 +80958,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("span", {
-            staticClass: "invalid-feedback",
+            staticClass: "c-invalid-feedback",
             attrs: { role: "alert" }
           })
         ]),
@@ -81070,13 +81041,7 @@ var render = function() {
               }
             ],
             staticClass: "c-form-group__text form-control",
-            attrs: {
-              id: "email",
-              type: "text",
-              name: "email",
-              autocomplete: "email",
-              autofocus: ""
-            },
+            attrs: { type: "text" },
             domProps: { value: _vm.setting.keyword_favorite },
             on: {
               input: function($event) {
@@ -81089,7 +81054,7 @@ var render = function() {
           }),
           _vm._v(" "),
           _c("span", {
-            staticClass: "invalid-feedback",
+            staticClass: "c-invalid-feedback",
             attrs: { role: "alert" }
           })
         ])
@@ -81130,17 +81095,24 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "ul",
-    { staticClass: "p-monitor-list" },
-    _vm._l(_vm.accountStatuses, function(accountStatus) {
-      return _c("account-status", {
-        key: accountStatus.id,
-        attrs: { accounsStatus: accountStatus }
-      })
-    }),
-    1
-  )
+  return _c("div", [
+    _vm.existsAccount
+      ? _c(
+          "ul",
+          { staticClass: "p-monitor-list" },
+          _vm._l(_vm.accountStatuses, function(accountStatus) {
+            return _c("account-status", {
+              key: accountStatus.id,
+              attrs: { accounsStatus: accountStatus }
+            })
+          }),
+          1
+        )
+      : _c("span", { staticClass: "p-message-1" }, [
+          _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
+          _vm._v("自動化したいTwitterアカウントを追加してください")
+        ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -81222,35 +81194,42 @@ var render = function() {
       }
     }),
     _vm._v(" "),
-    _c("span", { staticClass: "p-tweet-form__count js-show-count" }, [
-      _vm._v("140/140字")
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "c-justify-content-between" }, [
-      _c(
-        "label",
-        { attrs: { for: "" } },
-        [
-          _vm._v("\n      投稿予定日時：\n      "),
-          _c("vue-ctkc-date-time-picker", {
-            attrs: {
-              "minute-interval": 1,
-              format: "YYYY-MM-DD HH:mm",
-              overlay: true,
-              "min-date": _vm.start
-            },
-            model: {
-              value: _vm.requestDate,
-              callback: function($$v) {
-                _vm.requestDate = $$v
+    _c(
+      "div",
+      { staticClass: "c-justify-content-between mb-2 c-align-item-start" },
+      [
+        _c(
+          "div",
+          { staticClass: "c-justify-content-start" },
+          [
+            _c("label", [_vm._v("投稿予定日時")]),
+            _vm._v(" "),
+            _c("vue-ctkc-date-time-picker", {
+              attrs: {
+                "minute-interval": 1,
+                format: "YYYY-MM-DD HH:mm",
+                overlay: true,
+                "min-date": _vm.start
               },
-              expression: "requestDate"
-            }
-          })
-        ],
-        1
-      ),
-      _vm._v(" "),
+              model: {
+                value: _vm.requestDate,
+                callback: function($$v) {
+                  _vm.requestDate = $$v
+                },
+                expression: "requestDate"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "p-tweet-form__count js-show-count" }, [
+          _vm._v("140/140字")
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "c-justify-content-end" }, [
       _c(
         "button",
         {
@@ -81284,49 +81263,52 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("div", { staticClass: "p-select-account" }, [
-        _c(
-          "label",
-          { staticClass: "p-select-account__label", attrs: { for: "" } },
-          [
-            _vm._v("\n      操作中のアカウント：\n      "),
-            _c("account-select-box", {
-              attrs: { accounts: _vm.accounts },
-              on: { changeAccount: _vm.onChangeAccount }
-            })
-          ],
-          1
-        )
-      ]),
-      _vm._v(" "),
-      _c("h2", { staticClass: "c-title" }, [_vm._v("自動ツイート予約")]),
-      _vm._v(" "),
-      _c("reserve-tweet-form", { on: { addedTweet: _vm.addTweetList } }),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "c-row" },
-        [
-          _c("h2", { staticClass: "c-title" }, [_vm._v("予約済みツイート")]),
-          _vm._v(" "),
-          _c("reserved-tweet-list", {
-            model: {
-              value: _vm.tweets,
-              callback: function($$v) {
-                _vm.tweets = $$v
-              },
-              expression: "tweets"
-            }
-          })
-        ],
-        1
-      )
-    ],
-    1
-  )
+  return _c("div", [
+    _c(
+      "section",
+      { staticClass: "p-section" },
+      [
+        _c("div", { staticClass: "p-select-account" }, [
+          _c(
+            "label",
+            { staticClass: "p-select-account__label", attrs: { for: "" } },
+            [
+              _vm._v("\n        操作中のアカウント：\n        "),
+              _c("account-select-box", {
+                attrs: { accounts: _vm.accounts },
+                on: { changeAccount: _vm.onChangeAccount }
+              })
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _c("h2", { staticClass: "c-title" }, [_vm._v("自動ツイート予約")]),
+        _vm._v(" "),
+        _c("reserve-tweet-form", { on: { addedTweet: _vm.addTweetList } })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "section",
+      { staticClass: "p-section" },
+      [
+        _c("h2", { staticClass: "c-title" }, [_vm._v("予約済みツイート")]),
+        _vm._v(" "),
+        _c("reserved-tweet-list", {
+          model: {
+            value: _vm.tweets,
+            callback: function($$v) {
+              _vm.tweets = $$v
+            },
+            expression: "tweets"
+          }
+        })
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -81356,12 +81338,12 @@ var render = function() {
     [
       !_vm.isEdit
         ? _c("div", [
-            _c("p", { staticClass: "p-reserve-history__str" }, [
+            _c("p", { staticClass: "p-reserve-history__content" }, [
               _vm._v(_vm._s(_vm.tweet.content))
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "c-justify-content-between" }, [
-              _c("span", { staticClass: "p-reserve-history__str" }, [
+              _c("span", { staticClass: "p-reserve-history__date" }, [
                 _vm._v("投稿予定日時：" + _vm._s(_vm.tweet.submit_date))
               ])
             ])
@@ -81370,6 +81352,7 @@ var render = function() {
       _vm._v(" "),
       _vm.isEdit
         ? _c("reserve-tweet-form", {
+            staticClass: "u-mb-2",
             attrs: { tweet: _vm.tweet },
             on: { addedTweet: _vm.onAddedTweet }
           })

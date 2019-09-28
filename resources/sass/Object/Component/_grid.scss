@@ -36,6 +36,10 @@
 .c-align-item-center {
   align-items: center !important;
 }
+
+.c-align-item-start {
+  align-items: start !important;
+}
 .c-gnav {
   &__item {
     margin-left: $space-l;
@@ -76,6 +80,14 @@
 .u-m-1 {
   margin: $space-xs;
 }
+
+.u-m-2 {
+  margin: $space-s;
+}
+
+.u-ml-2 {
+  margin-left: $space-s;
+}
 .u-mr-2 {
   margin-right: $space-s;
 }
@@ -84,6 +96,9 @@
 }
 .u-mb-3 {
   margin-bottom: $space-l;
+}
+.u-mb-2 {
+  margin-bottom: $space-m;
 }
 .u-w-70 {
   @include mq("md") {
@@ -122,7 +137,6 @@
       width: 100%;
       margin-bottom: $space-s;
       @include mq("md") {
-        width: 25%;
         margin-bottom: 0;
       }
     }
@@ -138,12 +152,24 @@
     &__select-multi {
       width: 100%;
       box-sizing: border-box;
+      padding: $space-xs $space-s;
+      font-size: 1.4rem;
       @include mq("md") {
         width: 100%;
       }
       height: 100px;
     }
   }
+}
+.p-message{
+  &-1{
+    margin-bottom: $space-3l;
+    display: inline-block;
+  }
+}
+.c-textbox--small{
+  padding: $space-xs;
+  font-size: 1.4rem;
 }
 .c-invalid-feedback {
   display: inline-block;
@@ -152,6 +178,7 @@
 }
 .c-side-menu {
   &__title {
+    font-size: 1.6rem;
     margin-bottom: $space-l;
   }
   &__list {
@@ -161,6 +188,12 @@
 }
 .c-row {
   width: 100%;
+}
+.u-d-block{
+  display: block;
+}
+.p-section{
+  margin-bottom: $space-3l;
 }
 .p-monitor-list {
   &__account-info {
@@ -237,10 +270,15 @@
     width: 100%;
     height: $font-size-base * 10;
     margin-bottom: $space-m;
+    padding: $space-m;
+    box-sizing: border-box;
+    font-size: 1.6rem;
+    line-height: 1.2;
+    letter-spacing: .1rem;
+    
   }
   &__count {
     display: inline-block;
-    width: 100%;
     text-align: right;
     margin-bottom: $space-m;
   }
@@ -254,8 +292,13 @@
   -moz-box-shadow: 3px 3px 0px 0px rgba(189, 189, 189, 1);
   box-shadow: 3px 3px 0px 0px rgba(189, 189, 189, 1);
   margin-bottom: $space-m;
-  &__str {
-    margin-bottom: $space-m;
+  white-space:pre-line; 
+  &__content {
+    margin-bottom: $space-s;
+  }
+  &__date{
+    margin-bottom: $space-s;
+    font-size: 1.2rem;
   }
 }
 .p-select-account {

@@ -15,7 +15,7 @@
                         class="c-form-group__text form-control @error('email') is-invalid @enderror" name="email"
                         value="{{ old('email') }}" required autocomplete="email" autofocus>
                     @error('email')
-                    <span class="invalid-feedback" role="alert">
+                    <span class="c-invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                     @enderror
@@ -29,7 +29,7 @@
                         required autocomplete="current-password">
 
                     @error('password')
-                    <span class="invalid-feedback" role="alert">
+                    <span class="c-invalid-feedback" role="alert">
                         <strong>{{ $message }}</strong>
                     </span>
                     @enderror
@@ -48,17 +48,17 @@
                     </div>
                 </div>
 
-                <div class="c-justify-content-between">
-                    @if (Route::has('password.request'))
-                    <a class="" href="{{ route('password.request') }}">
-                        パスワードを忘れた場合はこちら
-                    </a>
-                    @endif
+                <div class="u-mb-2 c-justify-content-end">
 
                     <button type="submit" class="c-btn">
                         ログイン
                     </button>
                 </div>
+                @if (Route::has('password.request'))
+                <a class="u-d-block" href="{{ route('password.request') }}">
+                    パスワードを忘れた場合はこちら
+                </a>
+                @endif
             </div>
         </div>
     </div>
