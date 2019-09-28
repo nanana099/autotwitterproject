@@ -16,7 +16,7 @@ class TwitterAccount
 
     public function __construct(string $access_token)
     {
-        $access_token_ary = json_decode($access_token);
+        $access_token_ary = json_decode($access_token, true);
 
         $this->user_id = $access_token_ary['user_id'];
         $this->screen_name = $access_token_ary['screen_name'];
@@ -68,6 +68,13 @@ class TwitterAccount
     }
     public function getMyAccountInfo()
     {
+        $result = get_object_vars($this->twitter->get(
+            "users/show",
+            array(
+                'user_id' => $this->user_id,
+            )
+        ));
+        return $result;
     }
     public function getAccountInfo(string $screen_name)
     {

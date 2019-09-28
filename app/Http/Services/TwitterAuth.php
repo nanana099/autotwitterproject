@@ -27,7 +27,7 @@ class TwitterAuth
      */
     private static function getCallbackUrl()
     {
-        return env('TWITTER_OAUTH_CALLBACK_URL');
+        return 'http://127.0.0.1:8000/account/callback';
     }
 
     /**
@@ -41,7 +41,9 @@ class TwitterAuth
 
         $twitter = new TwitterOAuth(self::getApiKey(), self::getApiSecretKey());
         //リクエストトークン取得
-        $request_token = $twitter->oauth('oauth/request_token', array('oauth_callback' => self::getCallbackUrl()));
+        $callbackUrl = 'http://127.0.0.1:8001/account/callback';
+        $request_token = $twitter->oauth('oauth/request_token', array('oauth_callback' => $callbackUrl));
+        // $request_token = $twitter->oauth('oauth/request_token', array('oauth_callback' => self::getCallbackUrl()));
             
         
         //認証用URL取得
@@ -64,7 +66,6 @@ class TwitterAuth
 
             $oauth_token = Request::get('oauth_token');
             $oauth_verifier = Request::get('oauth_verifier');
-
             //インスタンス生成
             $twitter = new TwitterOAuth(
                 static::getApiKey(),

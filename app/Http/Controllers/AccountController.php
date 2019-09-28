@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Services\TwitterAuth;
+use App\Http\Services\TwitterAccount;
 use App\User;
 use App\Account;
 use App\AccountSetting;
@@ -27,17 +28,25 @@ class AccountController extends Controller
     {
         $accessToken = TwitterAuth::getAccessToken();
         $account_id = $accessToken['user_id'];
-
         $account = Account::find($account_id);
 
         if (!empty($account) && $account['user_id'] !== Auth::id()) {
             // すでにTwitterアカウントが他のユーザーによって登録済みの場合は不可
             return redirect()->route('mypage.account')->with('flash_message_error', 'Twitterアカウントが他のユーザにより登録済みのため、登録できませんでした。');
         } else {
-            $accessTokenStr = json_encode(TwitterAuth::getAccessToken());
+            $accessTokenStr = json_encode($accessToken);
+
+            // アカウントのアイコン画像のURLが欲しいので、TwitterAPIを呼び出す
+            $account = new TwitterAccount($accessTokenStr);
+            $accountInfo = $account->getMyAccountInfo();
+            logger($accountInfo);
+            $screen_name = $accountInfo['screen_name'];
+            $image_url = $accountInfo['profile_image_url_https'];
+        
             // mytodo: アクセストークン暗号化
-            Account::updateOrCreate(['id' => $account_id], ['access_token' => $accessTokenStr,'user_id' => Auth::id()]);
-            AccountSetting::updateOrCreate(['account_id' => $account_id]);
+            // DBへアカウント情報を格納
+            Account::updateOrCreate(['id' => $account_id], ['access_token' => $accessTokenStr,'user_id' => Auth::id(),'screen_name' => $screen_name, 'image_url' => $image_url]);
+            AccountSetting::updateOrCreate(['account_id' => $account_id,'target_accounts' => '']);
 
             return redirect()->route('mypage.account')->with('flash_message_success', 'Twitterアカウントの登録に成功しました。');
         }
@@ -93,7 +102,7 @@ class AccountController extends Controller
     {
         $account_id = $request['account_id'] ;
         logger(Auth::user()->accounts()->find($account_id));
-        $tweets = Auth::user()->accounts()->find($account_id)->reservedTweets()->orderBy('submit_date','desc')->get();
+        $tweets = Auth::user()->accounts()->find($account_id)->reservedTweets()->orderBy('submit_date', 'desc')->get();
         return response()->json($tweets);
     }
     public function postTweet(Request $request)
