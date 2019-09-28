@@ -14,6 +14,12 @@ class Account extends Model
         return $this->belongsTo('App\User');
     }
 
+    public function operationStatus()
+    {
+        return $this->hasOne('App\OperationStatus');
+    }
+
+
     public function accountSetting()
     {
         return $this->hasOne('App\AccountSetting');

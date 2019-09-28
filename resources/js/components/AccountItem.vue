@@ -1,7 +1,7 @@
 <template>
   <li class="p-monitor-list__item">
     <div class="p-monitor-list__account-info">
-      <img :src="account.profile_image_url_https" alt="アカウントアイコン" class="p-monitor-list__img" />
+      <img :src="account.image_url" alt="アカウントアイコン" class="p-monitor-list__img" />
       <span class="p-monito-list__user-name">{{account.screen_name}}</span>
     </div>
     <div class="p-monitor-list__buttons">

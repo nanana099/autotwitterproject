@@ -20,6 +20,7 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('account-list', require('./components/AccountList.vue').default);
+Vue.component('account-status-list', require('./components/AccountStatusList.vue').default);
 Vue.component('account-setting-screen', require('./components/AccountSettingScreen.vue').default);
 Vue.component('reserve-tweet--screen', require('./components/ReserveTweetScreen.vue').default);
 
