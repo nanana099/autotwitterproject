@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return view('mypage.monitor');
+    return view('home');
 });
 
 Auth::routes();
