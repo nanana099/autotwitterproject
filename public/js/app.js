@@ -1942,6 +1942,51 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountAddButton.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountAddButton.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      msg: ""
+    };
+  },
+  methods: {
+    addAccount: function addAccount() {
+      var _this = this;
+
+      // １ユーザーが登録できるTwitterアカウントの最大数
+      var MAX_ACCOUNT_NUM = 10;
+      axios.get("/account/count").then(function (res) {
+        if (res.data >= MAX_ACCOUNT_NUM) {
+          _this.msg = "アカウントをこれ以上追加できません";
+        } else {
+          document.location = "/account/add";
+        }
+      })["catch"](function (error) {
+        _this.msg = "正常に処理できませんでした。しばらく経ってからもう一度お試しください。";
+      });
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountItem.vue?vue&type=script&lang=js&":
 /*!**********************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountItem.vue?vue&type=script&lang=js& ***!
@@ -2390,6 +2435,15 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccounsStatus__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccounsStatus */ "./resources/js/components/AccounsStatus.vue");
+/* harmony import */ var _AccountAddButton__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AccountAddButton */ "./resources/js/components/AccountAddButton.vue");
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2404,9 +2458,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    "account-status": _AccounsStatus__WEBPACK_IMPORTED_MODULE_0__["default"]
+    "account-status": _AccounsStatus__WEBPACK_IMPORTED_MODULE_0__["default"],
+    "account-add-button": _AccountAddButton__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
     return {
@@ -2416,6 +2472,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
+    // ログイン中のユーザーに紐づくTwitterアカウントを全件取得する
     axios.get("/account/status").then(function (res) {
       _this.accountStatuses = res.data;
     })["catch"](function (error) {});
@@ -80597,6 +80654,41 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountAddButton.vue?vue&type=template&id=4204321e&":
+/*!*******************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountAddButton.vue?vue&type=template&id=4204321e& ***!
+  \*******************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "button",
+      { staticClass: "c-btn c-btn--primary", on: { click: _vm.addAccount } },
+      [
+        _c("i", { staticClass: "fas fa-user-plus" }),
+        _vm._v("アカウント追加\n  ")
+      ]
+    ),
+    _vm._v(" "),
+    _c("span", { staticClass: "c-invalid-feedback" }, [_vm._v(_vm._s(_vm.msg))])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountItem.vue?vue&type=template&id=5f5625c5&":
 /*!**************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/AccountItem.vue?vue&type=template&id=5f5625c5& ***!
@@ -81096,22 +81188,33 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm.existsAccount
-      ? _c(
-          "ul",
-          { staticClass: "p-monitor-list" },
-          _vm._l(_vm.accountStatuses, function(accountStatus) {
-            return _c("account-status", {
-              key: accountStatus.id,
-              attrs: { accounsStatus: accountStatus }
-            })
-          }),
-          1
-        )
-      : _c("span", { staticClass: "p-message-1" }, [
-          _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
-          _vm._v("自動化したいTwitterアカウントを追加してください")
-        ])
+    _c("h2", { staticClass: "c-title" }, [_vm._v("稼働状況")]),
+    _vm._v(" "),
+    _c("section", { staticClass: "p-section" }, [
+      _vm.existsAccount
+        ? _c(
+            "ul",
+            { staticClass: "p-monitor-list" },
+            _vm._l(_vm.accountStatuses, function(accountStatus) {
+              return _c("account-status", {
+                key: accountStatus.id,
+                attrs: { accounsStatus: accountStatus }
+              })
+            }),
+            1
+          )
+        : _c("span", { staticClass: "p-message-1" }, [
+            _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
+            _vm._v("自動化したいTwitterアカウントを追加してください\n    ")
+          ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "c-justify-content-start" },
+        [_c("account-add-button")],
+        1
+      )
+    ])
   ])
 }
 var staticRenderFns = []
@@ -93746,6 +93849,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccounsStatus_vue_vue_type_template_id_240241e3___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccounsStatus_vue_vue_type_template_id_240241e3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountAddButton.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/AccountAddButton.vue ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _AccountAddButton_vue_vue_type_template_id_4204321e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountAddButton.vue?vue&type=template&id=4204321e& */ "./resources/js/components/AccountAddButton.vue?vue&type=template&id=4204321e&");
+/* harmony import */ var _AccountAddButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AccountAddButton.vue?vue&type=script&lang=js& */ "./resources/js/components/AccountAddButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _AccountAddButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _AccountAddButton_vue_vue_type_template_id_4204321e___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _AccountAddButton_vue_vue_type_template_id_4204321e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/AccountAddButton.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountAddButton.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/AccountAddButton.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountAddButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./AccountAddButton.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountAddButton.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountAddButton_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/AccountAddButton.vue?vue&type=template&id=4204321e&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/AccountAddButton.vue?vue&type=template&id=4204321e& ***!
+  \*************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountAddButton_vue_vue_type_template_id_4204321e___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./AccountAddButton.vue?vue&type=template&id=4204321e& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/AccountAddButton.vue?vue&type=template&id=4204321e&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountAddButton_vue_vue_type_template_id_4204321e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_AccountAddButton_vue_vue_type_template_id_4204321e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

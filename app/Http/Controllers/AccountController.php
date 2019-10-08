@@ -24,6 +24,11 @@ class AccountController extends Controller
         }
     }
 
+    public function count()
+    {
+        return response()->json(Auth::user()->accounts()->count());
+    }
+
     public function callback()
     {
         $accessToken = TwitterAuth::getAccessToken();
