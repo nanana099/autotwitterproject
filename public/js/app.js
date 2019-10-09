@@ -2061,7 +2061,7 @@ __webpack_require__.r(__webpack_exports__);
     onDeleteAccount: function onDeleteAccount(account) {
       var _this = this;
 
-      if (!window.confirm("アカウントを削除しますか？")) {
+      if (!window.confirm("神ったーから、アカウント情報を全て削除します。\n一度削除すると、復元ができません。\nアカウントを削除しますか？")) {
         return;
       }
 

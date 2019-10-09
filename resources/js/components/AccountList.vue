@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     onDeleteAccount: function(account) {
-      if (!window.confirm("アカウントを削除しますか？")) {
+      if (!window.confirm("神ったーから、アカウント情報を全て削除します。\n一度削除すると、復元ができません。\nアカウントを削除しますか？")) {
         return;
       }
       axios
