@@ -80,19 +80,6 @@ export default {
       });
     }
   },
-  computed: {
-    start() {
-      // min-date に明日の9時を指定
-      const start = moment();
-      return start.format("YYYY-MM-DDTHH:mm:ss");
-    },
-    end() {
-      // max-date に min-date から3ヶ月後を指定
-      const start = moment(this.start);
-      const end = start.add(3, "months").endOf("day");
-      return end.format("YYYY-MM-DDTHH:mm:ss");
-    }
-  },
   created: function() {
     axios
       .get("/account/get", {})

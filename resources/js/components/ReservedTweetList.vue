@@ -32,6 +32,9 @@ export default {
   },
   methods: {
     deleteTweet: function(tweet) {
+      if (!window.confirm("ツイートの予約を削除しますか？")) {
+        return;
+      }
       axios
         .delete("/account/tweet", {
           params: {

@@ -1,18 +1,15 @@
 <template>
   <div>
-    <textarea v-model="content" id class="p-tweet-form__textarea" />
+    <textarea v-model="content" id class="p-tweet-form__textarea" placeholder="つぶやき内容" />
     <div class="c-justify-content-between mb-2 c-align-item-start">
       <div class="c-justify-content-start">
-        <label>投稿予定日時</label>
-        <vue-ctkc-date-time-picker
-          v-model="requestDate"
-          :minute-interval="1"
-          :format="'YYYY-MM-DD HH:mm'"
-          :overlay="true"
-          :min-date="start"
-        ></vue-ctkc-date-time-picker>
+        <label>投稿予定日時：</label>
+        <input type="datetime-local" v-model="requestDate" :min="start" :max="end" />
+        <span class="c-invalid-feedback">{{msg}}</span>
       </div>
-      <span class="p-tweet-form__count js-show-count">140/140字</span>
+      <span class="p-tweet-form__count">
+        <span :class="{'c-invalid-feedback':isOverContent}">{{count}}/140字</span>
+      </span>
     </div>
     <div class="c-justify-content-end">
       <button class="c-btn c-btn--primary c-btn--large" @click="reserveTweet">予約</button>
@@ -22,29 +19,28 @@
 
 <script>
 import moment from "moment";
-import VueCtkDateTimePicker from "vue-ctk-date-time-picker";
-import "vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css";
 
 export default {
-  components: {
-    "vue-ctkc-date-time-picker": VueCtkDateTimePicker
-  },
   data: function() {
     return {
       content: "",
       requestDate: "",
-      id: ""
+      id: "",
+      msg: ""
     };
   },
   mounted: function() {
     if (this.tweet) {
       this.content = this.tweet.content;
-      this.requestDate = this.tweet.submit_date;
+      this.requestDate = moment(this.tweet.submit_date).format(
+        "YYYY-MM-DDTHH:mm"
+      );
       this.id = this.tweet.id;
     }
   },
   methods: {
     reserveTweet: function() {
+      if (!this.validTweet()) return;
       axios
         .post("/account/tweet", {
           content: this.content,
@@ -54,7 +50,7 @@ export default {
         })
         .then(res => {
           let content = this.content;
-          let submit_date = this.requestDate;
+          let submit_date = moment(this.requestDate).format("YYYY-MM-DD HH:mm");
 
           this.content = "";
           this.requestDate = "";
@@ -67,22 +63,39 @@ export default {
         .catch(error => {
           this.isError = true;
         });
+    },
+    validTweet: function() {
+      if (this.content.length === 0 && this.content.length > 140) {
+        return false;
+      }
+      if (this.requestDate === "") {
+        this.msg = "日時の入力は必須です";
+        return false;
+      }
+      this.msg = "";
+
+      return true;
     }
   },
   computed: {
-    start() {
+    start: function() {
       // min-date に明日の9時を指定
       const start = moment();
-      return start.format("YYYY-MM-DDTHH:mm:ss");
+      return start.format("YYYY-MM-DDTHH:mm");
     },
-    end() {
+    end: function() {
       // max-date に min-date から3ヶ月後を指定
       const start = moment(this.start);
-      const end = start.add(3, "months").endOf("day");
-      return end.format("YYYY-MM-DDTHH:mm:ss");
+      const end = start.add(1, "years").endOf("day");
+      return end.format("YYYY-MM-DDTHH:mm");
+    },
+    count: function() {
+      return this.content.length;
+    },
+    isOverContent: function() {
+      return this.content.length > 140;
     }
   },
-  created: function() {},
   props: ["tweet"]
 };
 </script>

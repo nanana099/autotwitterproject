@@ -473,7 +473,6 @@ body {
 .c-invalid-feedback {
   display: inline-block;
   color: #dc4834;
-  margin-top: 5px;
 }
 
 .c-side-menu__title {
@@ -615,6 +614,7 @@ body {
 
 .p-reserve-history__content {
   margin-bottom: 10px;
+  word-break: break-all;
 }
 
 .p-reserve-history__date {
