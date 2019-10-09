@@ -24,12 +24,6 @@ export default {
     this.tweets = this.value;
   },
   created: function() {},
-  watch: {
-    value() {
-      this.choice = this.value.choice;
-      this.text = this.value.text;
-    }
-  },
   methods: {
     deleteTweet: function(tweet) {
       if (!window.confirm("ツイートの予約を削除しますか？")) {

@@ -17,46 +17,27 @@
         </div>
         <div class="c-form-group">
           <label for="email" class="c-form-group__label">・ターゲットアカウント</label>
-          <div class="u-m-2">
-            <input
-              type="text"
-              class="c-textbox--small"
-              v-model="addTargetName"
-              placeholder="例）@tanaka_taro123"
-            />
-            <button class="c-btn c-btn--primary" @click="addTarget">追加</button>
-          </div>
-          <select
-            id="list2"
-            name="list2"
-            size="5"
-            class="c-form-group__select-multi u-mb-3"
-            v-model="selectedAccount"
-            multiple
-          >
-            <option v-for="target in targetAccounts" :value="target" :key="target">{{target}}</option>
-          </select>
-          <div class="c-justify-content-end">
-            <button class="c-btn c-btn--danger" @click="deleteTarget">削除</button>
-          </div>
+          <string-list-manager v-model="targetAccounts"></string-list-manager>
         </div>
       </fieldset>
       <fieldset class="c-form-fieldset">
         <legend>自動アンフォロー関連</legend>
         <div class="c-form-group">
-          <label for="email" class>
-            ・フォローしてから
-            <input
-              id
-              type="number"
-              class="form-control"
-              name="email"
-              v-model="setting.days_unfollow_user"
-            />
-            日間、フォローが無かったらアンフォローする
-          </label>
-
-          <span class="c-invalid-feedback" role="alert"></span>
+          <div>
+            <label for class>
+              ・フォローしてから
+              <input
+                id
+                type="number"
+                class="form-control"
+                v-model.number="setting.days_unfollow_user"
+                min="1"
+                max="999"
+              />
+              日間、フォローが返って来ない場合にアンフォローする
+            </label>
+          </div>
+          <span class="c-invalid-feedback" role="alert">{{msgDaysUnfollowUser}}</span>
         </div>
 
         <div class="c-form-group">
@@ -68,7 +49,7 @@
               id="unfollow-inactive"
               v-model="setting.bool_unfollow_inactive"
             />
-            非アクティブのユーザーのフォローを外す
+            15日間投稿の無いユーザーをアンフォローする
           </label>
         </div>
       </fieldset>
@@ -166,9 +147,11 @@
 
 <script>
 import AccountSelectBox from "./AccountSelectBox";
+import StringListManager from "./StringListManager";
 export default {
   components: {
-    "account-select-box": AccountSelectBox
+    "account-select-box": AccountSelectBox,
+    "string-list-manager": StringListManager
   },
   data: function() {
     return {
@@ -176,7 +159,9 @@ export default {
       setting: {},
       targetAccounts: [],
       addTargetName: "",
-      selectedAccount: []
+      selectedAccount: [],
+      msgAddTarget: "",
+      msgDaysUnfollowUser: ""
     };
   },
   methods: {
@@ -189,14 +174,24 @@ export default {
         })
         .then(res => {
           this.setting = res.data[0];
-          if (res.data[0].target_accounts !== "")
-            this.targetAccounts = res.data[0].target_accounts.split(",");
+          this.targetAccounts = res.data[0].target_accounts.split(",");
         })
         .catch(error => {
           this.isError = true;
         });
     },
     saveSetting: function() {
+      if (
+        this.setting.days_unfollow_user === 0 ||
+        this.setting.days_unfollow_user > 999
+      ) {
+        this.msgDaysUnfollowUser = "1~999を入力してください";
+      } else {
+        this.msgDaysUnfollowUser = "";
+      }
+      if (this.msgDaysUnfollowUser !== "") {
+        return;
+      }
       axios
         .post("/account/setting", {
           account_setting_id: this.setting.id,
@@ -220,6 +215,12 @@ export default {
       if (this.addTargetName === "") {
         return;
       }
+      if (this.addTargetName.match(",")) {
+        this.msgAddTarget = "','を含むことはできません";
+        return;
+      }
+      this.msgAddTarget = "";
+
       if (!this.targetAccounts.some(x => x === this.addTargetName)) {
         this.targetAccounts.push(this.addTargetName);
         this.addTargetName = "";

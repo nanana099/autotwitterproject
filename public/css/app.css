@@ -467,6 +467,7 @@ body {
 
 .c-textbox--small {
   padding: 5px;
+  width: 40%;
   font-size: 1.4rem;
 }
 

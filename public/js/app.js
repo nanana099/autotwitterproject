@@ -2154,25 +2154,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var _StringListManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StringListManager */ "./resources/js/components/StringListManager.vue");
 //
 //
 //
@@ -2321,9 +2303,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    "account-select-box": _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__["default"]
+    "account-select-box": _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__["default"],
+    "string-list-manager": _StringListManager__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
     return {
@@ -2331,7 +2315,9 @@ __webpack_require__.r(__webpack_exports__);
       setting: {},
       targetAccounts: [],
       addTargetName: "",
-      selectedAccount: []
+      selectedAccount: [],
+      msgAddTarget: "",
+      msgDaysUnfollowUser: ""
     };
   },
   methods: {
@@ -2344,12 +2330,22 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (res) {
         _this.setting = res.data[0];
-        if (res.data[0].target_accounts !== "") _this.targetAccounts = res.data[0].target_accounts.split(",");
+        _this.targetAccounts = res.data[0].target_accounts.split(",");
       })["catch"](function (error) {
         _this.isError = true;
       });
     },
     saveSetting: function saveSetting() {
+      if (this.setting.days_unfollow_user === 0 || this.setting.days_unfollow_user > 999) {
+        this.msgDaysUnfollowUser = "1~999を入力してください";
+      } else {
+        this.msgDaysUnfollowUser = "";
+      }
+
+      if (this.msgDaysUnfollowUser !== "") {
+        return;
+      }
+
       axios.post("/account/setting", {
         account_setting_id: this.setting.id,
         keyword_follow: this.setting.keyword_follow,
@@ -2372,6 +2368,13 @@ __webpack_require__.r(__webpack_exports__);
       if (this.addTargetName === "") {
         return;
       }
+
+      if (this.addTargetName.match(",")) {
+        this.msgAddTarget = "','を含むことはできません";
+        return;
+      }
+
+      this.msgAddTarget = "";
 
       if (!this.targetAccounts.some(function (x) {
         return x === _this2.addTargetName;
@@ -2832,12 +2835,6 @@ __webpack_require__.r(__webpack_exports__);
     this.tweets = this.value;
   },
   created: function created() {},
-  watch: {
-    value: function value() {
-      this.choice = this.value.choice;
-      this.text = this.value.text;
-    }
-  },
   methods: {
     deleteTweet: function deleteTweet(tweet) {
       var _this = this;
@@ -2862,6 +2859,90 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   props: ["value"]
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/StringListManager.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/StringListManager.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      ary: [],
+      // セレクトボックス内の文字列の配列
+      addStr: "",
+      // 追加用テキストボックス内の文字列
+      selectedStr: [],
+      // セレクトボックスで選択中要素の配列
+      msg: ""
+    };
+  },
+  props: ["value"],
+  // 参照元からセレクトボックスに表示する配列を受け取る
+  watch: {
+    value: function value() {
+      this.ary = this.value;
+    }
+  },
+  methods: {
+    // 配列に要素を追加
+    addTarget: function addTarget() {
+      var _this = this;
+
+      if (this.addStr === "") {
+        return;
+      }
+
+      if (this.addStr.match(",")) {
+        this.msg = "','を含むことはできません";
+        return;
+      }
+
+      this.msg = "";
+
+      if (!this.ary.some(function (x) {
+        return x === _this.addStr;
+      })) {
+        this.ary.push(this.addStr);
+        this.addStr = "";
+      }
+    },
+    // 配列から要素を削除
+    deleteTarget: function deleteTarget() {
+      var _this2 = this;
+
+      this.selectedStr.forEach(function (deleteItem) {
+        _this2.ary.forEach(function (item, index) {
+          if (item === deleteItem) {
+            _this2.ary.splice(index, 1);
+          }
+        });
+      });
+    }
+  }
 });
 
 /***/ }),
@@ -56123,138 +56204,77 @@ var render = function() {
           })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "c-form-group" }, [
-          _c(
-            "label",
-            { staticClass: "c-form-group__label", attrs: { for: "email" } },
-            [_vm._v("・ターゲットアカウント")]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "u-m-2" }, [
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.addTargetName,
-                  expression: "addTargetName"
-                }
-              ],
-              staticClass: "c-textbox--small",
-              attrs: { type: "text", placeholder: "例）@tanaka_taro123" },
-              domProps: { value: _vm.addTargetName },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.addTargetName = $event.target.value
-                }
-              }
-            }),
+        _c(
+          "div",
+          { staticClass: "c-form-group" },
+          [
+            _c(
+              "label",
+              { staticClass: "c-form-group__label", attrs: { for: "email" } },
+              [_vm._v("・ターゲットアカウント")]
+            ),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "c-btn c-btn--primary",
-                on: { click: _vm.addTarget }
-              },
-              [_vm._v("追加")]
-            )
-          ]),
-          _vm._v(" "),
-          _c(
-            "select",
-            {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.selectedAccount,
-                  expression: "selectedAccount"
-                }
-              ],
-              staticClass: "c-form-group__select-multi u-mb-3",
-              attrs: { id: "list2", name: "list2", size: "5", multiple: "" },
-              on: {
-                change: function($event) {
-                  var $$selectedVal = Array.prototype.filter
-                    .call($event.target.options, function(o) {
-                      return o.selected
-                    })
-                    .map(function(o) {
-                      var val = "_value" in o ? o._value : o.value
-                      return val
-                    })
-                  _vm.selectedAccount = $event.target.multiple
-                    ? $$selectedVal
-                    : $$selectedVal[0]
-                }
+            _c("string-list-manager", {
+              model: {
+                value: _vm.targetAccounts,
+                callback: function($$v) {
+                  _vm.targetAccounts = $$v
+                },
+                expression: "targetAccounts"
               }
-            },
-            _vm._l(_vm.targetAccounts, function(target) {
-              return _c(
-                "option",
-                { key: target, domProps: { value: target } },
-                [_vm._v(_vm._s(target))]
-              )
-            }),
-            0
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "c-justify-content-end" }, [
-            _c(
-              "button",
-              {
-                staticClass: "c-btn c-btn--danger",
-                on: { click: _vm.deleteTarget }
-              },
-              [_vm._v("削除")]
-            )
-          ])
-        ])
+            })
+          ],
+          1
+        )
       ]),
       _vm._v(" "),
       _c("fieldset", { staticClass: "c-form-fieldset" }, [
         _c("legend", [_vm._v("自動アンフォロー関連")]),
         _vm._v(" "),
         _c("div", { staticClass: "c-form-group" }, [
-          _c("label", { attrs: { for: "email" } }, [
-            _vm._v("\n          ・フォローしてから\n          "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.setting.days_unfollow_user,
-                  expression: "setting.days_unfollow_user"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { id: "", type: "number", name: "email" },
-              domProps: { value: _vm.setting.days_unfollow_user },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+          _c("div", [
+            _c("label", { attrs: { for: "" } }, [
+              _vm._v("\n            ・フォローしてから\n            "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.number",
+                    value: _vm.setting.days_unfollow_user,
+                    expression: "setting.days_unfollow_user",
+                    modifiers: { number: true }
                   }
-                  _vm.$set(
-                    _vm.setting,
-                    "days_unfollow_user",
-                    $event.target.value
-                  )
+                ],
+                staticClass: "form-control",
+                attrs: { id: "", type: "number", min: "1", max: "999" },
+                domProps: { value: _vm.setting.days_unfollow_user },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.setting,
+                      "days_unfollow_user",
+                      _vm._n($event.target.value)
+                    )
+                  },
+                  blur: function($event) {
+                    return _vm.$forceUpdate()
+                  }
                 }
-              }
-            }),
-            _vm._v(
-              "\n          日間、フォローが無かったらアンフォローする\n        "
-            )
+              }),
+              _vm._v(
+                "\n            日間、フォローが返って来ない場合にアンフォローする\n          "
+              )
+            ])
           ]),
           _vm._v(" "),
-          _c("span", {
-            staticClass: "c-invalid-feedback",
-            attrs: { role: "alert" }
-          })
+          _c(
+            "span",
+            { staticClass: "c-invalid-feedback", attrs: { role: "alert" } },
+            [_vm._v(_vm._s(_vm.msgDaysUnfollowUser))]
+          )
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "c-form-group" }, [
@@ -56309,7 +56329,7 @@ var render = function() {
               }
             }),
             _vm._v(
-              "\n          非アクティブのユーザーのフォローを外す\n        "
+              "\n          15日間投稿の無いユーザーをアンフォローする\n        "
             )
           ])
         ])
@@ -56750,6 +56770,109 @@ var render = function() {
     }),
     1
   )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/StringListManager.vue?vue&type=template&id=7a2a5a83&":
+/*!********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/StringListManager.vue?vue&type=template&id=7a2a5a83& ***!
+  \********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "u-m-2" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.addStr,
+            expression: "addStr"
+          }
+        ],
+        staticClass: "c-textbox--small",
+        attrs: { type: "text", placeholder: "" },
+        domProps: { value: _vm.addStr },
+        on: {
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.addStr = $event.target.value
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "c-btn c-btn--primary", on: { click: _vm.addTarget } },
+        [_vm._v("追加")]
+      ),
+      _vm._v(" "),
+      _c("span", { staticClass: "c-invalid-feedback" }, [
+        _vm._v(_vm._s(_vm.msg))
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "select",
+      {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.selectedStr,
+            expression: "selectedStr"
+          }
+        ],
+        staticClass: "c-form-group__select-multi u-mb-3",
+        attrs: { size: "5", multiple: "" },
+        on: {
+          change: function($event) {
+            var $$selectedVal = Array.prototype.filter
+              .call($event.target.options, function(o) {
+                return o.selected
+              })
+              .map(function(o) {
+                var val = "_value" in o ? o._value : o.value
+                return val
+              })
+            _vm.selectedStr = $event.target.multiple
+              ? $$selectedVal
+              : $$selectedVal[0]
+          }
+        }
+      },
+      _vm._l(_vm.ary, function(target) {
+        return _c("option", { key: target, domProps: { value: target } }, [
+          _vm._v(_vm._s(target))
+        ])
+      }),
+      0
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "c-justify-content-end" }, [
+      _c(
+        "button",
+        { staticClass: "c-btn c-btn--danger", on: { click: _vm.deleteTarget } },
+        [_vm._v("削除")]
+      )
+    ])
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -69816,6 +69939,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservedTweetList_vue_vue_type_template_id_40fea3e8___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservedTweetList_vue_vue_type_template_id_40fea3e8___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/StringListManager.vue":
+/*!*******************************************************!*\
+  !*** ./resources/js/components/StringListManager.vue ***!
+  \*******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _StringListManager_vue_vue_type_template_id_7a2a5a83___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./StringListManager.vue?vue&type=template&id=7a2a5a83& */ "./resources/js/components/StringListManager.vue?vue&type=template&id=7a2a5a83&");
+/* harmony import */ var _StringListManager_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StringListManager.vue?vue&type=script&lang=js& */ "./resources/js/components/StringListManager.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _StringListManager_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _StringListManager_vue_vue_type_template_id_7a2a5a83___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _StringListManager_vue_vue_type_template_id_7a2a5a83___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/StringListManager.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/StringListManager.vue?vue&type=script&lang=js&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/StringListManager.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_StringListManager_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./StringListManager.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/StringListManager.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_StringListManager_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/StringListManager.vue?vue&type=template&id=7a2a5a83&":
+/*!**************************************************************************************!*\
+  !*** ./resources/js/components/StringListManager.vue?vue&type=template&id=7a2a5a83& ***!
+  \**************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_StringListManager_vue_vue_type_template_id_7a2a5a83___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./StringListManager.vue?vue&type=template&id=7a2a5a83& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/StringListManager.vue?vue&type=template&id=7a2a5a83&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_StringListManager_vue_vue_type_template_id_7a2a5a83___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_StringListManager_vue_vue_type_template_id_7a2a5a83___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
