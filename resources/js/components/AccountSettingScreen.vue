@@ -166,9 +166,22 @@ export default {
         })
         .then(res => {
           this.setting = res.data[0];
-          this.targetAccountArray = res.data[0].target_accounts.split(",");
-          this.followKeywordArray = res.data[0].keyword_follow.split(",");
-          this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
+
+          if (res.data[0].target_accounts !== "") {
+            this.targetAccountArray = res.data[0].target_accounts.split(",");
+          } else {
+            this.targetAccountArray = [];
+          }
+          if (res.data[0].keyword_follow !== "") {
+            this.followKeywordArray = res.data[0].keyword_follow.split(",");
+          } else {
+            this.followKeywordArray = [];
+          }
+          if (res.data[0].keyword_favorite !== "") {
+            this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
+          } else {
+            this.favoriteKeywordArray = [];
+          }
         })
         .catch(error => {
           this.isError = true;
@@ -224,9 +237,24 @@ export default {
           })
           .then(res => {
             this.setting = res.data[0];
-            this.targetAccountArray = res.data[0].target_accounts.split(",");
-            this.followKeywordArray = res.data[0].keyword_follow.split(",");
-            this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
+
+            if (res.data[0].target_accounts !== "") {
+              this.targetAccountArray = res.data[0].target_accounts.split(",");
+            } else {
+              this.targetAccountArray = [];
+            }
+            if (res.data[0].keyword_follow !== "") {
+              this.followKeywordArray = res.data[0].keyword_follow.split(",");
+            } else {
+              this.followKeywordArray = [];
+            }
+            if (res.data[0].keyword_favorite !== "") {
+              this.favoriteKeywordArray = res.data[0].keyword_favorite.split(
+                ","
+              );
+            } else {
+              this.favoriteKeywordArray = [];
+            }
           })
           .catch(error => {
             this.isError = true;

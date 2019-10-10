@@ -2322,9 +2322,24 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (res) {
         _this.setting = res.data[0];
-        _this.targetAccountArray = res.data[0].target_accounts.split(",");
-        _this.followKeywordArray = res.data[0].keyword_follow.split(",");
-        _this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
+
+        if (res.data[0].target_accounts !== "") {
+          _this.targetAccountArray = res.data[0].target_accounts.split(",");
+        } else {
+          _this.targetAccountArray = [];
+        }
+
+        if (res.data[0].keyword_follow !== "") {
+          _this.followKeywordArray = res.data[0].keyword_follow.split(",");
+        } else {
+          _this.followKeywordArray = [];
+        }
+
+        if (res.data[0].keyword_favorite !== "") {
+          _this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
+        } else {
+          _this.favoriteKeywordArray = [];
+        }
       })["catch"](function (error) {
         _this.isError = true;
       });
@@ -2372,9 +2387,24 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (res) {
         _this2.setting = res.data[0];
-        _this2.targetAccountArray = res.data[0].target_accounts.split(",");
-        _this2.followKeywordArray = res.data[0].keyword_follow.split(",");
-        _this2.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
+
+        if (res.data[0].target_accounts !== "") {
+          _this2.targetAccountArray = res.data[0].target_accounts.split(",");
+        } else {
+          _this2.targetAccountArray = [];
+        }
+
+        if (res.data[0].keyword_follow !== "") {
+          _this2.followKeywordArray = res.data[0].keyword_follow.split(",");
+        } else {
+          _this2.followKeywordArray = [];
+        }
+
+        if (res.data[0].keyword_favorite !== "") {
+          _this2.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
+        } else {
+          _this2.favoriteKeywordArray = [];
+        }
       })["catch"](function (error) {
         _this2.isError = true;
       });
