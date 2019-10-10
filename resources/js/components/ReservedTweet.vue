@@ -8,7 +8,7 @@
     </div>
     <reserve-tweet-form v-if="isEdit" :tweet="tweet" @addedTweet="onAddedTweet" class="u-mb-2"></reserve-tweet-form>
     <div class="c-justify-content-end">
-      <button class="c-btn c-btn--primary" @click="toEditMode" v-if="!isEdit">編集</button>
+      <button class="c-btn c-btn--primary u-mr-2" @click="toEditMode" v-if="!isEdit">編集</button>
       <button class="c-btn c-btn--danger" v-if="!isEdit" @click="$emit('deleteTweet',value)">削除</button>
       <button class="c-btn c-btn--danger" v-if="isEdit" @click="canselEdit">キャンセル</button>
     </div>

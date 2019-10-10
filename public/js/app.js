@@ -56661,7 +56661,7 @@ var render = function() {
           ? _c(
               "button",
               {
-                staticClass: "c-btn c-btn--primary",
+                staticClass: "c-btn c-btn--primary u-mr-2",
                 on: { click: _vm.toEditMode }
               },
               [_vm._v("編集")]
