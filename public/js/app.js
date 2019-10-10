@@ -2320,6 +2320,24 @@ __webpack_require__.r(__webpack_exports__);
     .then(function (res) {
       _this3.accounts = res.data;
       var targetId = localStorage.selectedId;
+      var isSelectedAccount = false;
+
+      _this3.accounts.forEach(function (x) {
+        if (x.id === Number(targetId)) {
+          isSelectedAccount = true;
+        }
+      });
+
+      if (!isSelectedAccount) {
+        // 操作中のアカウントが未選択の場合
+        _this3.flash("アカウントを選択してください", "info", {
+          timeout: 0,
+          important: false
+        });
+
+        return;
+      }
+
       axios.get("/account/setting", {
         params: {
           account_id: targetId
@@ -2650,6 +2668,24 @@ __webpack_require__.r(__webpack_exports__);
       _this2.accounts = res.data;
       var targetId;
       targetId = localStorage.selectedId;
+      var isSelectedAccount = false;
+
+      _this2.accounts.forEach(function (x) {
+        if (x.id === Number(targetId)) {
+          isSelectedAccount = true;
+        }
+      });
+
+      if (!isSelectedAccount) {
+        // 操作中のアカウントが未選択の場合
+        _this2.flash("アカウントを選択してください", "info", {
+          timeout: 0,
+          important: false
+        });
+
+        return;
+      }
+
       axios.get("/account/tweet", {
         params: {
           account_id: targetId

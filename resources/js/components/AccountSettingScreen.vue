@@ -164,6 +164,20 @@ export default {
       .then(res => {
         this.accounts = res.data;
         let targetId = localStorage.selectedId;
+        let isSelectedAccount = false;
+        this.accounts.forEach(x => {
+          if (x.id === Number(targetId)) {
+            isSelectedAccount = true;
+          }
+        });
+        if (!isSelectedAccount) {
+          // 操作中のアカウントが未選択の場合
+          this.flash("アカウントを選択してください", "info", {
+            timeout: 0,
+            important: false
+          });
+          return;
+        }
         axios
           .get("/account/setting", {
             params: {
