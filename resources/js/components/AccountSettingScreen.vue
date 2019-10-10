@@ -12,12 +12,11 @@
         <legend>自動フォロー関連</legend>
         <div class="c-form-group">
           <label for="keyword-follow" class="c-form-group__label">・フォローキーワード</label>
-          <input type="text" class="c-form-group__text" v-model="setting.keyword_follow" />
-          <span class="c-invalid-feedback" role="alert"></span>
+          <string-list-manager v-model="followKeywordArray" :placeholder="'例）HTML'"></string-list-manager>
         </div>
         <div class="c-form-group">
           <label for="email" class="c-form-group__label">・ターゲットアカウント</label>
-          <string-list-manager v-model="targetAccounts"></string-list-manager>
+          <string-list-manager v-model="targetAccountArray" :placeholder="'例）tanakaTaro'"></string-list-manager>
         </div>
       </fieldset>
       <fieldset class="c-form-fieldset">
@@ -57,13 +56,7 @@
         <legend>自動いいね関連</legend>
         <div class="c-form-group">
           <label for="email" class="c-form-group__label">・いいねキーワード</label>
-          <input
-            type="text"
-            class="c-form-group__text form-control"
-            v-model="setting.keyword_favorite"
-          />
-
-          <span class="c-invalid-feedback" role="alert"></span>
+          <string-list-manager v-model="favoriteKeywordArray" :placeholder="'例）プログラミング'"></string-list-manager>
         </div>
       </fieldset>
 
@@ -157,10 +150,9 @@ export default {
     return {
       accounts: [],
       setting: {},
-      targetAccounts: [],
-      addTargetName: "",
-      selectedAccount: [],
-      msgAddTarget: "",
+      targetAccountArray: [],
+      followKeywordArray: [],
+      favoriteKeywordArray: [],
       msgDaysUnfollowUser: ""
     };
   },
@@ -174,7 +166,9 @@ export default {
         })
         .then(res => {
           this.setting = res.data[0];
-          this.targetAccounts = res.data[0].target_accounts.split(",");
+          this.targetAccountArray = res.data[0].target_accounts.split(",");
+          this.followKeywordArray = res.data[0].keyword_follow.split(",");
+          this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
         })
         .catch(error => {
           this.isError = true;
@@ -195,48 +189,18 @@ export default {
       axios
         .post("/account/setting", {
           account_setting_id: this.setting.id,
-          keyword_follow: this.setting.keyword_follow,
-          keyword_favorite: this.setting.keyword_favorite,
           days_inactive_user: this.setting.days_inactive_user,
           days_unfollow_user: this.setting.days_unfollow_user,
           num_max_unfollow_per_day: this.setting.num_max_unfollow_per_day,
           num_user_start_unfollow: this.setting.num_user_start_unfollow,
           bool_unfollow_inactive: this.setting.bool_unfollow_inactive,
           account_id: this.setting.account_id,
-          target_accounts: this.targetAccounts.join(",")
+          keyword_follow: this.followKeywordArray.join(","),
+          keyword_favorite: this.favoriteKeywordArray.join(","),
+          target_accounts: this.targetAccountArray.join(",")
         })
         .then()
         .catch();
-    },
-    addTarget: function() {
-      // 追加OKチェック
-      // mytodo: アカウントの存在チェック（ここまでやらなくてもよい？）
-      // 既に追加済みのアカウントは追加しない
-      if (this.addTargetName === "") {
-        return;
-      }
-      if (this.addTargetName.match(",")) {
-        this.msgAddTarget = "','を含むことはできません";
-        return;
-      }
-      this.msgAddTarget = "";
-
-      if (!this.targetAccounts.some(x => x === this.addTargetName)) {
-        this.targetAccounts.push(this.addTargetName);
-        this.addTargetName = "";
-      }
-    },
-    deleteTarget: function() {
-      this.selectedAccount;
-      let item;
-      this.selectedAccount.forEach(item => {
-        this.targetAccounts = this.targetAccounts.filter(function(element) {
-          return element !== item;
-        });
-      });
-    },
-    getSelectedAccount: function() {
-      return this.selectedAccount;
     }
   },
   created: function() {
@@ -260,8 +224,9 @@ export default {
           })
           .then(res => {
             this.setting = res.data[0];
-            if (res.data[0].target_accounts !== "")
-              this.targetAccounts = res.data[0].target_accounts.split(",");
+            this.targetAccountArray = res.data[0].target_accounts.split(",");
+            this.followKeywordArray = res.data[0].keyword_follow.split(",");
+            this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
           })
           .catch(error => {
             this.isError = true;

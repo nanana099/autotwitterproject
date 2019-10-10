@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="u-m-2">
-      <input type="text" class="c-textbox--small" v-model="addStr" placeholder />
+      <input type="text" class="c-textbox--small" v-model="addStr" :placeholder="placeholder" />
       <button class="c-btn c-btn--primary" @click="addTarget">追加</button>
       <span class="c-invalid-feedback">{{msg}}</span>
     </div>
@@ -24,7 +24,7 @@ export default {
       msg: ""
     };
   },
-  props: ["value"], // 参照元からセレクトボックスに表示する配列を受け取る
+  props: ["value","placeholder"], // 参照元からセレクトボックスに表示する配列を受け取る
   watch: {
     value() {
       this.ary = this.value;

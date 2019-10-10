@@ -2295,13 +2295,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2313,10 +2306,9 @@ __webpack_require__.r(__webpack_exports__);
     return {
       accounts: [],
       setting: {},
-      targetAccounts: [],
-      addTargetName: "",
-      selectedAccount: [],
-      msgAddTarget: "",
+      targetAccountArray: [],
+      followKeywordArray: [],
+      favoriteKeywordArray: [],
       msgDaysUnfollowUser: ""
     };
   },
@@ -2330,7 +2322,9 @@ __webpack_require__.r(__webpack_exports__);
         }
       }).then(function (res) {
         _this.setting = res.data[0];
-        _this.targetAccounts = res.data[0].target_accounts.split(",");
+        _this.targetAccountArray = res.data[0].target_accounts.split(",");
+        _this.followKeywordArray = res.data[0].keyword_follow.split(",");
+        _this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
       })["catch"](function (error) {
         _this.isError = true;
       });
@@ -2348,61 +2342,23 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.post("/account/setting", {
         account_setting_id: this.setting.id,
-        keyword_follow: this.setting.keyword_follow,
-        keyword_favorite: this.setting.keyword_favorite,
         days_inactive_user: this.setting.days_inactive_user,
         days_unfollow_user: this.setting.days_unfollow_user,
         num_max_unfollow_per_day: this.setting.num_max_unfollow_per_day,
         num_user_start_unfollow: this.setting.num_user_start_unfollow,
         bool_unfollow_inactive: this.setting.bool_unfollow_inactive,
         account_id: this.setting.account_id,
-        target_accounts: this.targetAccounts.join(",")
+        keyword_follow: this.followKeywordArray.join(","),
+        keyword_favorite: this.favoriteKeywordArray.join(","),
+        target_accounts: this.targetAccountArray.join(",")
       }).then()["catch"]();
-    },
-    addTarget: function addTarget() {
-      var _this2 = this;
-
-      // 追加OKチェック
-      // mytodo: アカウントの存在チェック（ここまでやらなくてもよい？）
-      // 既に追加済みのアカウントは追加しない
-      if (this.addTargetName === "") {
-        return;
-      }
-
-      if (this.addTargetName.match(",")) {
-        this.msgAddTarget = "','を含むことはできません";
-        return;
-      }
-
-      this.msgAddTarget = "";
-
-      if (!this.targetAccounts.some(function (x) {
-        return x === _this2.addTargetName;
-      })) {
-        this.targetAccounts.push(this.addTargetName);
-        this.addTargetName = "";
-      }
-    },
-    deleteTarget: function deleteTarget() {
-      var _this3 = this;
-
-      this.selectedAccount;
-      var item;
-      this.selectedAccount.forEach(function (item) {
-        _this3.targetAccounts = _this3.targetAccounts.filter(function (element) {
-          return element !== item;
-        });
-      });
-    },
-    getSelectedAccount: function getSelectedAccount() {
-      return this.selectedAccount;
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this2 = this;
 
     axios.get("/account/get", {}).then(function (res) {
-      _this4.accounts = res.data;
+      _this2.accounts = res.data;
       var targetId;
 
       if (true) {
@@ -2415,13 +2371,15 @@ __webpack_require__.r(__webpack_exports__);
           account_id: targetId
         }
       }).then(function (res) {
-        _this4.setting = res.data[0];
-        if (res.data[0].target_accounts !== "") _this4.targetAccounts = res.data[0].target_accounts.split(",");
+        _this2.setting = res.data[0];
+        _this2.targetAccountArray = res.data[0].target_accounts.split(",");
+        _this2.followKeywordArray = res.data[0].keyword_follow.split(",");
+        _this2.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
       })["catch"](function (error) {
-        _this4.isError = true;
+        _this2.isError = true;
       });
     })["catch"](function (error) {
-      _this4.isError = true;
+      _this2.isError = true;
     });
   }
 });
@@ -2900,7 +2858,7 @@ __webpack_require__.r(__webpack_exports__);
       msg: ""
     };
   },
-  props: ["value"],
+  props: ["value", "placeholder"],
   // 参照元からセレクトボックスに表示する配列を受け取る
   watch: {
     value: function value() {
@@ -56166,43 +56124,32 @@ var render = function() {
       _c("fieldset", { staticClass: "c-form-fieldset" }, [
         _c("legend", [_vm._v("自動フォロー関連")]),
         _vm._v(" "),
-        _c("div", { staticClass: "c-form-group" }, [
-          _c(
-            "label",
-            {
-              staticClass: "c-form-group__label",
-              attrs: { for: "keyword-follow" }
-            },
-            [_vm._v("・フォローキーワード")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
+        _c(
+          "div",
+          { staticClass: "c-form-group" },
+          [
+            _c(
+              "label",
               {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.setting.keyword_follow,
-                expression: "setting.keyword_follow"
+                staticClass: "c-form-group__label",
+                attrs: { for: "keyword-follow" }
+              },
+              [_vm._v("・フォローキーワード")]
+            ),
+            _vm._v(" "),
+            _c("string-list-manager", {
+              attrs: { placeholder: "例）HTML" },
+              model: {
+                value: _vm.followKeywordArray,
+                callback: function($$v) {
+                  _vm.followKeywordArray = $$v
+                },
+                expression: "followKeywordArray"
               }
-            ],
-            staticClass: "c-form-group__text",
-            attrs: { type: "text" },
-            domProps: { value: _vm.setting.keyword_follow },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.setting, "keyword_follow", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("span", {
-            staticClass: "c-invalid-feedback",
-            attrs: { role: "alert" }
-          })
-        ]),
+            })
+          ],
+          1
+        ),
         _vm._v(" "),
         _c(
           "div",
@@ -56215,12 +56162,13 @@ var render = function() {
             ),
             _vm._v(" "),
             _c("string-list-manager", {
+              attrs: { placeholder: "例）tanakaTaro" },
               model: {
-                value: _vm.targetAccounts,
+                value: _vm.targetAccountArray,
                 callback: function($$v) {
-                  _vm.targetAccounts = $$v
+                  _vm.targetAccountArray = $$v
                 },
-                expression: "targetAccounts"
+                expression: "targetAccountArray"
               }
             })
           ],
@@ -56338,40 +56286,29 @@ var render = function() {
       _c("fieldset", { staticClass: "c-form-fieldset" }, [
         _c("legend", [_vm._v("自動いいね関連")]),
         _vm._v(" "),
-        _c("div", { staticClass: "c-form-group" }, [
-          _c(
-            "label",
-            { staticClass: "c-form-group__label", attrs: { for: "email" } },
-            [_vm._v("・いいねキーワード")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.setting.keyword_favorite,
-                expression: "setting.keyword_favorite"
+        _c(
+          "div",
+          { staticClass: "c-form-group" },
+          [
+            _c(
+              "label",
+              { staticClass: "c-form-group__label", attrs: { for: "email" } },
+              [_vm._v("・いいねキーワード")]
+            ),
+            _vm._v(" "),
+            _c("string-list-manager", {
+              attrs: { placeholder: "例）プログラミング" },
+              model: {
+                value: _vm.favoriteKeywordArray,
+                callback: function($$v) {
+                  _vm.favoriteKeywordArray = $$v
+                },
+                expression: "favoriteKeywordArray"
               }
-            ],
-            staticClass: "c-form-group__text form-control",
-            attrs: { type: "text" },
-            domProps: { value: _vm.setting.keyword_favorite },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.setting, "keyword_favorite", $event.target.value)
-              }
-            }
-          }),
-          _vm._v(" "),
-          _c("span", {
-            staticClass: "c-invalid-feedback",
-            attrs: { role: "alert" }
-          })
-        ])
+            })
+          ],
+          1
+        )
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "c-justify-content-end" }, [
@@ -56805,7 +56742,7 @@ var render = function() {
           }
         ],
         staticClass: "c-textbox--small",
-        attrs: { type: "text", placeholder: "" },
+        attrs: { type: "text", placeholder: _vm.placeholder },
         domProps: { value: _vm.addStr },
         on: {
           input: function($event) {
