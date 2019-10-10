@@ -666,3 +666,10 @@ body {
   color: #ffffff;
 }
 
+.p-flash_message--fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+

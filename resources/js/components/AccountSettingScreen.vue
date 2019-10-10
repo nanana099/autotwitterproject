@@ -64,6 +64,7 @@
         <button class="c-btn c-btn--primary c-btn--large u-mr-2" @click="saveSetting">保存</button>
       </div>
     </section>
+    <flash-message class="p-flash_message--fixed"></flash-message>
   </div>
 </template>
 
@@ -139,8 +140,22 @@ export default {
           keyword_favorite: this.favoriteKeywordArray.join(","),
           target_accounts: this.targetAccountArray.join(",")
         })
-        .then()
-        .catch();
+        .then(res => {
+          this.flash("設定を保存しました", "success", {
+            timeout: 5000,
+            important: true
+          });
+        })
+        .catch(error => {
+          this.flash(
+            "設定を保存できませんでした。しばらく経ってから再度お試しください",
+            "error",
+            {
+              timeout: 0,
+              important: false
+            }
+          );
+        });
     }
   },
   created: function() {

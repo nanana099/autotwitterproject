@@ -11,6 +11,7 @@
     <span class="p-message-1" v-else>
       <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません
     </span>
+    <flash-message class="p-flash_message--fixed"></flash-message>
   </div>
 </template>
 
@@ -48,9 +49,23 @@ export default {
             var index = this.accounts.indexOf(account);
             this.accounts.splice(index, 1);
           }
-        })
+
+          this.flash("アカウントを削除しました", "success", {
+            timeout: 5000,
+            important: true
+          });
+        })  
         .catch(error => {
           this.isError = true;
+
+          this.flash(
+            "アカウントの削除に失敗しました。しばらく経ってから再度お試しください。",
+            "error",
+            {
+              timeout: 0,
+              important: false
+            }
+          );
         });
     }
   },

@@ -14,6 +14,7 @@
     <div class="c-justify-content-end">
       <button class="c-btn c-btn--primary c-btn--large" @click="reserveTweet">予約</button>
     </div>
+    <flash-message class="p-flash_message--fixed"></flash-message>
   </div>
 </template>
 
@@ -61,9 +62,19 @@ export default {
             submit_date: submit_date,
             id: res.data.id
           });
+
+          this.flash("ツイートを予約しました", "success", {
+            timeout: 5000,
+            important: true
+          });
         })
         .catch(error => {
           this.isError = true;
+
+          this.flash("ツイートを予約に失敗しました。しばらく経ってから再度お試しください。", "error", {
+            timeout: 0,
+            important: false
+          });
         });
     },
     formInit: function() {

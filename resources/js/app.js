@@ -19,6 +19,11 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+// フラッシュメッセージ表示用
+import VueFlashMessage from 'vue-flash-message';
+require('vue-flash-message/dist/vue-flash-message.min.css');
+Vue.use(VueFlashMessage);
+
 Vue.component('account-list', require('./components/AccountList.vue').default);
 Vue.component('account-status-list', require('./components/AccountStatusList.vue').default);
 Vue.component('account-setting-screen', require('./components/AccountSettingScreen.vue').default);
