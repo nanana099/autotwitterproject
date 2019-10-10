@@ -5,6 +5,7 @@
     class="p-select-account__select"
     @change="$emit('changeAccount', selectedId)"
   >
+    <option disabled value="">選択してください</option>
     <option
       v-for="account in accounts"
       :key="account.id"

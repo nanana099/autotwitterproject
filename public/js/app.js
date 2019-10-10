@@ -2138,6 +2138,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -56715,14 +56716,20 @@ var render = function() {
         ]
       }
     },
-    _vm._l(_vm.accounts, function(account) {
-      return _c(
-        "option",
-        { key: account.id, domProps: { value: account.id } },
-        [_vm._v(_vm._s(account.screen_name))]
-      )
-    }),
-    0
+    [
+      _c("option", { attrs: { disabled: "", value: "" } }, [
+        _vm._v("選択してください")
+      ]),
+      _vm._v(" "),
+      _vm._l(_vm.accounts, function(account) {
+        return _c(
+          "option",
+          { key: account.id, domProps: { value: account.id } },
+          [_vm._v(_vm._s(account.screen_name))]
+        )
+      })
+    ],
+    2
   )
 }
 var staticRenderFns = []
