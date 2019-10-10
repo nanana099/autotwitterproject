@@ -77,6 +77,7 @@ export default {
       });
     },
     changeStatus: function(type, value, callback) {
+      // アカウントの自動機能稼働状況を更新する
       axios
         .post("/account/status", {
           operation_status_id: this.accounsStatus.operation_status.id,

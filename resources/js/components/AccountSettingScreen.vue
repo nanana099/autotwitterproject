@@ -65,75 +65,6 @@
       </div>
     </section>
   </div>
-  <!-- <form action="">
-        <fieldset class="c-form-fieldset">
-            <legend>自動フォロー関連</legend>
-            <div class="c-form-group">
-                <label for="email" class="c-form-group__label">・フォローキーワード</label>
-                <input id="email" type="email"
-                    class="c-form-group__text form-control" name="email"
-                    value="" required autocomplete="email" autofocus>
-
-                <span class="c-invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-
-            </div>
-            <div class="c-form-group">
-                <label for="email" class="c-form-group__label">・ターゲットアカウント</label>
-                <select id="list2" name="list2" size="5" class="c-form-group__select-multi u-mb-3" multiple>
-                    <option value="1">abc_iii</option>
-                    <option value="1">efafeafeee</option>
-                </select>
-                <div class="c-justify-content-end">
-                    <label for="">追加するアカウント名：
-                        <input id="email" type="email" class=" form-control"
-                            name="email" value="" required autocomplete="email" autofocus></label>
-                    <button class="c-btn c-btn--primary">追加</button>
-                    <button class="c-btn c-btn--danger">削除</button>
-                </div>
-            </div>
-        </fieldset>
-        <fieldset class="c-form-fieldset">
-            <legend>自動アンフォロー関連</legend>
-            <div class="c-form-group">
-                <label for="email" class="">・フォローしてから
-                    <input id="" type="number" class=" form-control" name="email"
-                        value="" required autocomplete="email" autofocus>
-                    日間、フォローが無かったらアンフォローする</label>
-
-                <span class="c-invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-
-            </div>
-
-            <div class="c-form-group">
-                <label for="unfollow-inactive" class="">
-                    ・<input type="checkbox" name="unfollow-inactive" id="unfollow-inactive">
-                    非アクティブのユーザーのフォローを外す
-                </label>
-            </div>
-        </fieldset>
-        <fieldset class="c-form-fieldset">
-            <legend>自動いいね関連</legend>
-            <div class="c-form-group">
-                <label for="email" class="c-form-group__label">・いいねキーワード</label>
-                <input id="email" type="email"
-                    class="c-form-group__text form-control" name="email"
-                    value="" required autocomplete="email" autofocus>
-
-                <span class="c-invalid-feedback" role="alert">
-                    <strong>{{ $message }}</strong>
-                </span>
-
-            </div>
-        </fieldset>
-
-        <div class="c-justify-content-end">
-            <button class="c-btn c-btn--primary c-btn--large u-mr-2">保存</button>
-        </div>
-  </form>-->
 </template>
 
 
@@ -158,6 +89,7 @@ export default {
   },
   methods: {
     onChangeAccount: function(id) {
+      // 操作中のアカウント変更時に、アカウントの設定情報をDBから取得する
       axios
         .get("/account/setting", {
           params: {
@@ -166,39 +98,34 @@ export default {
         })
         .then(res => {
           this.setting = res.data[0];
-
-          if (res.data[0].target_accounts !== "") {
-            this.targetAccountArray = res.data[0].target_accounts.split(",");
-          } else {
-            this.targetAccountArray = [];
-          }
-          if (res.data[0].keyword_follow !== "") {
-            this.followKeywordArray = res.data[0].keyword_follow.split(",");
-          } else {
-            this.followKeywordArray = [];
-          }
-          if (res.data[0].keyword_favorite !== "") {
-            this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
-          } else {
-            this.favoriteKeywordArray = [];
-          }
+          res.data[0].target_accounts !== ""
+            ? (this.targetAccountArray = res.data[0].target_accounts.split(","))
+            : (this.targetAccountArray = []);
+          res.data[0].keyword_follow !== ""
+            ? (this.followKeywordArray = res.data[0].keyword_follow.split(","))
+            : (this.followKeywordArray = []);
+          res.data[0].keyword_favorite !== ""
+            ? (this.favoriteKeywordArray = res.data[0].keyword_favorite.split(
+                ","
+              ))
+            : (this.favoriteKeywordArray = []);
         })
         .catch(error => {
           this.isError = true;
         });
     },
     saveSetting: function() {
-      if (
-        this.setting.days_unfollow_user === 0 ||
-        this.setting.days_unfollow_user > 999
-      ) {
-        this.msgDaysUnfollowUser = "1~999を入力してください";
-      } else {
-        this.msgDaysUnfollowUser = "";
-      }
+      this.setting.days_unfollow_user === 0 ||
+      this.setting.days_unfollow_user > 999
+        ? (this.msgDaysUnfollowUser = "1~999を入力してください")
+        : (this.msgDaysUnfollowUser = "");
+
       if (this.msgDaysUnfollowUser !== "") {
+        // エラーがある場合は保存処理しない
         return;
       }
+
+      // 設定保存
       axios
         .post("/account/setting", {
           account_setting_id: this.setting.id,
@@ -218,43 +145,33 @@ export default {
   },
   created: function() {
     axios
-      .get("/account/get", {})
+      .get("/account/get", {}) // アカウント一覧取得
       .then(res => {
         this.accounts = res.data;
-        let targetId;
-        if (true) {
-          // 選択中のアカウントがある
-          targetId = localStorage.selectedId;
-        } else {
-          // 選択中のアカウントがない
-          targetId = this.accounts[0]["id"];
-        }
+        let targetId = localStorage.selectedId;
         axios
           .get("/account/setting", {
             params: {
               account_id: targetId
             }
-          })
+          }) // 選択中のアカウントの設定情報を取得
           .then(res => {
             this.setting = res.data[0];
-
-            if (res.data[0].target_accounts !== "") {
-              this.targetAccountArray = res.data[0].target_accounts.split(",");
-            } else {
-              this.targetAccountArray = [];
-            }
-            if (res.data[0].keyword_follow !== "") {
-              this.followKeywordArray = res.data[0].keyword_follow.split(",");
-            } else {
-              this.followKeywordArray = [];
-            }
-            if (res.data[0].keyword_favorite !== "") {
-              this.favoriteKeywordArray = res.data[0].keyword_favorite.split(
-                ","
-              );
-            } else {
-              this.favoriteKeywordArray = [];
-            }
+            res.data[0].target_accounts !== ""
+              ? (this.targetAccountArray = res.data[0].target_accounts.split(
+                  ","
+                ))
+              : (this.targetAccountArray = []);
+            res.data[0].keyword_follow !== ""
+              ? (this.followKeywordArray = res.data[0].keyword_follow.split(
+                  ","
+                ))
+              : (this.followKeywordArray = []);
+            res.data[0].keyword_favorite !== ""
+              ? (this.favoriteKeywordArray = res.data[0].keyword_favorite.split(
+                  ","
+                ))
+              : (this.favoriteKeywordArray = []);
           })
           .catch(error => {
             this.isError = true;

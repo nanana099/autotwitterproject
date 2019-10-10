@@ -17,7 +17,7 @@ export default {
   },
   data: function() {
     return {
-      tweets: []
+      tweets: [] // 予約済みツイートの一覧
     };
   },
   mounted: function() {

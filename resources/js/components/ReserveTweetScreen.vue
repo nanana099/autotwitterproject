@@ -30,8 +30,8 @@ export default {
   },
   data: function() {
     return {
-      accounts: [],
-      tweets: []
+      accounts: [], // アカウント一覧
+      tweets: [] // Tweet一覧
     };
   },
   methods: {
@@ -55,11 +55,7 @@ export default {
               }
             })
             .then(res => {
-              // this.tweets = res.data;
-
-              // key番目から１つ削除
               this.tweets.splice(0, this.tweets.length);
-
               res.data.forEach(e => {
                 this.tweets.push(e);
               });
@@ -73,6 +69,7 @@ export default {
         });
     },
     addTweetList: function(tweet) {
+      // Tweet一覧に新しいTweetを追加する
       this.tweets.push({
         content: tweet.content,
         submit_date: tweet.submit_date,
@@ -81,18 +78,13 @@ export default {
     }
   },
   created: function() {
+    // アカウント一覧とTweet一覧を取得する
     axios
       .get("/account/get", {})
       .then(res => {
         this.accounts = res.data;
         let targetId;
-        if (true) {
-          // 選択中のアカウントがある
-          targetId = localStorage.selectedId;
-        } else {
-          // 選択中のアカウントがない
-          targetId = this.accounts[0]["id"];
-        }
+        targetId = localStorage.selectedId;
         axios
           .get("/account/tweet", {
             params: {
@@ -100,7 +92,6 @@ export default {
             }
           })
           .then(res => {
-            // this.tweets = res.data;
             res.data.forEach(e => {
               this.tweets.push(e);
             });

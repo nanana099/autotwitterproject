@@ -40,6 +40,7 @@ export default {
   },
   methods: {
     reserveTweet: function() {
+      // ツイート予約をDBへ更新または挿入する
       if (!this.validTweet()) return;
       axios
         .post("/account/tweet", {
@@ -52,9 +53,10 @@ export default {
           let content = this.content;
           let submit_date = moment(this.requestDate).format("YYYY-MM-DD HH:mm");
 
-          this.content = "";
-          this.requestDate = "";
+          this.formInit();
+
           this.$emit("addedTweet", {
+            // Tweetが追加された時のイベントを親に通知する
             content: content,
             submit_date: submit_date,
             id: res.data.id
@@ -63,6 +65,10 @@ export default {
         .catch(error => {
           this.isError = true;
         });
+    },
+    formInit: function() {
+      this.content = "";
+      this.requestDate = "";
     },
     validTweet: function() {
       if (this.content.length === 0 && this.content.length > 140) {
@@ -79,12 +85,10 @@ export default {
   },
   computed: {
     start: function() {
-      // min-date に明日の9時を指定
       const start = moment();
       return start.format("YYYY-MM-DDTHH:mm");
     },
     end: function() {
-      // max-date に min-date から3ヶ月後を指定
       const start = moment(this.start);
       const end = start.add(1, "years").endOf("day");
       return end.format("YYYY-MM-DDTHH:mm");

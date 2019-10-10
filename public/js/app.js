@@ -1928,6 +1928,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     changeStatus: function changeStatus(type, value, callback) {
+      // アカウントの自動機能稼働状況を更新する
       axios.post("/account/status", {
         operation_status_id: this.accounsStatus.operation_status.id,
         type: type,
@@ -1963,7 +1964,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      msg: ""
+      errorMsg: ""
     };
   },
   methods: {
@@ -1971,15 +1972,17 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       // １ユーザーが登録できるTwitterアカウントの最大数
-      var MAX_ACCOUNT_NUM = 10;
+      var MAX_ACCOUNT_NUM = 10; // アカウントの追加(TwitterのOAuthページへリダイレクトする)
+
       axios.get("/account/count").then(function (res) {
         if (res.data >= MAX_ACCOUNT_NUM) {
-          _this.msg = "アカウントをこれ以上追加できません";
+          _this.errorMsg = "アカウントをこれ以上追加できません";
         } else {
+          // リダイレクト
           document.location = "/account/add";
         }
       })["catch"](function (error) {
-        _this.msg = "正常に処理できませんでした。しばらく経ってからもう一度お試しください。";
+        _this.errorMsg = "正常に処理できませんでした。しばらく経ってからもう一度お試しください。";
       });
     }
   }
@@ -2070,9 +2073,9 @@ __webpack_require__.r(__webpack_exports__);
           id: account.id
         }
       }).then(function (res) {
+        // 子コンポーネントから渡ってきたアカウントをDBから削除する
         if (!res.data["result"]) {
-          var index = _this.accounts.indexOf(account); // key番目から１つ削除
-
+          var index = _this.accounts.indexOf(account);
 
           _this.accounts.splice(index, 1);
         }
@@ -2084,6 +2087,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this2 = this;
 
+    // アカウント一覧取得
     axios.get("/account/get", {}).then(function (res) {
       _this2.accounts = res.data;
     })["catch"](function (error) {
@@ -2226,75 +2230,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2316,44 +2251,28 @@ __webpack_require__.r(__webpack_exports__);
     onChangeAccount: function onChangeAccount(id) {
       var _this = this;
 
+      // 操作中のアカウント変更時に、アカウントの設定情報をDBから取得する
       axios.get("/account/setting", {
         params: {
           account_id: id
         }
       }).then(function (res) {
         _this.setting = res.data[0];
-
-        if (res.data[0].target_accounts !== "") {
-          _this.targetAccountArray = res.data[0].target_accounts.split(",");
-        } else {
-          _this.targetAccountArray = [];
-        }
-
-        if (res.data[0].keyword_follow !== "") {
-          _this.followKeywordArray = res.data[0].keyword_follow.split(",");
-        } else {
-          _this.followKeywordArray = [];
-        }
-
-        if (res.data[0].keyword_favorite !== "") {
-          _this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
-        } else {
-          _this.favoriteKeywordArray = [];
-        }
+        res.data[0].target_accounts !== "" ? _this.targetAccountArray = res.data[0].target_accounts.split(",") : _this.targetAccountArray = [];
+        res.data[0].keyword_follow !== "" ? _this.followKeywordArray = res.data[0].keyword_follow.split(",") : _this.followKeywordArray = [];
+        res.data[0].keyword_favorite !== "" ? _this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",") : _this.favoriteKeywordArray = [];
       })["catch"](function (error) {
         _this.isError = true;
       });
     },
     saveSetting: function saveSetting() {
-      if (this.setting.days_unfollow_user === 0 || this.setting.days_unfollow_user > 999) {
-        this.msgDaysUnfollowUser = "1~999を入力してください";
-      } else {
-        this.msgDaysUnfollowUser = "";
-      }
+      this.setting.days_unfollow_user === 0 || this.setting.days_unfollow_user > 999 ? this.msgDaysUnfollowUser = "1~999を入力してください" : this.msgDaysUnfollowUser = "";
 
       if (this.msgDaysUnfollowUser !== "") {
+        // エラーがある場合は保存処理しない
         return;
-      }
+      } // 設定保存
+
 
       axios.post("/account/setting", {
         account_setting_id: this.setting.id,
@@ -2372,39 +2291,20 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this2 = this;
 
-    axios.get("/account/get", {}).then(function (res) {
+    axios.get("/account/get", {}) // アカウント一覧取得
+    .then(function (res) {
       _this2.accounts = res.data;
-      var targetId;
-
-      if (true) {
-        // 選択中のアカウントがある
-        targetId = localStorage.selectedId;
-      } else {}
-
+      var targetId = localStorage.selectedId;
       axios.get("/account/setting", {
         params: {
           account_id: targetId
         }
-      }).then(function (res) {
+      }) // 選択中のアカウントの設定情報を取得
+      .then(function (res) {
         _this2.setting = res.data[0];
-
-        if (res.data[0].target_accounts !== "") {
-          _this2.targetAccountArray = res.data[0].target_accounts.split(",");
-        } else {
-          _this2.targetAccountArray = [];
-        }
-
-        if (res.data[0].keyword_follow !== "") {
-          _this2.followKeywordArray = res.data[0].keyword_follow.split(",");
-        } else {
-          _this2.followKeywordArray = [];
-        }
-
-        if (res.data[0].keyword_favorite !== "") {
-          _this2.favoriteKeywordArray = res.data[0].keyword_favorite.split(",");
-        } else {
-          _this2.favoriteKeywordArray = [];
-        }
+        res.data[0].target_accounts !== "" ? _this2.targetAccountArray = res.data[0].target_accounts.split(",") : _this2.targetAccountArray = [];
+        res.data[0].keyword_follow !== "" ? _this2.followKeywordArray = res.data[0].keyword_follow.split(",") : _this2.followKeywordArray = [];
+        res.data[0].keyword_favorite !== "" ? _this2.favoriteKeywordArray = res.data[0].keyword_favorite.split(",") : _this2.favoriteKeywordArray = [];
       })["catch"](function (error) {
         _this2.isError = true;
       });
@@ -2547,6 +2447,7 @@ __webpack_require__.r(__webpack_exports__);
     reserveTweet: function reserveTweet() {
       var _this = this;
 
+      // ツイート予約をDBへ更新または挿入する
       if (!this.validTweet()) return;
       axios.post("/account/tweet", {
         content: this.content,
@@ -2556,10 +2457,11 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         var content = _this.content;
         var submit_date = moment__WEBPACK_IMPORTED_MODULE_0___default()(_this.requestDate).format("YYYY-MM-DD HH:mm");
-        _this.content = "";
-        _this.requestDate = "";
+
+        _this.formInit();
 
         _this.$emit("addedTweet", {
+          // Tweetが追加された時のイベントを親に通知する
           content: content,
           submit_date: submit_date,
           id: res.data.id
@@ -2567,6 +2469,10 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         _this.isError = true;
       });
+    },
+    formInit: function formInit() {
+      this.content = "";
+      this.requestDate = "";
     },
     validTweet: function validTweet() {
       if (this.content.length === 0 && this.content.length > 140) {
@@ -2584,12 +2490,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     start: function start() {
-      // min-date に明日の9時を指定
       var start = moment__WEBPACK_IMPORTED_MODULE_0___default()();
       return start.format("YYYY-MM-DDTHH:mm");
     },
     end: function end() {
-      // max-date に min-date から3ヶ月後を指定
       var start = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.start);
       var end = start.add(1, "years").endOf("day");
       return end.format("YYYY-MM-DDTHH:mm");
@@ -2649,7 +2553,9 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       accounts: [],
-      tweets: []
+      // アカウント一覧
+      tweets: [] // Tweet一覧
+
     };
   },
   methods: {
@@ -2670,8 +2576,6 @@ __webpack_require__.r(__webpack_exports__);
             account_id: targetId
           }
         }).then(function (res) {
-          // this.tweets = res.data;
-          // key番目から１つ削除
           _this.tweets.splice(0, _this.tweets.length);
 
           res.data.forEach(function (e) {
@@ -2685,6 +2589,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     addTweetList: function addTweetList(tweet) {
+      // Tweet一覧に新しいTweetを追加する
       this.tweets.push({
         content: tweet.content,
         submit_date: tweet.submit_date,
@@ -2695,21 +2600,16 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this2 = this;
 
+    // アカウント一覧とTweet一覧を取得する
     axios.get("/account/get", {}).then(function (res) {
       _this2.accounts = res.data;
       var targetId;
-
-      if (true) {
-        // 選択中のアカウントがある
-        targetId = localStorage.selectedId;
-      } else {}
-
+      targetId = localStorage.selectedId;
       axios.get("/account/tweet", {
         params: {
           account_id: targetId
         }
       }).then(function (res) {
-        // this.tweets = res.data;
         res.data.forEach(function (e) {
           _this2.tweets.push(e);
         });
@@ -2816,7 +2716,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      tweets: []
+      tweets: [] // 予約済みツイートの一覧
+
     };
   },
   mounted: function mounted() {
@@ -2885,11 +2786,11 @@ __webpack_require__.r(__webpack_exports__);
       // 追加用テキストボックス内の文字列
       selectedStr: [],
       // セレクトボックスで選択中要素の配列
-      msg: ""
+      errorMsg: ""
     };
   },
   props: ["value", "placeholder"],
-  // 参照元からセレクトボックスに表示する配列を受け取る
+  // value:参照元からセレクトボックスに表示する配列を受け取る
   watch: {
     value: function value() {
       this.ary = this.value;
@@ -2900,16 +2801,17 @@ __webpack_require__.r(__webpack_exports__);
     addTarget: function addTarget() {
       var _this = this;
 
+      // バリデーション
       if (this.addStr === "") {
         return;
       }
 
       if (this.addStr.match(",")) {
-        this.msg = "','を含むことはできません";
+        this.errorMsg = "','を含むことはできません";
         return;
       }
 
-      this.msg = "";
+      this.errorMsg = ""; // 要素の追加処理
 
       if (!this.ary.some(function (x) {
         return x === _this.addStr;
@@ -55950,7 +55852,9 @@ var render = function() {
       ]
     ),
     _vm._v(" "),
-    _c("span", { staticClass: "c-invalid-feedback" }, [_vm._v(_vm._s(_vm.msg))])
+    _c("span", { staticClass: "c-invalid-feedback" }, [
+      _vm._v(_vm._s(_vm.errorMsg))
+    ])
   ])
 }
 var staticRenderFns = []
@@ -56040,7 +55944,7 @@ var render = function() {
         )
       : _c("span", { staticClass: "p-message-1" }, [
           _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
-          _vm._v("Twitterアカウントが登録されていません")
+          _vm._v("Twitterアカウントが登録されていません\n  ")
         ])
   ])
 }
@@ -56791,7 +56695,7 @@ var render = function() {
       ),
       _vm._v(" "),
       _c("span", { staticClass: "c-invalid-feedback" }, [
-        _vm._v(_vm._s(_vm.msg))
+        _vm._v(_vm._s(_vm.errorMsg))
       ])
     ]),
     _vm._v(" "),

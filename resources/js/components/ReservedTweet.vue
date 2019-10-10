@@ -29,7 +29,7 @@ export default {
     };
   },
   mounted: function() {
-    this.tweet = this.value;
+    this.tweet = this.value; 
     this.tmpTweet = Object.create(this.value);
   },
   methods: {

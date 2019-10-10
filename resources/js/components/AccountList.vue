@@ -1,6 +1,5 @@
 <template>
   <div>
-    
     <ul class="p-monitor-list" v-if="existsAccount">
       <account-item
         v-for="account in accounts"
@@ -9,8 +8,9 @@
         @deleteAccount="onDeleteAccount"
       ></account-item>
     </ul>
-    <span class="p-message-1" v-else><i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません</span>
-
+    <span class="p-message-1" v-else>
+      <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません
+    </span>
   </div>
 </template>
 
@@ -29,7 +29,11 @@ export default {
   },
   methods: {
     onDeleteAccount: function(account) {
-      if (!window.confirm("神ったーから、アカウント情報を全て削除します。\n一度削除すると、復元ができません。\nアカウントを削除しますか？")) {
+      if (
+        !window.confirm(
+          "神ったーから、アカウント情報を全て削除します。\n一度削除すると、復元ができません。\nアカウントを削除しますか？"
+        )
+      ) {
         return;
       }
       axios
@@ -39,9 +43,9 @@ export default {
           }
         })
         .then(res => {
+          // 子コンポーネントから渡ってきたアカウントをDBから削除する
           if (!res.data["result"]) {
             var index = this.accounts.indexOf(account);
-            // key番目から１つ削除
             this.accounts.splice(index, 1);
           }
         })
@@ -51,6 +55,7 @@ export default {
     }
   },
   created: function() {
+    // アカウント一覧取得
     axios
       .get("/account/get", {})
       .then(res => {
