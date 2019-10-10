@@ -5,7 +5,7 @@
       <div class="c-justify-content-start">
         <label>投稿予定日時：</label>
         <input type="datetime-local" v-model="requestDate" :min="start" :max="end" />
-        <span class="c-invalid-feedback">{{msg}}</span>
+        <span class="c-invalid-feedback">{{errorMsgDatetime}}</span>
       </div>
       <span class="p-tweet-form__count">
         <span :class="{'c-invalid-feedback':isOverContent}">{{count}}/140字</span>
@@ -27,7 +27,7 @@ export default {
       content: "",
       requestDate: "",
       id: "",
-      msg: ""
+      errorMsgDatetime: ""
     };
   },
   mounted: function() {
@@ -37,6 +37,10 @@ export default {
         "YYYY-MM-DDTHH:mm"
       );
       this.id = this.tweet.id;
+    } else {
+      this.requestDate = moment()
+        .add(1, "days")
+        .format("YYYY-MM-DDTHH:mm");
     }
   },
   methods: {
@@ -71,25 +75,38 @@ export default {
         .catch(error => {
           this.isError = true;
 
-          this.flash("ツイートを予約に失敗しました。しばらく経ってから再度お試しください。", "error", {
-            timeout: 0,
-            important: false
-          });
+          this.flash(
+            "ツイートを予約に失敗しました。しばらく経ってから再度お試しください。",
+            "error",
+            {
+              timeout: 0,
+              important: false
+            }
+          );
         });
     },
     formInit: function() {
       this.content = "";
-      this.requestDate = "";
+      this.requestDate = moment()
+        .add(1, "days")
+        .format("YYYY-MM-DDTHH:mm");
     },
     validTweet: function() {
-      if (this.content.length === 0 && this.content.length > 140) {
-        return false;
-      }
+      // 日付日時
       if (this.requestDate === "") {
-        this.msg = "日時の入力は必須です";
+        this.errorMsgDatetime = "日時の入力は必須です";
         return false;
       }
-      this.msg = "";
+      if (moment(this.requestDate).isBefore(moment())) {
+        this.errorMsgDatetime = "現在日時よりも後の日時を入力してください";
+        return false;
+      }
+      this.errorMsgDatetime = "";
+
+      // Tweet内容
+      if (this.content.length === 0 || this.content.length > 140) {
+        return false;
+      }
 
       return true;
     }

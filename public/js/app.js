@@ -2459,7 +2459,7 @@ __webpack_require__.r(__webpack_exports__);
       content: "",
       requestDate: "",
       id: "",
-      msg: ""
+      errorMsgDatetime: ""
     };
   },
   mounted: function mounted() {
@@ -2467,6 +2467,8 @@ __webpack_require__.r(__webpack_exports__);
       this.content = this.tweet.content;
       this.requestDate = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.tweet.submit_date).format("YYYY-MM-DDTHH:mm");
       this.id = this.tweet.id;
+    } else {
+      this.requestDate = moment__WEBPACK_IMPORTED_MODULE_0___default()().add(1, "days").format("YYYY-MM-DDTHH:mm");
     }
   },
   methods: {
@@ -2508,19 +2510,26 @@ __webpack_require__.r(__webpack_exports__);
     },
     formInit: function formInit() {
       this.content = "";
-      this.requestDate = "";
+      this.requestDate = moment__WEBPACK_IMPORTED_MODULE_0___default()().add(1, "days").format("YYYY-MM-DDTHH:mm");
     },
     validTweet: function validTweet() {
-      if (this.content.length === 0 && this.content.length > 140) {
-        return false;
-      }
-
+      // 日付日時
       if (this.requestDate === "") {
-        this.msg = "日時の入力は必須です";
+        this.errorMsgDatetime = "日時の入力は必須です";
         return false;
       }
 
-      this.msg = "";
+      if (moment__WEBPACK_IMPORTED_MODULE_0___default()(this.requestDate).isBefore(moment__WEBPACK_IMPORTED_MODULE_0___default()())) {
+        this.errorMsgDatetime = "現在日時よりも後の日時を入力してください";
+        return false;
+      }
+
+      this.errorMsgDatetime = ""; // Tweet内容
+
+      if (this.content.length === 0 || this.content.length > 140) {
+        return false;
+      }
+
       return true;
     }
   },
@@ -57145,7 +57154,7 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("span", { staticClass: "c-invalid-feedback" }, [
-              _vm._v(_vm._s(_vm.msg))
+              _vm._v(_vm._s(_vm.errorMsgDatetime))
             ])
           ]),
           _vm._v(" "),
