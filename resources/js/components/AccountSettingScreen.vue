@@ -6,65 +6,78 @@
         <account-select-box :accounts="accounts" @changeAccount="onChangeAccount"></account-select-box>
       </label>
     </div>
-    <h2 class="c-title">設定</h2>
     <section class="p-section">
-      <fieldset class="c-form-fieldset">
-        <legend>自動フォロー関連</legend>
-        <div class="c-form-group">
-          <label for="keyword-follow" class="c-form-group__label">・フォローキーワード</label>
-          <string-list-manager v-model="followKeywordArray" :placeholder="'例）HTML'"></string-list-manager>
+      <h2 class="c-title">設定</h2>
+
+      <div v-show="isLoading">
+        <span class="p-message-1">Loading...</span>
+      </div>
+      <div v-show="!isLoading">
+        <div v-show="!existsAccount">
+          <span class="p-message-1">
+            <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません
+          </span>
         </div>
-        <div class="c-form-group">
-          <label for="email" class="c-form-group__label">・ターゲットアカウント</label>
-          <string-list-manager v-model="targetAccountArray" :placeholder="'例）tanakaTaro'"></string-list-manager>
-        </div>
-      </fieldset>
-      <fieldset class="c-form-fieldset">
-        <legend>自動アンフォロー関連</legend>
-        <div class="c-form-group">
-          <div>
-            <label for class>
-              ・フォローしてから
-              <input
-                id
-                type="number"
-                class="form-control"
-                v-model.number="setting.days_unfollow_user"
-                min="1"
-                max="999"
-              />
-              日間、フォローが返って来ない場合にアンフォローする
-            </label>
+        <div v-show="existsAccount">
+          <fieldset class="c-form-fieldset">
+            <legend>自動フォロー関連</legend>
+            <div class="c-form-group">
+              <label for="keyword-follow" class="c-form-group__label">・フォローキーワード</label>
+              <string-list-manager v-model="followKeywordArray" :placeholder="'例）HTML'"></string-list-manager>
+            </div>
+            <div class="c-form-group">
+              <label for="email" class="c-form-group__label">・ターゲットアカウント</label>
+              <string-list-manager v-model="targetAccountArray" :placeholder="'例）tanakaTaro'"></string-list-manager>
+            </div>
+          </fieldset>
+          <fieldset class="c-form-fieldset">
+            <legend>自動アンフォロー関連</legend>
+            <div class="c-form-group">
+              <div>
+                <label for class>
+                  ・フォローしてから
+                  <input
+                    id
+                    type="number"
+                    class="form-control"
+                    v-model.number="setting.days_unfollow_user"
+                    min="1"
+                    max="999"
+                  />
+                  日間、フォローが返って来ない場合にアンフォローする
+                </label>
+              </div>
+              <span class="c-invalid-feedback" role="alert">{{msgDaysUnfollowUser}}</span>
+            </div>
+
+            <div class="c-form-group">
+              <label for="unfollow-inactive" class>
+                ・
+                <input
+                  type="checkbox"
+                  name="unfollow-inactive"
+                  id="unfollow-inactive"
+                  v-model="setting.bool_unfollow_inactive"
+                />
+                15日間投稿の無いユーザーをアンフォローする
+              </label>
+            </div>
+          </fieldset>
+          <fieldset class="c-form-fieldset">
+            <legend>自動いいね関連</legend>
+            <div class="c-form-group">
+              <label for="email" class="c-form-group__label">・いいねキーワード</label>
+              <string-list-manager v-model="favoriteKeywordArray" :placeholder="'例）プログラミング'"></string-list-manager>
+            </div>
+          </fieldset>
+
+          <div class="c-justify-content-end">
+            <button class="c-btn c-btn--primary c-btn--large u-mr-2" @click="saveSetting">保存</button>
           </div>
-          <span class="c-invalid-feedback" role="alert">{{msgDaysUnfollowUser}}</span>
+          <flash-message class="p-flash_message--fixed"></flash-message>
         </div>
-
-        <div class="c-form-group">
-          <label for="unfollow-inactive" class>
-            ・
-            <input
-              type="checkbox"
-              name="unfollow-inactive"
-              id="unfollow-inactive"
-              v-model="setting.bool_unfollow_inactive"
-            />
-            15日間投稿の無いユーザーをアンフォローする
-          </label>
-        </div>
-      </fieldset>
-      <fieldset class="c-form-fieldset">
-        <legend>自動いいね関連</legend>
-        <div class="c-form-group">
-          <label for="email" class="c-form-group__label">・いいねキーワード</label>
-          <string-list-manager v-model="favoriteKeywordArray" :placeholder="'例）プログラミング'"></string-list-manager>
-        </div>
-      </fieldset>
-
-      <div class="c-justify-content-end">
-        <button class="c-btn c-btn--primary c-btn--large u-mr-2" @click="saveSetting">保存</button>
       </div>
     </section>
-    <flash-message class="p-flash_message--fixed"></flash-message>
   </div>
 </template>
 
@@ -85,12 +98,14 @@ export default {
       targetAccountArray: [],
       followKeywordArray: [],
       favoriteKeywordArray: [],
-      msgDaysUnfollowUser: ""
+      msgDaysUnfollowUser: "",
+      isLoading: true
     };
   },
   methods: {
     onChangeAccount: function(id) {
       // 操作中のアカウント変更時に、アカウントの設定情報をDBから取得する
+      this.isLoading = true;
       axios
         .get("/account/setting", {
           params: {
@@ -110,6 +125,7 @@ export default {
                 ","
               ))
             : (this.favoriteKeywordArray = []);
+          this.isLoading = false;
         })
         .catch(error => {
           this.isError = true;
@@ -176,6 +192,7 @@ export default {
             timeout: 0,
             important: false
           });
+          this.isLoading = false;
           return;
         }
         axios
@@ -201,6 +218,7 @@ export default {
                   ","
                 ))
               : (this.favoriteKeywordArray = []);
+            this.isLoading = false;
           })
           .catch(error => {
             this.isError = true;
@@ -209,6 +227,11 @@ export default {
       .catch(error => {
         this.isError = true;
       });
+  },
+  computed: {
+    existsAccount: function() {
+      return this.accounts.length > 0;
+    }
   }
 };
 </script>

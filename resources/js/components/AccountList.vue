@@ -1,17 +1,25 @@
 <template>
   <div>
-    <ul class="p-monitor-list" v-if="existsAccount">
-      <account-item
-        v-for="account in accounts"
-        :account="account"
-        :key="account.id"
-        @deleteAccount="onDeleteAccount"
-      ></account-item>
-    </ul>
-    <span class="p-message-1" v-else>
-      <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません
-    </span>
-    <flash-message class="p-flash_message--fixed"></flash-message>
+    <div v-show="isLoading">
+
+      <span class="p-message-1">
+       Loading...
+      </span>
+    </div>
+    <div v-show="!isLoading">
+      <ul class="p-monitor-list" v-if="existsAccount">
+        <account-item
+          v-for="account in accounts"
+          :account="account"
+          :key="account.id"
+          @deleteAccount="onDeleteAccount"
+        ></account-item>
+      </ul>
+      <span class="p-message-1" v-else>
+        <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません
+      </span>
+      <flash-message class="p-flash_message--fixed"></flash-message>
+    </div>
   </div>
 </template>
 
@@ -25,7 +33,8 @@ export default {
   },
   data: function() {
     return {
-      accounts: []
+      accounts: [],
+      isLoading : true
     };
   },
   methods: {
@@ -54,7 +63,7 @@ export default {
             timeout: 5000,
             important: true
           });
-        })  
+        })
         .catch(error => {
           this.isError = true;
 
@@ -75,6 +84,7 @@ export default {
       .get("/account/get", {})
       .then(res => {
         this.accounts = res.data;
+        this.isLoading = false;
       })
       .catch(error => {
         this.isError = true;
