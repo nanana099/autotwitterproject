@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Services\TwitterAuth;
-use App\Http\Services\TwitterAccount;
+use App\Services\TwitterAuth;
+use App\Services\TwitterAccount;
 use App\Account;
 use App\AccountSetting;
 use App\OperationStatus;

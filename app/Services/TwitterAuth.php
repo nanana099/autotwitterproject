@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services;
+namespace App\Services;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use Illuminate\Support\Facades\Request;
