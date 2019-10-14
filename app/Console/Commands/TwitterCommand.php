@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Services\FavoriteExecutor;
+use App\Services\FollowExecutor;
+use App\Services\UnfollowExecutor;
 
 class TwitterCommand extends Command
 {
@@ -39,8 +41,11 @@ class TwitterCommand extends Command
     public function handle()
     {
         $executors = [
-            new FavoriteExecutor()
+            new FollowExecutor(),  // フォロー機能
+            new UnfollowExecutor(),// アンフォロー機能
+            new FavoriteExecutor(),// いいね機能
         ];
+        
         foreach ($executors as $executor) {
             $executor->prepare();
             $executor->execute();
