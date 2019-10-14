@@ -51,9 +51,23 @@ class TwitterAccount
     public function removeFollower(int $user_id)
     {
     }
+
+    // ユーザーをフォローする
     public function followUser(int $user_id)
     {
+        $result = get_object_vars($this->twitter->post(
+            "friendships/create",
+            array(
+                'user_id' => $user_id,
+            )
+        ));
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+
+        return $result;
     }
+
+    // いいね実行
     public function favoriteTweet(string $id)
     {
         $result = get_object_vars($this->twitter->post(
@@ -68,6 +82,8 @@ class TwitterAccount
 
         return $result;
     }
+     
+    // ツイート検索
     public function searchTweets(string $word)
     {
         $result = get_object_vars($this->twitter->get(
@@ -95,12 +111,14 @@ class TwitterAccount
     {
         // users/lookup
     }
-    public function getFollowerList(string $user_id)
+
+    // フォロワーの情報を取得する
+    public function getFollowerList(string $screen_name)
     {
         $result = get_object_vars($this->twitter->get(
             "followers/list",
             array(
-                'screen_name' => $user_id,
+                'screen_name' => $screen_name,
                 'count' => 20, // 最大取得件数
                 'status' => false,
                 'include_user_entities' => false
@@ -110,13 +128,14 @@ class TwitterAccount
         TwitterAPIErrorChecker::check($result);
 
         return $result;
-        
     }
     public function getTweetLatest(string $screen_name)
     {
     }
 
-    public function getRateLimit(){
+    // アカウントのTwitterAPI制限を調べる
+    public function getRateLimit()
+    {
         $result = get_object_vars($this->twitter->get(
             "application/rate_limit_status",
         ));
