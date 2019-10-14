@@ -42,8 +42,8 @@ class TwitterCommand extends Command
     {
         $executors = [
             new FollowExecutor(),  // フォロー機能
-            new UnfollowExecutor(),// アンフォロー機能
-            new FavoriteExecutor(),// いいね機能
+            // new UnfollowExecutor(),// アンフォロー機能
+            // new FavoriteExecutor(),// いいね機能
         ];
         
         foreach ($executors as $executor) {

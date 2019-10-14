@@ -14,6 +14,8 @@ class TwitterAPIErrorChecker
     public static function check($result)
     {
         if (!empty($result['errors'])) {
+            logger($result['errors']);
+
             $errorCode = $result['errors'][0]->code;
 
             if ($errorCode === self::RISTRICT_CODE) {

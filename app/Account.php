@@ -28,4 +28,14 @@ class Account extends Model
     {
         return $this->hasMany('App\ReservedTweet');
     }
+
+    public function followedUsers()
+    {
+        return $this->hasMany('App\FollowedUser');
+    }
+
+    public function unfollowedUsers()
+    {
+        return $this->hasMany('App\UnfollowedUser');
+    }
 }

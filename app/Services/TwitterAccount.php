@@ -97,8 +97,32 @@ class TwitterAccount
     }
     public function getFollowerList(string $user_id)
     {
+        $result = get_object_vars($this->twitter->get(
+            "followers/list",
+            array(
+                'screen_name' => $user_id,
+                'count' => 20, // 最大取得件数
+                'status' => false,
+                'include_user_entities' => false
+            )
+        ));
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+
+        return $result;
+        
     }
     public function getTweetLatest(string $screen_name)
     {
+    }
+
+    public function getRateLimit(){
+        $result = get_object_vars($this->twitter->get(
+            "application/rate_limit_status",
+        ));
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+
+        return $result;
     }
 }
