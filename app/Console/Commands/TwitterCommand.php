@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Services\FavoriteExecutor;
 
 class TwitterCommand extends Command
 {
@@ -37,6 +38,12 @@ class TwitterCommand extends Command
      */
     public function handle()
     {
-        logger('twitter');
+        $executors = [
+            new FavoriteExecutor()
+        ];
+        foreach ($executors as $executor) {
+            $executor->prepare();
+            $executor->execute();
+        }
     }
 }

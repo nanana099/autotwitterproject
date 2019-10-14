@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
+use App\Services\TwitterAPIErrorChecker;
 
 // Twitterアカウントのオブジェクト
 class TwitterAccount
@@ -28,10 +29,6 @@ class TwitterAccount
         );
     }
 
-    /**
-     * つぶやきを投稿する
-     * @param string $msg
-     */
     public function getScreenName()
     {
         return $this->screen_name;
@@ -57,24 +54,42 @@ class TwitterAccount
     public function followUser(int $user_id)
     {
     }
-    public function favoriteTweet(int $id)
+    public function favoriteTweet(string $id)
     {
+        $result = get_object_vars($this->twitter->post(
+            "favorites/create",
+            array(
+                'id' => $id,
+                'include_entities' => false
+            )
+        ));
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+
+        return $result;
     }
     public function searchTweets(string $word)
     {
+        $result = get_object_vars($this->twitter->get(
+            "search/tweets",
+            array(
+                'q' => $word,
+                'lang' => 'ja',
+                'locale' => 'ja',
+                'result_type' => 'recent', // 最近のツイートを検索結果として取得
+                'count' => 1, // 最大取得件数
+            )
+        ));
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+
+        return $result;
     }
     public function existsAccount(string $screen_name)
     {
     }
     public function getMyAccountInfo()
     {
-        $result = get_object_vars($this->twitter->get(
-            "users/show",
-            array(
-                'user_id' => $this->user_id,
-            )
-        ));
-        return $result;
     }
     public function getAccountInfo(string $screen_name)
     {
