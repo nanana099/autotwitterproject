@@ -11,5 +11,7 @@ class OperationStatus extends Model
         'is_unfollow',
         'is_favorite',
         'account_id',
+        'is_flozen',
+        'stopped_at'
     ];
 }

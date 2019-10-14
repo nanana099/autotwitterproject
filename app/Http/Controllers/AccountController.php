@@ -147,6 +147,7 @@ class AccountController extends Controller
                 $data['is_favorite'] = $value;
                 break;
         }
+        $data['is_flozen'] = false;
         return response()->json($status->fill($data)->save());
     }
 }

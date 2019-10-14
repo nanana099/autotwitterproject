@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use \Exception;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
+use App\OperationStatus;
 
 class FavoriteExecutor implements ITwitterFunctionExecutor
 {
@@ -23,8 +24,8 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
             INNER JOIN operation_statuses 
                 ON accounts.id = operation_statuses.account_id  
                 AND operation_statuses.is_favorite = 1
-                -- AND operation_statuses.is_flozen = 0
-                -- AND operation_statuses.stopped_at <  SUBTIME(NOW(),\'00:15:00\')
+                AND operation_statuses.is_flozen = 0
+                AND operation_statuses.stopped_at <  SUBTIME(NOW(),\'00:15:00\')
                 '
         );
     }
@@ -48,15 +49,17 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                 }
             } catch (TwitterRestrictionException $e) {
                 // API制限
-                // 処理を次のアカウントへ
-                // 前回停止時間を更新
-                
-            } catch (TwitterFlozenException $e){
+                OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                    'stopped_at' => date('Y/m/d H:i:s')))->save();
+                // メール送信
+            } catch (TwitterFlozenException $e) {
                 // 凍結
-                // 処理を次のアカウントへ
-                // 稼働フラグを0へ変更
-                // 凍結フラグを1へ変更
-            } catch (Exception $e){
+                OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                    'is_favorite' => 0,
+                    'is_flozen'=>1,
+                    'stopped_at' => date('Y/m/d H:i:s')))->save();
+                // メール送信
+            } catch (Exception $e) {
                 // その他例外
             }
         }
