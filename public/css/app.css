@@ -377,6 +377,10 @@ body {
   margin-bottom: 15px;
 }
 
+.u-mb-1 {
+  margin-bottom: 10px;
+}
+
 @media screen and (min-width: 768px) {
   .u-w-70 {
     width: 70%;

@@ -100,6 +100,10 @@
 .u-mb-2 {
   margin-bottom: $space-m;
 }
+
+.u-mb-1 {
+  margin-bottom: $space-s;
+}
 .u-w-70 {
   @include mq("md") {
     width: 70%;

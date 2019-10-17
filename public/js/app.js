@@ -57815,7 +57815,7 @@ var render = function() {
             expression: "selectedStr"
           }
         ],
-        staticClass: "c-form-group__select-multi u-mb-3",
+        staticClass: "c-form-group__select-multi u-mb-1",
         attrs: { size: "5", multiple: "" },
         on: {
           change: function($event) {

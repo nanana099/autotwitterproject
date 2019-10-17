@@ -5,7 +5,7 @@
       <button class="c-btn c-btn--primary" @click="addTarget">追加</button>
       <span class="c-invalid-feedback">{{errorMsg}}</span>
     </div>
-    <select size="5" class="c-form-group__select-multi u-mb-3" v-model="selectedStr" multiple>
+    <select size="5" class="c-form-group__select-multi u-mb-1" v-model="selectedStr" multiple>
       <option v-for="target in ary" :value="target" :key="target">{{target}}</option>
     </select>
     <div class="c-justify-content-end">
