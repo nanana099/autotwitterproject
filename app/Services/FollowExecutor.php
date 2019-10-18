@@ -50,11 +50,10 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 foreach ($targetAccounts as $targetAccount) {
                     // フォロー対象アカウント
                     $followUsers = $this->getFollowList($followedUsers, $unfollowedUsers, $keywords, $targetAccount, $twitterAccount);//['123456789','987654321','111111111',....]
-                    logger($followUsers);
                     // フォロー実行
                     foreach ($followUsers as $followUser) {
                         // フォローできたらDBへ格納
-                        $twitterAccount->followUser($followUser);
+                        $twitterAccount->follow($followUser);
                     }
                 }
             } catch (TwitterRestrictionException $e) {

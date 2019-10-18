@@ -44,7 +44,7 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
 
                     foreach ($tweets as $tweet) {
                         // いいね実行
-                        $result = $twitterAccount->favoriteTweet($tweet->id_str);
+                        $result = $twitterAccount->favorite($tweet->id_str);
                     }
                 }
             } catch (TwitterRestrictionException $e) {

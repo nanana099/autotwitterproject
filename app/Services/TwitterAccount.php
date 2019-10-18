@@ -53,7 +53,7 @@ class TwitterAccount
     }
 
     // ユーザーをフォローする
-    public function followUser(int $user_id)
+    public function follow(int $user_id)
     {
         $result = get_object_vars($this->twitter->post(
             "friendships/create",
@@ -68,7 +68,7 @@ class TwitterAccount
     }
 
     // いいね実行
-    public function favoriteTweet(string $id)
+    public function favorite(string $id)
     {
         $result = get_object_vars($this->twitter->post(
             "favorites/create",
