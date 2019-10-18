@@ -2,11 +2,12 @@
 namespace App\Services;
 
 use App\Account;
-use App\AccountSetting;
 use Illuminate\Support\Facades\DB;
 use \Exception;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
+use App\FollowedUser;
+use Illuminate\Support\Carbon;
 
 class FollowExecutor implements ITwitterFunctionExecutor
 {
@@ -42,18 +43,20 @@ class FollowExecutor implements ITwitterFunctionExecutor
             $targetAccounts = empty($account->target_accounts) ? [] : explode(',', $account->target_accounts);
             $wk =Account::find($account->id);
             // フォロー済みリスト
-            $followedUsers = $wk->followedUsers()->get();
+            $followedUsers = $wk->followedUsers()->where('followed_at', '>=', Carbon::today()->subDay(30))->get();
             //アンフォロー済みリストをDBから取得
             $unfollowedUsers =  $wk->unfollowedUsers()->get();
 
             try {
                 foreach ($targetAccounts as $targetAccount) {
-                    // フォロー対象アカウント
+                    // フォロー対象アカウントのリスト
                     $followUsers = $this->getFollowList($followedUsers, $unfollowedUsers, $keywords, $targetAccount, $twitterAccount);//['123456789','987654321','111111111',....]
+
                     // フォロー実行
                     foreach ($followUsers as $followUser) {
                         // フォローできたらDBへ格納
                         $twitterAccount->follow($followUser);
+                        (new FollowedUser(array('user_id' => $followUser, 'account_id' => $account->id, 'followed_at' => Carbon::now())))->save();
                     }
                 }
             } catch (TwitterRestrictionException $e) {
@@ -70,6 +73,8 @@ class FollowExecutor implements ITwitterFunctionExecutor
             }
         }
     }
+
+    // フォロー対象アカウントのuser_idのリストを返す
     private function getFollowList($followedUsers, $unfollowedUsers, $keywords, $targetAccount, $twitterAccount)
     {
         $resultList = [];
