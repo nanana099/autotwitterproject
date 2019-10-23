@@ -13,6 +13,9 @@ class TwitterAPIErrorChecker
 
     public static function check($result)
     {
+        if (is_object($result)) {
+            $result = get_object_vars($result);
+        }
         if (!empty($result['errors'])) {
             logger($result['errors']);
 

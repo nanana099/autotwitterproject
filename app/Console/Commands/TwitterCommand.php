@@ -41,8 +41,8 @@ class TwitterCommand extends Command
     public function handle()
     {
         $executors = [
-            new FollowExecutor(),  // フォロー機能
-            // new UnfollowExecutor(),// アンフォロー機能
+            // new FollowExecutor(),  // フォロー機能
+            new UnfollowExecutor(),// アンフォロー機能
             // new FavoriteExecutor(),// いいね機能
         ];
         

@@ -17,7 +17,10 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
         // 対象リストの作成
         // 前回停止日時、凍結中は除く
         $this->accounts = DB::select(
-            'SELECT accounts.id,accounts.access_token,account_settings.keyword_favorite
+            'SELECT 
+                accounts.id,
+                accounts.access_token,
+                account_settings.keyword_favorite
             FROM accounts 
             INNER JOIN account_settings 
                 ON accounts.id = account_settings.account_id

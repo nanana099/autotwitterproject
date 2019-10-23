@@ -4,13 +4,12 @@ namespace App\Services;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Services\TwitterAPIErrorChecker;
+use \Exception;
 
 // Twitterアカウントのオブジェクト
 class TwitterAccount
 {
-    /** @var int Twitterアカウントのuser_id */
     private $user_id;
-    /** @var int Twitterアカウントのscreen_name */
     private $screen_name;
     /** @var TwitterOAuth */
     private $twitter;
@@ -48,8 +47,18 @@ class TwitterAccount
             )
         ));
     }
-    public function removeFollower(int $user_id)
+    public function unfollow(string $user_id)
     {
+        $result =  get_object_vars(
+            $this->twitter->post(
+                "friendships/destroy",
+                array(
+                'user_id' => $user_id,
+            )
+            )
+        );
+        TwitterAPIErrorChecker::check($result);
+        return $result;
     }
 
     // ユーザーをフォローする
@@ -65,6 +74,20 @@ class TwitterAccount
         TwitterAPIErrorChecker::check($result);
 
         return $result;
+    }
+
+    public function getMyFollowersCount()
+    {
+        $result = get_object_vars($this->twitter->get(
+            "users/show",
+            array(
+                'user_id' => $this->user_id
+            )
+        ));
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+
+        return $result['followers_count'];
     }
 
     // いいね実行
@@ -101,6 +124,40 @@ class TwitterAccount
 
         return $result;
     }
+    // 最新ツイートを取得する
+    public function getLatestTweet(string $user_id)
+    {
+        $result = ($this->twitter->get(
+            "statuses/user_timeline",
+            array(
+                    'user_id' => $user_id,
+                    'result_type' => 'recent', // 最近のツイートを検索結果として取得
+                    'count' => 1, // 最大取得件数
+                    'execlude_replies' => false, // リプライでも取得する
+                    'include_rts' => true , // リツイートでも取得する
+                )
+        ));
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+
+        return $result;
+    }
+
+    // 最新ツイートの作成日時を取得する
+    public function getLatestTweetDate(string $user_id)
+    {
+        $tweet = $this->getLatestTweet($user_id);
+        if ($tweet[0]) {
+            return $tweet[0]->created_at;
+        } else {
+            // つぶやきが０件数の場合
+            return false;
+        }
+    }
+
+    public function isFollowedBy($user_id)
+    {
+    }
     public function existsAccount(string $screen_name)
     {
     }
@@ -110,6 +167,21 @@ class TwitterAccount
     public function getAccountInfo(string $screen_name)
     {
         // users/lookup
+    }
+
+    // 自分からみた他ユーザーとの関係
+    public function getFriendShips(string $user_ids)
+    {
+        $result = $this->twitter->get(
+            "friendships/lookup",
+            array(
+                    'user_id' => $user_ids,
+                )
+        );
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+
+        return $result;
     }
 
     // フォロワーの情報を取得する
@@ -129,9 +201,7 @@ class TwitterAccount
 
         return $result;
     }
-    public function getTweetLatest(string $screen_name)
-    {
-    }
+  
 
     // アカウントのTwitterAPI制限を調べる
     public function getRateLimit()

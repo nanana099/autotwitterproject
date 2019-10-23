@@ -105,7 +105,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 continue;
             }
 
-            // 確認：プロフィールにキーワードを含むか
+            // 確認：プロフィールにキーワードを含むか（５０音が入っていない場合はフォロー対象から除く）
             foreach ($keywords as $keyword) {
                 if (preg_match("/[ぁ-ん]+|[ァ-ヴー]+/u", $targetAccountFollower->description) && (strpos($targetAccountFollower->description, $keyword) !== false)) {
                     $resultList[] = $targetAccountFollower->id_str;
