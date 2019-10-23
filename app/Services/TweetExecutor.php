@@ -3,62 +3,83 @@ namespace App\Services;
 
 // use App\Account;
 // use App\AccountSetting;
-// use Illuminate\Support\Facades\DB;
-// use \Exception;
-// use App\Exceptions\TwitterRestrictionException;
-// use App\Exceptions\TwitterFlozenException;
+use Illuminate\Support\Facades\DB;
+use \Exception;
+use App\Exceptions\TwitterRestrictionException;
+use App\Exceptions\TwitterFlozenException;
+use App\ReservedTweet;
+use App\Account;
 
 class TweetExecutor implements ITwitterFunctionExecutor
 {
-    private $accounts = [];
+    private $tweets = [];
     public function prepare()
     {
         // 対象リストの作成
-        // 前回停止日時、凍結中は除く
-        // $this->accounts = DB::select(
-        //     'SELECT accounts.id,accounts.access_token,account_settings.keyword_favorite
-        //     FROM accounts 
-        //     INNER JOIN account_settings 
-        //         ON accounts.id = account_settings.account_id
-        //     INNER JOIN operation_statuses 
-        //         ON accounts.id = operation_statuses.account_id  
-        //         AND operation_statuses.is_favorite = 1
-        //         -- AND operation_statuses.is_flozen = 0
-        //         -- AND operation_statuses.stopped_at <  SUBTIME(NOW(),\'00:15:00\')
-        //         '
-        // );
+        $this->tweets = DB::select(
+            'SELECT 
+                r.id ,
+                r.content,
+                r.submit_date,
+                r.account_id,
+                a.access_token
+            FROM reserved_tweets r
+                INNER JOIN operation_statuses o
+                ON r.account_id = o.account_id
+                AND o.is_flozen = 0
+                INNER JOIN accounts a
+                ON r.account_id = a.id
+            WHERE r.submit_date < NOW()
+            ORDER BY r.account_id
+            '
+        );
+    }
+
+    // TwitterAPIを用いて、つぶやきを投稿する
+    private function postTweet(TwitterAccount $twitterAccount, $tweet)
+    {
+        $twitterAccount->postTweet($tweet->content);
+    }
+
+    // DBからツイートの予約情報を削除する
+    private function deleteTweetOnDB(int $tweet_id)
+    {
+        ReservedTweet::find($tweet_id)->delete();
     }
 
     public function execute()
     {
-        // foreach ($this->accounts as  $account) {
-        //     // Twitterアカウントのインスタンス作成
-        //     $twitterAccount = new TwitterAccount($account->access_token);
-        //     // いいねキーワードのリスト作成
-        //     $keywords = empty($account->keyword_favorite) ? [] : explode(',', $account->keyword_favorite);
-        //     try {
-        //         foreach ($keywords as $keyword) {
-        //             // つぶやきを検索
-        //             $tweets = $twitterAccount->searchTweets($keyword)['statuses'];
+        $prevAccountId = '';
+        $skipAccountId = '';
+        $twitterAccount = '';
 
-        //             foreach ($tweets as $tweet) {
-        //                 // いいね実行
-        //                 $result = $twitterAccount->favoriteTweet($tweet->id_str);
-        //             }
-        //         }
-        //     } catch (TwitterRestrictionException $e) {
-        //         // API制限
-        //         // 処理を次のアカウントへ
-        //         // 前回停止時間を更新
-                
-        //     } catch (TwitterFlozenException $e){
-        //         // 凍結
-        //         // 処理を次のアカウントへ
-        //         // 稼働フラグを0へ変更
-        //         // 凍結フラグを1へ変更
-        //     } catch (Exception $e){
-        //         // その他例外
-        //     }
-        // }
+        // １ツイートごとに繰り返し
+        foreach ($this->tweets as $tweet) {
+            // API制限または凍結を受けたアカウントは処理を行わない
+            if ($skipAccountId === $tweet->account_id) {
+                continue;
+            }
+
+            if ($prevAccountId !== $tweet->account_id) {
+                $prevAccountId = $tweet->account_id;
+                $twitterAccount = new TwitterAccount($tweet->access_token);
+            }
+
+            try {
+                $this->postTweet($twitterAccount, $tweet);
+                $this->deleteTweetOnDB($tweet->id);
+            } catch (TwitterRestrictionException $e) {
+                // API制限のエラー
+                $skipAccountId = $tweet->account_id;
+                // 前回停止時間を更新
+            } catch (TwitterFlozenException $e) {
+                // 凍結のエラー
+                $skipAccountId = $tweet->account_id;
+                // 稼働フラグを0へ変更
+                // 凍結フラグを1へ変更
+            } catch (Exception $e) {
+                // その他例外
+            }
+        }
     }
 }

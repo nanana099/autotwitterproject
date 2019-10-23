@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\Services\FavoriteExecutor;
 use App\Services\FollowExecutor;
 use App\Services\UnfollowExecutor;
+use App\Services\TweetExecutor;
 
 class TwitterCommand extends Command
 {
@@ -41,8 +42,9 @@ class TwitterCommand extends Command
     public function handle()
     {
         $executors = [
+            new TweetExecutor(),  // フォロー機能
             // new FollowExecutor(),  // フォロー機能
-            new UnfollowExecutor(),// アンフォロー機能
+            // new UnfollowExecutor(),// アンフォロー機能
             // new FavoriteExecutor(),// いいね機能
         ];
         

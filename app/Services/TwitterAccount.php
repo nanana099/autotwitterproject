@@ -37,15 +37,19 @@ class TwitterAccount
      * つぶやきを投稿する
      * @param string $msg
      */
-    public function tweet(string $msg)
+    public function postTweet(string $msg)
     {
+        logger('hoge');
         // myTodo:画像やURLも呟けるようにする
-        $userInfo = get_object_vars($this->twitter->post(
+        $result = get_object_vars($this->twitter->post(
             "statuses/update",
             array(
                 'status' => $msg,
             )
         ));
+
+        TwitterAPIErrorChecker::check($result);
+        return $result;
     }
     public function unfollow(string $user_id)
     {
@@ -57,6 +61,7 @@ class TwitterAccount
             )
             )
         );
+        
         TwitterAPIErrorChecker::check($result);
         return $result;
     }
