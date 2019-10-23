@@ -13,6 +13,7 @@ class TwitterAccount
     private $screen_name;
     /** @var TwitterOAuth */
     private $twitter;
+    private $apiLimit;
 
     public function __construct(string $access_token)
     {
@@ -28,6 +29,28 @@ class TwitterAccount
         );
     }
 
+    // TwitterAPIの関数の使用回数制限の判定
+    private function checkLimit(string $resourceName)
+    {
+        if (!isset($this->apilimit)) {
+            $this->apiLimit = json_decode(json_encode($this->getRateLimit()['resources']), true);
+        }
+
+        $resource_parent = explode('/', $resourceName)[0];
+        $resource_child = '/'.$resourceName;
+
+        if (empty($this->apiLimit[$resource_parent][$resource_child])) {
+            return true;
+        } else {
+            if ($this->apiLimit[$resource_parent][$resource_child]['remaining'] > 0) {
+                $this->apiLimit[$resource_parent][$resource_child]['remaining'] -= 1;
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     public function getScreenName()
     {
         return $this->screen_name;
@@ -39,10 +62,14 @@ class TwitterAccount
      */
     public function postTweet(string $msg)
     {
-        logger('hoge');
+        $resourceName = "statuses/update";
+        if (!$this->checkLimit($resourceName)) {
+            return;
+        }
+        
         // myTodo:画像やURLも呟けるようにする
         $result = get_object_vars($this->twitter->post(
-            "statuses/update",
+            $resourceName,
             array(
                 'status' => $msg,
             )
@@ -164,8 +191,8 @@ class TwitterAccount
     {
     }
     public function existsAccount(string $screen_name)
-    {  
-    } 
+    {
+    }
     public function getMyAccountInfo()
     {
         $result = get_object_vars($this->twitter->get(
@@ -175,7 +202,6 @@ class TwitterAccount
             )
         ));
         return $result;
-
     }
     public function getAccountInfo(string $screen_name)
     {
@@ -215,9 +241,8 @@ class TwitterAccount
         return $result;
     }
   
-
     // アカウントのTwitterAPI制限を調べる
-    public function getRateLimit()
+    private function getRateLimit()
     {
         $result = get_object_vars($this->twitter->get(
             "application/rate_limit_status",
