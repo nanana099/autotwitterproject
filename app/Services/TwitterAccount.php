@@ -159,10 +159,18 @@ class TwitterAccount
     {
     }
     public function existsAccount(string $screen_name)
-    {
-    }
+    {  
+    } 
     public function getMyAccountInfo()
     {
+        $result = get_object_vars($this->twitter->get(
+            "users/show",
+            array(
+                'user_id' => $this->user_id,
+            )
+        ));
+        return $result;
+
     }
     public function getAccountInfo(string $screen_name)
     {
