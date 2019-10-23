@@ -3,7 +3,7 @@ namespace App\Services;
 
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
-use \Exception;
+use App\Exceptions\TwitterException;
 
 // TwitterAPIレスポンスのエラーを見つけて、例外を発生するためのクラス
 class TwitterAPIErrorChecker
@@ -26,7 +26,7 @@ class TwitterAPIErrorChecker
             } elseif ($errorCode === self::FLOZEN_COEE) {
                 throw new TwitterFlozenException(); //API制限
             } else {
-                throw new Exception();// その他例外
+                throw new TwitterException();// その他例外
             }
         }
     }
