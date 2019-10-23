@@ -2,9 +2,16 @@
 
 namespace App\Exceptions;
 
-use Exception;
+use App\Exceptions\TwitterException;
 
-class TwitterFlozenException extends Exception
+class TwitterFlozenException extends TwitterException
 {
-    //
+    private $errorCode;
+
+    public function setErrorCode(int $errorCode) {
+        $this->errorCode = $errorCode;
+    }
+    public function getErrorCode(int $errorCode){
+        return $this->errorCode;
+    }
 }

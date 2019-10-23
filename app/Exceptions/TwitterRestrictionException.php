@@ -2,9 +2,9 @@
 
 namespace App\Exceptions;
 
-use Exception;
+use App\Exceptions\TwitterException;
 
-class TwitterRestrictionException extends Exception
+class TwitterRestrictionException extends TwitterException
 {
     //
 }
