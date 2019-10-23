@@ -17,6 +17,12 @@ class TwitterAccount
     private $twitter;
     // TwitterAPIのリソースの使用状況
     private $apiLimit;
+    //
+    private const FOLLOW_LIMIT_PER_15MINUTE = 15;
+    private const FOLLOW_LIMIT_PER_DAY = 1000;
+    private const UNFOLLOW_LIMIT_PER_DAY = 1000;
+    private const FRIENDSHIPS_LIMIT_PER_15MINUTE = 170;
+
 
     // コンストラクタ
     public function __construct(string $access_token)
