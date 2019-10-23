@@ -75,7 +75,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
     }
 
     // フォロー対象アカウントのuser_idのリストを返す
-    private function getFollowList($followedUsers, $unfollowedUsers, $keywords, $targetAccount, $twitterAccount)
+    private function getFollowList($followedUsers, $unfollowedUsers, $keywords, $targetAccount, TwitterAccount $twitterAccount)
     {
         $resultList = [];
         // ターゲットアカウントのフォロワー取得（フォロワーリスト）
