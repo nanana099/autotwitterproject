@@ -4,17 +4,21 @@ namespace App\Services;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
 use App\Services\TwitterAPIErrorChecker;
-use \Exception;
+use App\Exceptions\TwitterRestrictionException;
 
 // Twitterアカウントのオブジェクト
 class TwitterAccount
 {
+    // Twitterアカウントのuser_id(Twitter内で一意で変わらないID)
     private $user_id;
+    // Twitterアカウントのscreen_name(Twitter内で一意ではない、ユーザーが変更可能なID)
     private $screen_name;
     /** @var TwitterOAuth */
     private $twitter;
+    // TwitterAPIのリソースの使用状況
     private $apiLimit;
 
+    // コンストラクタ
     public function __construct(string $access_token)
     {
         $access_token_ary = json_decode($access_token, true);
@@ -51,11 +55,6 @@ class TwitterAccount
         }
     }
 
-    public function getScreenName()
-    {
-        return $this->screen_name;
-    }
-
     /**
      * つぶやきを投稿する
      * @param string $msg
@@ -63,119 +62,158 @@ class TwitterAccount
     public function postTweet(string $msg)
     {
         $resourceName = "statuses/update";
-        if (!$this->checkLimit($resourceName)) {
-            return;
-        }
-        
-        // myTodo:画像やURLも呟けるようにする
-        $result = get_object_vars($this->twitter->post(
-            $resourceName,
-            array(
-                'status' => $msg,
-            )
-        ));
 
-        TwitterAPIErrorChecker::check($result);
-        return $result;
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result = get_object_vars($this->twitter->post(
+                $resourceName,
+                array(
+                    'status' => $msg,
+                )
+            ));
+            // エラーチェック
+            TwitterAPIErrorChecker::check($result);
+    
+            return $result;
+        }
     }
+
+    // 指定のアカウントのフォローを外す
     public function unfollow(string $user_id)
     {
-        $result =  get_object_vars(
-            $this->twitter->post(
-                "friendships/destroy",
-                array(
-                'user_id' => $user_id,
-            )
-            )
-        );
+        $resourceName = "friendships/destroy";
         
-        TwitterAPIErrorChecker::check($result);
-        return $result;
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result =  get_object_vars(
+                $this->twitter->post(
+                    $resourceName,
+                    array(
+                        'user_id' => $user_id,
+                    )
+                )
+            );
+            // エラーチェック
+            TwitterAPIErrorChecker::check($result);
+            return $result;
+        }
     }
 
     // ユーザーをフォローする
     public function follow(int $user_id)
     {
-        $result = get_object_vars($this->twitter->post(
-            "friendships/create",
-            array(
-                'user_id' => $user_id,
-            )
-        ));
-        // エラーチェック
-        TwitterAPIErrorChecker::check($result);
-
-        return $result;
+        $resourceName =  "friendships/create";
+        
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result = get_object_vars($this->twitter->post(
+                $resourceName,
+                array(
+                    'user_id' => $user_id,
+                )
+            ));
+            // エラーチェック
+            TwitterAPIErrorChecker::check($result);
+            return $result;
+        }
     }
 
+    // 自アカウントのフォロワー数を取得する
     public function getMyFollowersCount()
     {
-        $result = get_object_vars($this->twitter->get(
-            "users/show",
-            array(
-                'user_id' => $this->user_id
-            )
-        ));
-        // エラーチェック
-        TwitterAPIErrorChecker::check($result);
-
-        return $result['followers_count'];
+        $resourceName =   "users/show";
+        
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result = get_object_vars($this->twitter->get(
+                $resourceName,
+                array(
+                    'user_id' => $this->user_id
+                )
+            ));
+            // エラーチェック
+            TwitterAPIErrorChecker::check($result);
+            return $result['followers_count'];
+        }
     }
 
-    // いいね実行
+    // 指定のツイートに対して「いいね」をする
     public function favorite(string $id)
     {
-        $result = get_object_vars($this->twitter->post(
-            "favorites/create",
-            array(
-                'id' => $id,
-                'include_entities' => false
-            )
-        ));
-        // エラーチェック
-        TwitterAPIErrorChecker::check($result);
-
-        return $result;
+        $resourceName = "favorites/create";
+        
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result = get_object_vars($this->twitter->post(
+                $resourceName,
+                array(
+                    'id' => $id,
+                    'include_entities' => false
+                )
+            ));
+            // エラーチェック
+            TwitterAPIErrorChecker::check($result);
+    
+            return $result;
+        }
     }
      
-    // ツイート検索
+    // 指定のキーワードでツイートを検索する
     public function searchTweets(string $word)
     {
-        $result = get_object_vars($this->twitter->get(
-            "search/tweets",
-            array(
-                'q' => $word,
-                'lang' => 'ja',
-                'locale' => 'ja',
-                'result_type' => 'recent', // 最近のツイートを検索結果として取得
-                'count' => 1, // 最大取得件数
-            )
-        ));
-        // エラーチェック
-        TwitterAPIErrorChecker::check($result);
-
-        return $result;
-    }
-    // 最新ツイートを取得する
-    public function getLatestTweet(string $user_id)
-    {
-        $result = ($this->twitter->get(
-            "statuses/user_timeline",
-            array(
-                    'user_id' => $user_id,
+        $resourceName = "search/tweets";
+        
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result = get_object_vars($this->twitter->get(
+                $resourceName,
+                array(
+                    'q' => $word,
+                    'lang' => 'ja',
+                    'locale' => 'ja',
                     'result_type' => 'recent', // 最近のツイートを検索結果として取得
                     'count' => 1, // 最大取得件数
-                    'execlude_replies' => false, // リプライでも取得する
-                    'include_rts' => true , // リツイートでも取得する
                 )
-        ));
-        // エラーチェック
-        TwitterAPIErrorChecker::check($result);
-
-        return $result;
+            ));
+            // エラーチェック
+            TwitterAPIErrorChecker::check($result);
+    
+            return $result;
+        }
     }
 
-    // 最新ツイートの作成日時を取得する
+    // 指定のアカウントの最新ツイートを取得する
+    public function getLatestTweet(string $user_id)
+    {
+        $resourceName = "statuses/user_timeline";
+        
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result = ($this->twitter->get(
+                $resourceName,
+                array(
+                        'user_id' => $user_id,
+                        'result_type' => 'recent', // 最近のツイートを検索結果として取得
+                        'count' => 1, // 最大取得件数
+                        'execlude_replies' => false, // リプライでも取得する
+                        'include_rts' => true , // リツイートでも取得する
+                    )
+            ));
+            // エラーチェック
+            TwitterAPIErrorChecker::check($result);
+    
+            return $result;
+        }
+    }
+
+    // 指定のアカウントの最新ツイートの作成日時を取得する
     public function getLatestTweetDate(string $user_id)
     {
         $tweet = $this->getLatestTweet($user_id);
@@ -186,62 +224,70 @@ class TwitterAccount
             return false;
         }
     }
-
-    public function isFollowedBy($user_id)
-    {
-    }
-    public function existsAccount(string $screen_name)
-    {
-    }
+    // 自アカウントの情報を取得する
     public function getMyAccountInfo()
     {
-        $result = get_object_vars($this->twitter->get(
-            "users/show",
-            array(
-                'user_id' => $this->user_id,
-            )
-        ));
-        return $result;
-    }
-    public function getAccountInfo(string $screen_name)
-    {
-        // users/lookup
+        $resourceName = "users/show";
+        
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result = get_object_vars($this->twitter->get(
+                $resourceName,
+                array(
+                    'user_id' => $this->user_id,
+                )
+            ));
+            return $result;
+        }
     }
 
-    // 自分からみた他ユーザーとの関係
+    // 自アカウントと指定のアカウントの関係の情報を取得する
     public function getFriendShips(string $user_ids)
     {
-        $result = $this->twitter->get(
-            "friendships/lookup",
-            array(
+        $resourceName = "friendships/lookup";
+        
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result = $this->twitter->get(
+                $resourceName,
+                array(
                     'user_id' => $user_ids,
                 )
-        );
-        // エラーチェック
-        TwitterAPIErrorChecker::check($result);
-
-        return $result;
+            );
+            // エラーチェック
+            TwitterAPIErrorChecker::check($result);
+    
+            return $result;
+        }
     }
 
-    // フォロワーの情報を取得する
+    // 指定のアカウントのフォロワーの情報を取得する
     public function getFollowerList(string $screen_name)
     {
-        $result = get_object_vars($this->twitter->get(
-            "followers/list",
-            array(
-                'screen_name' => $screen_name,
-                'count' => 20, // 最大取得件数
-                'status' => false,
-                'include_user_entities' => false
-            )
-        ));
-        // エラーチェック
-        TwitterAPIErrorChecker::check($result);
-
-        return $result;
+        $resourceName = "followers/list";
+        
+        if (!$this->checkLimit($resourceName)) {
+            throw new TwitterRestrictionException();
+        } else {
+            $result = get_object_vars($this->twitter->get(
+                $resourceName,
+                array(
+                    'screen_name' => $screen_name,
+                    'count' => 20, // 最大取得件数
+                    'status' => false,
+                    'include_user_entities' => false
+                )
+            ));
+            // エラーチェック
+            TwitterAPIErrorChecker::check($result);
+    
+            return $result;
+        }
     }
   
-    // アカウントのTwitterAPI制限を調べる
+    // 自アカウントのTwitterAPI制限を調べる
     private function getRateLimit()
     {
         $result = get_object_vars($this->twitter->get(

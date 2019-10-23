@@ -8,7 +8,7 @@ class TwitterException extends Exception
 {
     protected $errorCode;
 
-    public function __construct(int $errorCode)
+    public function __construct(int $errorCode = -1)
     {
         $this->errorCode = $errorCode;
     }
