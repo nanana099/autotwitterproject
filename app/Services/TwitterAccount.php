@@ -87,14 +87,14 @@ class TwitterAccount
 
             if ($resourceName === self::FRIENDSHIPS_DESTROY) {
                 // ２４時間制限
-                if ($this->calledCountFriendshipsDestroyBefore24Hour + $this->calledCountFriendshipsCreateNow >= $this::FRIENDHSIPS_DESTROY_LIMIT_PER_24HOUR) {
+                if ($this->calledCountFriendshipsDestroyBefore24Hour + $this->calledCountFriendshipsDestroyNow >= $this::FRIENDHSIPS_DESTROY_LIMIT_PER_24HOUR) {
                     throw new TwitterRestrictionException();
                 }
                 // １５分制限（フレンドシップ全体）
                 if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE) {
                     throw new TwitterRestrictionException();
                 }
-                $this->calledCountFriendshipsCreateNow++;
+                $this->calledCountFriendshipsDestroyNow++;
             }
 
             if ($resourceName === self::FRIENDSHIPS_LOOKUP) {

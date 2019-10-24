@@ -90,7 +90,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
             } catch (TwitterFlozenException $e) {
                 // 凍結
                 OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                'is_favorite' => 0,
+                'is_follow' => 0,
                 'is_flozen'=>1,
                 'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
             }
