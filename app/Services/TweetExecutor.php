@@ -29,7 +29,7 @@ class TweetExecutor implements ITwitterFunctionExecutor
                 AND o.is_flozen = 0
                 INNER JOIN accounts a
                 ON r.account_id = a.id
-            WHERE r.submit_date < NOW()
+            WHERE r.submit_date <= NOW()
             ORDER BY r.account_id
             '
         );
