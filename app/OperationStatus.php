@@ -12,6 +12,8 @@ class OperationStatus extends Model
         'is_favorite',
         'account_id',
         'is_flozen',
-        'stopped_at'
+        'stopped_at',
+        'following_target_account',
+        'following_target_account_cursor',
     ];
 }

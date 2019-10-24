@@ -41,46 +41,68 @@ class FollowExecutor implements ITwitterFunctionExecutor
             $keywords = empty($account->keyword_follow) ? [] : explode(',', $account->keyword_follow);
             // フォローターゲット
             $targetAccounts = empty($account->target_accounts) ? [] : explode(',', $account->target_accounts);
-            $wk =Account::find($account->id);
-            // フォロー済みリスト
-            $followedUsers = $wk->followedUsers()->where('followed_at', '>=', Carbon::today()->subDay(30))->get();
-            //アンフォロー済みリストをDBから取得
-            $unfollowedUsers =  $wk->unfollowedUsers()->get();
-
+            $accountFromDB = Account::find($account->id);
+            // フォロー済みリスト（３０日以内にフォロー済みのアカウント）
+            $followedUsers = $accountFromDB->followedUsers()->where('followed_at', '>=', Carbon::today()->subDay(30))->get();
+            // アンフォロー済みリストをDBから取得
+            $unfollowedUsers =  $accountFromDB->unfollowedUsers()->get();
+            // ターゲットアカウントのフォロワー格納用
+            $targetAccountFollowers = [];
+            // アカウントの設定情報
+            $operationStatus = $accountFromDB->operationStatus;
+            // 前回処理ターゲットアカウント
+            $prevTargetAccount = $operationStatus->following_target_account;
+            // 前回処理カーソル
+            $prevTargetAccountCursor = $operationStatus->following_target_account_cursor;
+            // 処理済みのターゲットアカウントを配列から削除しておく
+            $targetAccounts = array_slice($targetAccounts, array_search($prevTargetAccount, $targetAccounts));
             try {
                 foreach ($targetAccounts as $targetAccount) {
-                    // フォロー対象アカウントのリスト
-                    $followUsers = $this->getFollowList($followedUsers, $unfollowedUsers, $keywords, $targetAccount, $twitterAccount);//['123456789','987654321','111111111',....]
-
-                    // フォロー実行
-                    foreach ($followUsers as $followUser) {
-                        // フォローできたらDBへ格納
-                        $twitterAccount->follow($followUser);
-                        (new FollowedUser(array('user_id' => $followUser, 'account_id' => $account->id, 'followed_at' => Carbon::now())))->save();
+                    try {
+                        try {
+                            // ターゲットアカウントのフォロワーを取得
+                            $this->getFollowers($targetAccount, $twitterAccount, $prevTargetAccountCursor, $targetAccountFollowers);
+                            // 処理中情報をクリア
+                            $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
+                        } catch (TwitterRestrictionException $e) {
+                            // 処理中情報をDBに格納
+                            $operationStatus->fill(array('following_target_account' => $targetAccount,'following_target_account_cursor' => $prevTargetAccountCursor))->save();
+                            throw $e;
+                        }
+                    } finally {
+                        // ターゲットアカウントのフォロワーを取得中にAPI制限にかかっても、取得できた分はフォロー処理をしたいので、以下の処理はfinallyに記述している
+                        // フォロー対象を取得
+                        $followUsers = $this->getFollowUsers($targetAccountFollowers, $followedUsers, $unfollowedUsers, $keywords);
+                        // フォロー実行
+                        foreach ($followUsers as $followUser) {
+                            // フォローできたらDBへ格納
+                            $twitterAccount->follow($followUser);
+                            (new FollowedUser(array('user_id' => $followUser, 'account_id' => $account->id, 'followed_at' => Carbon::now())))->save();
+                        }
                     }
                 }
             } catch (TwitterRestrictionException $e) {
-                // API制限
-                // 処理を次のアカウントへ
-                // 前回停止時間を更新
-            } catch (TwitterFlozenException $e) {
-                // 凍結
-                // 処理を次のアカウントへ
-                // 稼働フラグを0へ変更
-                // 凍結フラグを1へ変更
-            } catch (Exception $e) {
-                // その他例外
+                // 停止処理
+                // ...
             }
         }
     }
 
-    // フォロー対象アカウントのuser_idのリストを返す
-    private function getFollowList($followedUsers, $unfollowedUsers, $keywords, $targetAccount, TwitterAccount $twitterAccount)
+    // 引数のターゲットアカウントのフォロワーを取得する
+    private function getFollowers(string $targetAccount, TwitterAccount $twitterAccount, string &$cursor, array &$followers)
     {
-        $resultList = [];
         // ターゲットアカウントのフォロワー取得（フォロワーリスト）
-        $targetAccountFollowers = $twitterAccount->getFollowerList($targetAccount)['users'];
-        foreach ($targetAccountFollowers as $targetAccountFollower) {
+        do {
+            $response = $twitterAccount->getFollowerList($targetAccount, $cursor);
+            $followers = array_merge($followers, empty($response['users']) ? [] : $response['users']);
+        } while ($cursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
+    }
+
+    // 引数のターゲットアカウントのフォロワーのうち、フォロー対象のアカウントを取得する
+    private function getFollowUsers(array $followers, object $followedUsers, object $unfollowedUsers, array $keywords): array
+    {
+        $resultList =[];
+        foreach ($followers as $targetAccountFollower) {
             $isContinue = false;
 
             // 確認：フォロー済みでないか

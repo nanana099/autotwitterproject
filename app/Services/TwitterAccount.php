@@ -67,23 +67,8 @@ class TwitterAccount
     // TwitterAPIの関数の使用回数制限の判定
     private function checkLimit(string $resourceName)
     {
-        // TwitterAPIのリソースの利用状況を、利用状況確認用のTwitterAPIにて確認
-        if (!isset($this->apilimit)) {
-            $this->apiLimit = json_decode(json_encode($this->getRateLimit()['resources']), true);
-        }
-        $resource_parent = explode('/', $resourceName)[0];
-        $resource_child = '/'.$resourceName;
-        if (!empty($this->apiLimit[$resource_parent][$resource_child])) {
-            if ($this->apiLimit[$resource_parent][$resource_child]['remaining'] > 0) {
-                $this->apiLimit[$resource_parent][$resource_child]['remaining'] -= 1;
-            } else {
-                throw new TwitterRestrictionException();
-            }
-        }
-
         // 一部のTwitterAPIのリソースは、利用状況がTwitterAPIで確認できないので、自分で管理している情報に照らしあわせてチェックする
         if (in_array($resourceName, $this::MANAGE_LIMIT_RESOURCE)) {
-
             if ($resourceName === self::FRIENDSHIPS_CREATE) {
                 // １５分制限
                 if ($this->calledCountFriendshipsCreateBefore15Minute + $this->calledCountFriendshipsCreateNow >= $this::FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE) {
@@ -118,6 +103,20 @@ class TwitterAccount
                     throw new TwitterRestrictionException();
                 }
                 $this->calledCountFriendshipsLookupNow++;
+            }
+        }
+        
+        // TwitterAPIのリソースの利用状況を、利用状況確認用のTwitterAPIにて確認
+        if (!isset($this->apilimit)) {
+            $this->apiLimit = json_decode(json_encode($this->getRateLimit()['resources']), true);
+        }
+        $resource_parent = explode('/', $resourceName)[0];
+        $resource_child = '/'.$resourceName;
+        if (!empty($this->apiLimit[$resource_parent][$resource_child])) {
+            if ($this->apiLimit[$resource_parent][$resource_child]['remaining'] > 0) {
+                $this->apiLimit[$resource_parent][$resource_child]['remaining'] -= 1;
+            } else {
+                throw new TwitterRestrictionException();
             }
         }
     }
@@ -212,6 +211,7 @@ class TwitterAccount
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
 
+
         return $result;
     }
 
@@ -304,20 +304,29 @@ class TwitterAccount
     }
 
     // 指定のアカウントのフォロワーの情報を取得する
-    public function getFollowerList(string $screen_name)
+    public function getFollowerList(string $screen_name, $cursor)
     {
         $resourceName = "followers/list";
-
         $this->checkLimit($resourceName);
         $result = get_object_vars($this->twitter->get(
             $resourceName,
             array(
                     'screen_name' => $screen_name,
-                    'count' => 20, // 最大取得件数
+                    'count' => 200, // 取得件数
                     'status' => false,
-                    'include_user_entities' => false
+                    'include_user_entities' => false,
+                    'cusror' => $cursor
                 )
         ));
+
+        // 存在しないアカウントを指定するとTwitterAPIはエラーになる。しかしシステム上は正常扱いにするため、ここでチェック
+        if (!empty($result['errors'])) {
+            $errorCode = $result['errors'][0]->code;
+            if ($errorCode === 34) {
+                return array();
+            }
+        }
+
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
 
