@@ -77,8 +77,8 @@ class FollowExecutor implements ITwitterFunctionExecutor
                         $followUsers = $this->getFollowUsers($targetAccountFollowers, $followedUsers, $unfollowedUsers, $keywords);
                         // フォロー実行
                         foreach ($followUsers as $followUser) {
-                            // フォローできたらDBへ格納
                             $twitterAccount->follow($followUser);
+                            // フォローできたらDBへ格納
                             (new FollowedUser(array('user_id' => $followUser, 'account_id' => $account->id, 'followed_at' => Carbon::now())))->save();
                         }
                     }
@@ -101,6 +101,10 @@ class FollowExecutor implements ITwitterFunctionExecutor
     private function getFollowers(string $targetAccount, TwitterAccount $twitterAccount, string &$cursor, array &$followers)
     {
         // ターゲットアカウントのフォロワー取得（フォロワーリスト）
+        // １回のリクエストで200件のフォロワーしか取れないので、最後のフォロワーに行き着くまでループする。
+        // なお、利用しているAPIは15分に15回までしか呼べないため、制限にかかる（＝TwitterRestrictionExceptionの発生）場合は、
+        // 当関数の呼び元で、「処理中のターゲットアカウント」「ターゲットアカウントのフォロワーのカーソル」をDBに保管しておいて、
+        // 次回の自動フォロー起動時に続きからできるようにする。
         do {
             $response = $twitterAccount->getFollowerList($targetAccount, $cursor);
             $followers = array_merge($followers, empty($response['users']) ? [] : $response['users']);
