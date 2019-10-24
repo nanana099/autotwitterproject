@@ -28,7 +28,7 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                 ON accounts.id = operation_statuses.account_id  
                 AND operation_statuses.is_favorite = 1
                 AND operation_statuses.is_flozen = 0
-                AND operation_statuses.stopped_at <  SUBTIME(NOW(),\'00:15:00\')
+                AND operation_statuses.favorite_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
                 '
         );
     }
@@ -53,14 +53,14 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
             } catch (TwitterRestrictionException $e) {
                 // API制限
                 OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                    'stopped_at' => date('Y/m/d H:i:s')))->save();
+                    'favorite_stopped_at' => date('Y/m/d H:i:s')))->save();
                 // メール送信
             } catch (TwitterFlozenException $e) {
                 // 凍結
                 OperationStatus::where('account_id', $account->id)->first()->fill(array(
                     'is_favorite' => 0,
                     'is_flozen'=>1,
-                    'stopped_at' => date('Y/m/d H:i:s')))->save();
+                    'favorite_stopped_at' => date('Y/m/d H:i:s')))->save();
                 // メール送信
             } catch (Exception $e) {
                 // その他例外

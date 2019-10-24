@@ -30,7 +30,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
             INNER JOIN operation_statuses
                 ON accounts.id = operation_statuses.account_id
                 AND operation_statuses.is_flozen = 0
-                AND operation_statuses.stopped_at <  SUBTIME(NOW(),\'00:15:00\')
+                AND operation_statuses.unfollow_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
                 '
         );
         foreach ($this->accounts as $key => $account) {

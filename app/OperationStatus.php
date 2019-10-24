@@ -12,7 +12,10 @@ class OperationStatus extends Model
         'is_favorite',
         'account_id',
         'is_flozen',
-        'stopped_at',
+        'follow_stopped_at',
+        'unfollow_stopped_at',
+        'favorite_stopped_at',
+        'tweet_stopped_at',
         'following_target_account',
         'following_target_account_cursor',
     ];

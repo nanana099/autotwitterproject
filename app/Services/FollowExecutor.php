@@ -8,6 +8,7 @@ use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
 use App\FollowedUser;
 use Illuminate\Support\Carbon;
+use App\OperationStatus;
 
 class FollowExecutor implements ITwitterFunctionExecutor
 {
@@ -27,7 +28,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
               ON accounts.id = operation_statuses.account_id
                 AND operation_statuses.is_follow = 1
                 AND operation_statuses.is_flozen = 0
-                AND operation_statuses.stopped_at <  SUBTIME(NOW(),\'00:15:00\')
+                AND operation_statuses.follow_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
                 '
         );
     }
@@ -56,6 +57,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
             $prevTargetAccountCursor = $operationStatus->following_target_account_cursor;
             // 処理済みのターゲットアカウントを配列から削除しておく
             $targetAccounts = array_slice($targetAccounts, array_search($prevTargetAccount, $targetAccounts));
+
             try {
                 foreach ($targetAccounts as $targetAccount) {
                     try {
@@ -82,8 +84,15 @@ class FollowExecutor implements ITwitterFunctionExecutor
                     }
                 }
             } catch (TwitterRestrictionException $e) {
-                // 停止処理
-                // ...
+                // APIの回数制限
+                OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                    'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
+            } catch (TwitterFlozenException $e) {
+                // 凍結
+                OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                'is_favorite' => 0,
+                'is_flozen'=>1,
+                'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
             }
         }
     }
