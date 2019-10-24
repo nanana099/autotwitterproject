@@ -315,7 +315,7 @@ class TwitterAccount
                     'count' => 200, // 取得件数
                     'status' => false,
                     'include_user_entities' => false,
-                    'cusror' => $cursor
+                    'cursor' => $cursor
                 )
         ));
 
