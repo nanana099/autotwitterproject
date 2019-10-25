@@ -4,6 +4,7 @@ namespace App\Services;
 use \Exception;
 use Illuminate\Support\Facades\DB;
 use App\ReservedTweet;
+use App\OperationStatus;
 use App\Exceptions\TwitterFlozenException;
 use App\Exceptions\TwitterRestrictionException;
 
@@ -33,6 +34,8 @@ class TweetExecutor implements ITwitterFunctionExecutor
                 INNER JOIN accounts a
                 ON r.account_id = a.id
             WHERE r.submit_date <= NOW()
+                AND o.is_flozen = 0
+                AND o.tweet_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
             ORDER BY r.account_id
             '
         );
@@ -59,7 +62,6 @@ class TweetExecutor implements ITwitterFunctionExecutor
             if ($skipAccountId === $tweet->account_id) {
                 continue;
             }
-
             if ($prevAccountId !== $tweet->account_id) {
                 $prevAccountId = $tweet->account_id;
                 $twitterAccount = new TwitterAccount($tweet->access_token);
@@ -69,15 +71,20 @@ class TweetExecutor implements ITwitterFunctionExecutor
                 $this->postTweet($twitterAccount, $tweet);
                 $this->deleteTweetOnDB($tweet->id);
             } catch (TwitterRestrictionException $e) {
-                // Todo:DBに停止日時格納すべき？
                 // API制限のエラー
                 $skipAccountId = $tweet->account_id;
-                // 前回停止時間を更新
+                // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
+                OperationStatus::where('account_id', $tweet->account_id)->first()->fill(array(
+                    'tweet_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (TwitterFlozenException $e) {
                 // 凍結のエラー
                 $skipAccountId = $tweet->account_id;
-                // 稼働フラグを0へ変更
-                // 凍結フラグを1へ変更
+                // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
+                // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
+                OperationStatus::where('account_id', $tweet->account_id)->first()->fill(array(
+                'is_unfollow' => 0,
+                'is_flozen'=>1,
+                'tweet_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (Exception $e) {
                 // その他例外
                 logger()->error($e);
