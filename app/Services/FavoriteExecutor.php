@@ -32,7 +32,7 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                 AND operation_statuses.favorite_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
                 '
         );
-        logger()->info('FavoriteExecutor：prepare-end');
+        logger()->info('FavoriteExecutor：prepare-end'.' 対象件数（アカウント）：'.count($this->accounts));
     }
 
     public function execute()

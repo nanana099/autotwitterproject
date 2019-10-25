@@ -60,7 +60,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 logger()->error($e);
             }
         }
-        logger()->info('UnfollowExecutor：prepare-end');
+        logger()->info('UnfollowExecutor：prepare-end'.' 対象件数（アカウント）：'.count($this->accounts));
     }
 
 

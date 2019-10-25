@@ -9,6 +9,7 @@ use App\Exceptions\TwitterFlozenException;
 use App\FollowedUser;
 use Illuminate\Support\Carbon;
 use App\OperationStatus;
+use Illuminate\Database\Eloquent\Collection;
 
 class FollowExecutor implements ITwitterFunctionExecutor
 {
@@ -32,7 +33,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 AND operation_statuses.follow_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
                 '
         );
-        logger()->info('FollowExecutor：prepare-end');
+        logger()->info('FollowExecutor：prepare-end'.' 対象件数（アカウント）：'.count($this->accounts));
     }
 
     public function execute()
@@ -120,7 +121,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
     }
 
     // 引数のターゲットアカウントのフォロワーのうち、フォロー対象のアカウントを取得する
-    private function getFollowUsers(array $followers, object $followedUsers, object $unfollowedUsers, array $keywords): array
+    private function getFollowUsers(array $followers, Collection $followedUsers, Collection $unfollowedUsers, array $keywords): array
     {
         $resultList =[];
         foreach ($followers as $targetAccountFollower) {

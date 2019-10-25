@@ -34,7 +34,7 @@ class TweetExecutor implements ITwitterFunctionExecutor
             ORDER BY r.account_id
             '
         );
-        logger()->info('TweetExecutor：prepare-end');
+        logger()->info('TweetExecutor：prepare-end'.' 対象件数：'.count($this->tweets));
     }
 
     // TwitterAPIを用いて、つぶやきを投稿する
