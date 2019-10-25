@@ -93,6 +93,8 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 } catch (Exception $e) {
                     // 進捗情報をDBに格納
                     $operationStatus->fill(array('unfollowing_target_cursor' => $cursor))->save();
+                    OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                        'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();                    
                     throw $e;
                 } finally {
                     // フォロー中のアカウント取得中にAPI制限にかかる場合でもアンフォロー処理を行いたいのでfinally句に処理を記述

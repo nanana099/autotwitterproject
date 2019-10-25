@@ -83,6 +83,9 @@ class FollowExecutor implements ITwitterFunctionExecutor
                         } catch (Exception $e) {
                             // 進捗情報をDBに記録
                             $operationStatus->fill(array('following_target_account_cursor' => $prevTargetAccountCursor))->save();
+                            // 
+                            OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                                        'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
                             throw $e;
                         }
                     } finally {
