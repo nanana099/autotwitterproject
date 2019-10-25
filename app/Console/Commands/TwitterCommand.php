@@ -7,6 +7,7 @@ use App\Services\FavoriteExecutor;
 use App\Services\FollowExecutor;
 use App\Services\UnfollowExecutor;
 use App\Services\TweetExecutor;
+use \Exception;
 
 class TwitterCommand extends Command
 {
@@ -49,8 +50,11 @@ class TwitterCommand extends Command
         ];
         
         foreach ($executors as $executor) {
-            $executor->prepare();
-            $executor->execute();
+            try {
+                $executor->prepare();
+                $executor->execute();
+            } catch (Exception $e) {
+            }
         }
     }
 }
