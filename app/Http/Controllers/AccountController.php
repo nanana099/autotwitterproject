@@ -10,6 +10,7 @@ use App\AccountSetting;
 use App\OperationStatus;
 use Illuminate\Support\Facades\Auth;
 use App\ReservedTweet;
+use Illuminate\Support\Facades\DB;
 
 class AccountController extends Controller
 {
@@ -58,12 +59,16 @@ class AccountController extends Controller
 
     public function destroy(Request $request)
     {
-        $account = Auth::user()->accounts()->find($request['id']);
         if (true) {
-            $account->operationStatus->delete();
-            $account->accountSetting->delete();
-            $account->reservedTweets()->delete();
-            $account->delete();
+            $account = Auth::user()->accounts()->find($request['id']);
+            DB::transaction(function () use($account)  {
+                $account->operationStatus->delete();
+                $account->accountSetting->delete();
+                $account->reservedTweets()->delete();
+                $account->followedUsers()->delete();
+                $account->unfollowedUsers()->delete();
+                $account->delete();
+            });
             return response()->json($account);
         } else {
             return response()->json($account);
