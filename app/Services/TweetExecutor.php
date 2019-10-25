@@ -15,6 +15,7 @@ class TweetExecutor implements ITwitterFunctionExecutor
     private $tweets = [];
     public function prepare()
     {
+        logger()->info('TweetExecutor：prepare-start');
         // 対象リストの作成
         $this->tweets = DB::select(
             'SELECT 
@@ -33,6 +34,7 @@ class TweetExecutor implements ITwitterFunctionExecutor
             ORDER BY r.account_id
             '
         );
+        logger()->info('TweetExecutor：prepare-end');
     }
 
     // TwitterAPIを用いて、つぶやきを投稿する
@@ -49,6 +51,7 @@ class TweetExecutor implements ITwitterFunctionExecutor
 
     public function execute()
     {
+        logger()->info('TweetExecutor：execute-start');
         $prevAccountId = '';
         $skipAccountId = '';
         $twitterAccount = '';
@@ -79,8 +82,10 @@ class TweetExecutor implements ITwitterFunctionExecutor
                 // 凍結フラグを1へ変更
             } catch (Exception $e) {
                 // その他例外
-                logger($e);
+                logger()->error($e);
             }
         }
+        logger()->info('TweetExecutor：execute-end');
+
     }
 }

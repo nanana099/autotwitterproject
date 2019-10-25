@@ -109,7 +109,7 @@ class TwitterAccount
         // TwitterAPIのリソースの利用状況を、利用状況確認用のTwitterAPIにて確認
         if (!isset($this->apiLimit)) {
             $this->apiLimit = json_decode(json_encode($this->getRateLimit()['resources']), true);
-        } 
+        }
         $resource_parent = explode('/', $resourceName)[0];
         $resource_child = '/'.$resourceName;
         if (!empty($this->apiLimit[$resource_parent][$resource_child])) {
@@ -491,7 +491,7 @@ class TwitterAccount
             logger($str);
         } catch (Exception $e) {
             logger('TwitterAPIロギングで例外');
-            logger($e);
+            logger()->info($e);
         }
     }
 }

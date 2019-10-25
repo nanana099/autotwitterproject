@@ -16,6 +16,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
     private $accounts = [];
     public function prepare()
     {
+        logger()->info('UnfollowExecutorr：prepare-start');
         // 対象リストの作成
         // フォロワー数が5000以上 または アンフォローが「稼働中」のアカウントは、自動アンフォロー実行対象のアカウント
         $this->accounts = DB::select(
@@ -56,14 +57,16 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (Exception $e) {
                 // その他例外
-                logger($e);
+                logger()->error($e);
             }
         }
+        logger()->info('UnfollowExecutor：prepare-end');
     }
 
 
     public function execute()
     {
+        logger()->info('UnfollowExecutor：execute-start');
         foreach ($this->accounts as $account) {
             // Twitterアカウントのインスタンス作成
             $twitterAccount = new TwitterAccount($account->access_token);
@@ -103,9 +106,11 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                     'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (Exception $e) {
                 // その他例外
-                logger($e);
+                logger()->error($e);
             }
         }
+
+        logger()->info('UnfollowExecutor：execute-end');
     }
 
     // フォロー済みアカウントを取得する

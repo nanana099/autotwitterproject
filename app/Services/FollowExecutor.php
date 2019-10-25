@@ -15,6 +15,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
     private $accounts = [];
     public function prepare()
     {
+        logger()->info('FollowExecutor：prepare-start');
         // 自動フォロー実行対象アカウント取得
         $this->accounts = DB::select(
             'SELECT accounts.id,
@@ -31,10 +32,12 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 AND operation_statuses.follow_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
                 '
         );
+        logger()->info('FollowExecutor：prepare-end');
     }
 
     public function execute()
     {
+        logger()->info('FollowExecutor：execute-start');
         foreach ($this->accounts as  $account) {
             // Twitterアカウントのインスタンス作成
             $twitterAccount = new TwitterAccount($account->access_token);
@@ -96,9 +99,10 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 'is_flozen'=>1,
                 'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch(Exception $e){
-                logger($e);
+                logger()->error($e);
             }
         }
+        logger()->info('FollowExecutor：execute-end');
     }
 
     // 引数のターゲットアカウントのフォロワーを取得する

@@ -14,6 +14,7 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
     private $accounts = [];
     public function prepare()
     {
+        logger()->info('FavoriteExecutor：prepare-start');
         // 対象リストの作成
         // 前回停止日時、凍結中は除く
         $this->accounts = DB::select(
@@ -31,10 +32,13 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                 AND operation_statuses.favorite_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
                 '
         );
+        logger()->info('FavoriteExecutor：prepare-end');
     }
 
     public function execute()
     {
+
+        logger()->info('FavoriteExecutor：execute-start');
         foreach ($this->accounts as  $account) {
             // Twitterアカウントのインスタンス作成
             $twitterAccount = new TwitterAccount($account->access_token);
@@ -64,8 +68,10 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                 // メール送信
             } catch (Exception $e) {
                 // その他例外
-                logger($e);
+                logger()->error($e);
             }
         }
+
+        logger()->info('FavoriteExecutor：execute-end');
     }
 }

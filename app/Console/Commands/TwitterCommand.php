@@ -54,6 +54,7 @@ class TwitterCommand extends Command
                 $executor->prepare();
                 $executor->execute();
             } catch (Exception $e) {
+                logger()->error($e);
             }
         }
     }
