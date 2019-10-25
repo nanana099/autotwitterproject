@@ -19,7 +19,7 @@ class TwitterAccount
     /** @var TwitterOAuth */
     private $twitter;
     // TwitterAPIのリソースの使用状況
-    private $apiLimit;
+    private $apiLimit ;
     // 一部TwitterAPIのリソースの使用状況管理用の定数と変数
     private const FRIENDSHIPS_CREATE    = 'friendships/create';
     private const FRIENDSHIPS_DESTROY   = 'friendships/destroy';
@@ -107,9 +107,9 @@ class TwitterAccount
         }
         
         // TwitterAPIのリソースの利用状況を、利用状況確認用のTwitterAPIにて確認
-        if (!isset($this->apilimit)) {
+        if (!isset($this->apiLimit)) {
             $this->apiLimit = json_decode(json_encode($this->getRateLimit()['resources']), true);
-        }
+        } 
         $resource_parent = explode('/', $resourceName)[0];
         $resource_child = '/'.$resourceName;
         if (!empty($this->apiLimit[$resource_parent][$resource_child])) {
@@ -128,6 +128,7 @@ class TwitterAccount
     public function postTweet(string $msg)
     {
         $resourceName = "statuses/update";
+        $this->log($resourceName, $msg);
 
         $this->checkLimit($resourceName);
         $result = get_object_vars($this->twitter->post(
@@ -146,6 +147,7 @@ class TwitterAccount
     public function unfollow(string $user_id)
     {
         $resourceName = "friendships/destroy";
+        $this->log($resourceName, $user_id);
 
         $this->checkLimit($resourceName);
         $result =  get_object_vars(
@@ -165,6 +167,7 @@ class TwitterAccount
     public function follow(string $user_id)
     {
         $resourceName =  "friendships/create";
+        $this->log($resourceName, $user_id);
 
         $this->checkLimit($resourceName);
         $result = get_object_vars($this->twitter->post(
@@ -182,6 +185,7 @@ class TwitterAccount
     public function getMyFollowedList(string $cursor)
     {
         $resourceName = "friends/ids";
+        $this->log($resourceName, $cursor);
 
         $this->checkLimit($resourceName);
         $result = get_object_vars($this->twitter->get(
@@ -202,6 +206,7 @@ class TwitterAccount
     public function getMyFollowersCount()
     {
         $resourceName =   "users/show";
+        $this->log($resourceName);
 
         $this->checkLimit($resourceName);
         $result = get_object_vars($this->twitter->get(
@@ -219,6 +224,7 @@ class TwitterAccount
     public function favorite(string $id)
     {
         $resourceName = "favorites/create";
+        $this->log($resourceName, $id);
 
         $this->checkLimit($resourceName);
         $result = get_object_vars($this->twitter->post(
@@ -228,6 +234,18 @@ class TwitterAccount
                 'include_entities' => false
             )
         ));
+        if (!empty($result['errors'])) {
+            $errorCode = $result['errors'][0]->code;
+            // すでにいいねしているツイートをいいねすると、139が返る
+            if ($errorCode === 139) {
+                return array();
+            }
+            // いいねしようとしたアカウントが不在の場合に発生
+            if ($errorCode === 144) {
+                return array();
+            }
+        }
+
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
 
@@ -239,6 +257,7 @@ class TwitterAccount
     public function searchTweets(string $word)
     {
         $resourceName = "search/tweets";
+        $this->log($resourceName, $word);
 
         $this->checkLimit($resourceName);
         $result = get_object_vars($this->twitter->get(
@@ -248,7 +267,7 @@ class TwitterAccount
                 'lang' => 'ja',
                 'locale' => 'ja',
                 'result_type' => 'recent', // 最近のツイートを検索結果として取得
-                'count' => 1, // 最大取得件数
+                'count' => 15, // 取得件数
             )
         ));
         // エラーチェック
@@ -261,6 +280,7 @@ class TwitterAccount
     public function getLatestTweet(string $user_id)
     {
         $resourceName = "statuses/user_timeline";
+        $this->log($resourceName, $user_id);
 
         $this->checkLimit($resourceName);
         $result = ($this->twitter->get(
@@ -294,6 +314,7 @@ class TwitterAccount
     public function getMyAccountInfo()
     {
         $resourceName = "users/show";
+        $this->log($resourceName);
 
         $this->checkLimit($resourceName);
         $result = get_object_vars($this->twitter->get(
@@ -309,6 +330,7 @@ class TwitterAccount
     public function getFriendShips(string $user_ids)
     {
         $resourceName = "friendships/lookup";
+        $this->log($resourceName, $user_ids);
 
         $this->checkLimit($resourceName);
         $result = $this->twitter->get(
@@ -327,6 +349,8 @@ class TwitterAccount
     public function getFollowerList(string $screen_name, $cursor)
     {
         $resourceName = "followers/list";
+        $this->log($resourceName, $screen_name, $cursor);
+
         $this->checkLimit($resourceName);
         $result = get_object_vars($this->twitter->get(
             $resourceName,
@@ -356,8 +380,11 @@ class TwitterAccount
     // 自アカウントのTwitterAPI制限を調べる
     private function getRateLimit()
     {
+        $resourceName = "application/rate_limit_status";
+        $this->log($resourceName);
+
         $result = get_object_vars($this->twitter->get(
-            "application/rate_limit_status",
+            $resourceName,
         ));
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
@@ -453,6 +480,18 @@ class TwitterAccount
                     // 不要
                     break;
             }
+        }
+    }
+
+    private function log(string $resourceName, ...$args)
+    {
+        try {
+            $str = "TwitterAPI呼び出し：".$resourceName." ".$this->user_id." ";
+            $str .= implode(" ", $args);
+            logger($str);
+        } catch (Exception $e) {
+            logger('TwitterAPIロギングで例外');
+            logger($e);
         }
     }
 }

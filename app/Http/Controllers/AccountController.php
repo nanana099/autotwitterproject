@@ -103,7 +103,6 @@ class AccountController extends Controller
     public function getTweet(Request $request)
     {
         $account_id = $request['account_id'] ;
-        logger(Auth::user()->accounts()->find($account_id));
         $tweets = Auth::user()->accounts()->find($account_id)->reservedTweets()->orderBy('submit_date', 'desc')->get();
         return response()->json($tweets);
     }
@@ -118,8 +117,6 @@ class AccountController extends Controller
     {
         $account_id = $request['account_id'] ;
         $tweet_id = $request['id'];
-        logger($request);
-        logger(Auth::user()->accounts()->find($account_id));
         $result = Auth::user()->accounts()->find($account_id)->reservedTweets()->find($tweet_id)->delete();
         return response()->json($result);
     }
