@@ -384,7 +384,7 @@ class TwitterAccount
         $this->log($resourceName);
 
         $result = get_object_vars($this->twitter->get(
-            $resourceName,
+            $resourceName
         ));
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
