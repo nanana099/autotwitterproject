@@ -11,6 +11,7 @@ use App\OperationStatus;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
 
+// 自動フォロー実行クラス
 class FollowExecutor implements ITwitterFunctionExecutor
 {
     // 自動フォロー実行アカウント

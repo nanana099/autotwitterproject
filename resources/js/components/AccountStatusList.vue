@@ -1,4 +1,5 @@
 <template>
+  <!-- 自動機能稼働状況の一覧 -->
   <div>
     <h2 class="c-title">稼働状況</h2>
     <section class="p-section">
@@ -49,9 +50,12 @@ export default {
         this.accountStatuses = res.data;
         this.isLoading = false;
       })
-      .catch(error => {});
+      .catch(error => {
+        // Todo:なんか表示する
+      });
   },
   computed: {
+    // Twitterアカウントが１件以上登録されているか
     existsAccount: function() {
       return this.accountStatuses.length > 0;
     }

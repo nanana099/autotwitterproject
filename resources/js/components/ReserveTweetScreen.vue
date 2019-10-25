@@ -1,4 +1,5 @@
 <template>
+  <!-- ツイート予約画面 -->
   <div>
     <div class="p-select-account">
       <label for class="p-select-account__label">
@@ -57,13 +58,16 @@ export default {
   },
   methods: {
     onChangeAccount: function() {
+      // 選択中のTwitterアカウント変更時
       this.isLoading = true;
+      // アカウント情報を取得
       axios
         .get("/account/get", {})
         .then(res => {
           this.accounts = res.data;
           let targetId;
           targetId = localStorage.selectedId;
+          // 予約済みツイートを取得
           axios
             .get("/account/tweet", {
               params: {
@@ -71,6 +75,7 @@ export default {
               }
             })
             .then(res => {
+              // 成功
               this.tweets.splice(0, this.tweets.length);
               res.data.forEach(e => {
                 this.tweets.push(e);
@@ -78,10 +83,12 @@ export default {
               this.isLoading = false;
             })
             .catch(error => {
+              // 失敗
               this.isError = true;
             });
         })
         .catch(error => {
+          // 失敗 Todo:なんかだす？
           this.isError = true;
         });
     },
@@ -103,6 +110,7 @@ export default {
         let targetId;
         targetId = localStorage.selectedId;
 
+        // Twitterアカウントが選択されているか？
         let isSelectedAccount = false;
         this.accounts.forEach(x => {
           if (x.id === Number(targetId)) {
@@ -119,6 +127,7 @@ export default {
           return;
         }
 
+        // 予約済みツイート取得
         axios
           .get("/account/tweet", {
             params: {
@@ -140,6 +149,7 @@ export default {
       });
   },
   computed: {
+    // Twitterアカウントが１件以上登録されているか
     existsAccount: function() {
       return this.accounts.length > 0;
     }

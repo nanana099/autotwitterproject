@@ -7,6 +7,7 @@ use App\OperationStatus;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
 
+// 自動いいね実行クラス
 class FavoriteExecutor implements ITwitterFunctionExecutor
 {
     // 自動いいね実行アカウント

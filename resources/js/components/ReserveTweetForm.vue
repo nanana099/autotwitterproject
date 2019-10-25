@@ -1,4 +1,5 @@
 <template>
+  <!-- 予約ツイート編集用フォーム -->
   <div>
     <textarea v-model="content" id class="p-tweet-form__textarea" placeholder="つぶやき内容" />
     <div class="c-justify-content-between mb-2 c-align-item-start">
@@ -32,12 +33,14 @@ export default {
   },
   mounted: function() {
     if (this.tweet) {
+      // 予約済みツイート
       this.content = this.tweet.content;
       this.requestDate = moment(this.tweet.submit_date).format(
         "YYYY-MM-DDTHH:mm"
       );
       this.id = this.tweet.id;
     } else {
+      // 新規
       this.requestDate = moment()
         .add(1, "days")
         .format("YYYY-MM-DDTHH:mm");
@@ -47,6 +50,8 @@ export default {
     reserveTweet: function() {
       // ツイート予約をDBへ更新または挿入する
       if (!this.validTweet()) return;
+
+      // ajax
       axios
         .post("/account/tweet", {
           content: this.content,
@@ -55,13 +60,15 @@ export default {
           reserved_tweet_id: this.id
         })
         .then(res => {
+          // 成功
           let content = this.content;
           let submit_date = moment(this.requestDate).format("YYYY-MM-DD HH:mm");
 
+          // フォームの表示をクリア
           this.formInit();
 
+          // Tweetが追加された時のイベントを親に通知する
           this.$emit("addedTweet", {
-            // Tweetが追加された時のイベントを親に通知する
             content: content,
             submit_date: submit_date,
             id: res.data.id
@@ -73,6 +80,7 @@ export default {
           });
         })
         .catch(error => {
+          // 失敗
           this.isError = true;
 
           this.flash(
@@ -86,6 +94,7 @@ export default {
         });
     },
     formInit: function() {
+      // フォームの表示をクリア
       this.content = "";
       this.requestDate = moment()
         .add(1, "days")
@@ -113,18 +122,22 @@ export default {
   },
   computed: {
     start: function() {
+      // 日付け用
       const start = moment();
       return start.format("YYYY-MM-DDTHH:mm");
     },
     end: function() {
+      // 日付け用
       const start = moment(this.start);
       const end = start.add(1, "years").endOf("day");
       return end.format("YYYY-MM-DDTHH:mm");
     },
     count: function() {
+      // 文字数用
       return this.content.length;
     },
     isOverContent: function() {
+      // 文字数用
       return this.content.length > 140;
     }
   },

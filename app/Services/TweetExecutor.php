@@ -7,6 +7,7 @@ use App\ReservedTweet;
 use App\Exceptions\TwitterFlozenException;
 use App\Exceptions\TwitterRestrictionException;
 
+// 自動ツイート実行クラス
 class TweetExecutor implements ITwitterFunctionExecutor
 {
     // 投稿するツイート

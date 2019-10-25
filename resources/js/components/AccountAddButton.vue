@@ -1,4 +1,5 @@
 <template>
+  <!--Twitterアカウント追加ボタン -->
   <div>
     <button class="c-btn c-btn--primary" @click="addAccount">
       <i class="fas fa-user-plus"></i>アカウント追加
@@ -15,6 +16,7 @@ export default {
     };
   },
   methods: {
+    // Twitterアカウントの追加
     addAccount: function() {
       // １ユーザーが登録できるTwitterアカウントの最大数
       const MAX_ACCOUNT_NUM = 10;

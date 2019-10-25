@@ -11,6 +11,7 @@ use App\UnfollowedUser;
 use App\Exceptions\TwitterFlozenException;
 use App\Exceptions\TwitterRestrictionException;
 
+// 自動アンフォロー実行クラス
 class UnfollowExecutor implements ITwitterFunctionExecutor
 {
     // 自動アンフォロー実行アカウント

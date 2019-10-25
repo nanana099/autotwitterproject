@@ -1,4 +1,5 @@
 <template>
+   <!-- 各アカウント設定画面 -->
   <div>
     <div class="p-select-account">
       <label for class="p-select-account__label">

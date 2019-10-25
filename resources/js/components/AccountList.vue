@@ -1,10 +1,8 @@
 <template>
+  <!-- アカウント一覧 -->
   <div>
     <div v-show="isLoading">
-
-      <span class="p-message-1">
-       Loading...
-      </span>
+      <span class="p-message-1">Loading...</span>
     </div>
     <div v-show="!isLoading">
       <ul class="p-monitor-list" v-if="existsAccount">
@@ -34,11 +32,13 @@ export default {
   data: function() {
     return {
       accounts: [],
-      isLoading : true
+      isLoading: true
     };
   },
   methods: {
+    // Twitterアカウントの削除
     onDeleteAccount: function(account) {
+      // ダイアログで確認
       if (
         !window.confirm(
           "神ったーから、アカウント情報を全て削除します。\n一度削除すると、復元ができません。\nアカウントを削除しますか？"
@@ -46,6 +46,7 @@ export default {
       ) {
         return;
       }
+      // 子コンポーネントから渡ってきたアカウントをDBから削除する
       axios
         .delete("/account/destroy", {
           params: {
@@ -53,20 +54,20 @@ export default {
           }
         })
         .then(res => {
-          // 子コンポーネントから渡ってきたアカウントをDBから削除する
+          // 成功
           if (!res.data["result"]) {
             var index = this.accounts.indexOf(account);
+            // dataからも削除
             this.accounts.splice(index, 1);
           }
-
           this.flash("アカウントを削除しました", "success", {
             timeout: 5000,
             important: true
           });
         })
         .catch(error => {
+          // 失敗
           this.isError = true;
-
           this.flash(
             "アカウントの削除に失敗しました。しばらく経ってから再度お試しください。",
             "error",
@@ -79,6 +80,7 @@ export default {
     }
   },
   created: function() {
+    // 画面表示時
     // アカウント一覧取得
     axios
       .get("/account/get", {})
@@ -87,6 +89,7 @@ export default {
         this.isLoading = false;
       })
       .catch(error => {
+        // Todo:エラーメッセージ出す
         this.isError = true;
       });
   },

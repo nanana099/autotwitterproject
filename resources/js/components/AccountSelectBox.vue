@@ -1,4 +1,5 @@
 <template>
+  <!-- アカウント選択のセレクトボックス -->
   <select
     v-model="selectedId"
     options="accounts"
@@ -23,6 +24,7 @@ export default {
   },
   props: ["accounts"],
   mounted() {
+    // 前回選択していたTwitterアカウントをセレクトボックス上選択する
     if (localStorage.selectedId) {
       this.selectedId = localStorage.selectedId;
     }

@@ -1,4 +1,5 @@
 <template>
+  <!-- アカウント情報表示用のカード -->
   <li class="p-monitor-list__item">
     <div class="p-monitor-list__account-info">
       <img :src="account.image_url" alt="アカウントアイコン" class="p-monitor-list__img" />

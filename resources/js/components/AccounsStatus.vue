@@ -1,4 +1,5 @@
 <template>
+  <!-- Twitterアカウントの自動機能稼働状況表示＆更新ボタン -->
   <li class="p-monitor-list__item">
     <div class="p-monitor-list__account-info">
       <img :src="accounsStatus.image_url" alt class="p-monitor-list__img" />
@@ -46,36 +47,43 @@ export default {
     };
   },
   methods: {
+    // 自動フォローをOFFにする
     stopFollow: function() {
       this.changeStatus("follow", false, () => {
         this.accounsStatus.operation_status.is_follow = false;
       });
     },
+    // 自動フォローをONにする
     startFollow: function() {
       this.changeStatus("follow", true, () => {
         this.accounsStatus.operation_status.is_follow = true;
       });
     },
+    // 自動アンフォローをOFFにする
     stopUnfollow: function() {
       this.changeStatus("unfollow", false, () => {
         this.accounsStatus.operation_status.is_unfollow = false;
       });
     },
+    // 自動アンフォローをONにする
     startUnfollow: function() {
       this.changeStatus("unfollow", true, () => {
         this.accounsStatus.operation_status.is_unfollow = true;
       });
     },
+    // 自動いいねをOFFにする
     stopFavorite: function() {
       this.changeStatus("favorite", false, () => {
         this.accounsStatus.operation_status.is_favorite = false;
       });
     },
+    // 自動いいねをONにする
     startFavorite: function() {
       this.changeStatus("favorite", true, () => {
         this.accounsStatus.operation_status.is_favorite = true;
       });
     },
+    // 稼働状況をDBに更新する
     changeStatus: function(type, value, callback) {
       // アカウントの自動機能稼働状況を更新する
       axios

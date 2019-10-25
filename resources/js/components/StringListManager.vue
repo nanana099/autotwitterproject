@@ -1,4 +1,5 @@
 <template>
+  <!-- 文字列を複数選択可能セレクトボックスに表示・登録・削除するための部品 -->
   <div>
     <div class="u-m-2">
       <input type="text" class="c-textbox--small" v-model="addStr" :placeholder="placeholder" />

@@ -1,4 +1,5 @@
 <template>
+  <!-- 予約済みツイートの一覧 -->
   <div>
     <ul>
       <reserved-tweet
@@ -29,10 +30,13 @@ export default {
   },
   created: function() {},
   methods: {
+    // 予約済みツイートを削除
     deleteTweet: function(tweet) {
+      // 確認用ダイアログを表示
       if (!window.confirm("ツイートの予約を削除しますか？")) {
         return;
       }
+      // ajax
       axios
         .delete("/account/tweet", {
           params: {
@@ -41,8 +45,9 @@ export default {
           }
         })
         .then(res => {
+          // 成功
           var index = this.tweets.indexOf(tweet);
-          // key番目から１つ削除
+          // dataからも削除
           this.tweets.splice(index, 1);
 
           this.flash("ツイートを削除しました", "success", {
@@ -51,6 +56,7 @@ export default {
           });
         })
         .catch(error => {
+          // 失敗
           this.isError = true;
 
           this.flash(

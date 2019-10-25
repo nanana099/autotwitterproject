@@ -1878,6 +1878,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   date: function date() {
     return {
@@ -1885,6 +1886,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    // 自動フォローをOFFにする
     stopFollow: function stopFollow() {
       var _this = this;
 
@@ -1892,6 +1894,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.accounsStatus.operation_status.is_follow = false;
       });
     },
+    // 自動フォローをONにする
     startFollow: function startFollow() {
       var _this2 = this;
 
@@ -1899,6 +1902,7 @@ __webpack_require__.r(__webpack_exports__);
         _this2.accounsStatus.operation_status.is_follow = true;
       });
     },
+    // 自動アンフォローをOFFにする
     stopUnfollow: function stopUnfollow() {
       var _this3 = this;
 
@@ -1906,6 +1910,7 @@ __webpack_require__.r(__webpack_exports__);
         _this3.accounsStatus.operation_status.is_unfollow = false;
       });
     },
+    // 自動アンフォローをONにする
     startUnfollow: function startUnfollow() {
       var _this4 = this;
 
@@ -1913,6 +1918,7 @@ __webpack_require__.r(__webpack_exports__);
         _this4.accounsStatus.operation_status.is_unfollow = true;
       });
     },
+    // 自動いいねをOFFにする
     stopFavorite: function stopFavorite() {
       var _this5 = this;
 
@@ -1920,6 +1926,7 @@ __webpack_require__.r(__webpack_exports__);
         _this5.accounsStatus.operation_status.is_favorite = false;
       });
     },
+    // 自動いいねをONにする
     startFavorite: function startFavorite() {
       var _this6 = this;
 
@@ -1927,6 +1934,7 @@ __webpack_require__.r(__webpack_exports__);
         _this6.accounsStatus.operation_status.is_favorite = true;
       });
     },
+    // 稼働状況をDBに更新する
     changeStatus: function changeStatus(type, value, callback) {
       // アカウントの自動機能稼働状況を更新する
       axios.post("/account/status", {
@@ -1961,6 +1969,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1968,6 +1977,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    // Twitterアカウントの追加
     addAccount: function addAccount() {
       var _this = this;
 
@@ -2000,6 +2010,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DeleteAccountButton__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DeleteAccountButton */ "./resources/js/components/DeleteAccountButton.vue");
+//
 //
 //
 //
@@ -2056,8 +2067,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AccountList",
@@ -2071,21 +2080,25 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    // Twitterアカウントの削除
     onDeleteAccount: function onDeleteAccount(account) {
       var _this = this;
 
+      // ダイアログで確認
       if (!window.confirm("神ったーから、アカウント情報を全て削除します。\n一度削除すると、復元ができません。\nアカウントを削除しますか？")) {
         return;
-      }
+      } // 子コンポーネントから渡ってきたアカウントをDBから削除する
+
 
       axios["delete"]("/account/destroy", {
         params: {
           id: account.id
         }
       }).then(function (res) {
-        // 子コンポーネントから渡ってきたアカウントをDBから削除する
+        // 成功
         if (!res.data["result"]) {
-          var index = _this.accounts.indexOf(account);
+          var index = _this.accounts.indexOf(account); // dataからも削除
+
 
           _this.accounts.splice(index, 1);
         }
@@ -2095,6 +2108,7 @@ __webpack_require__.r(__webpack_exports__);
           important: true
         });
       })["catch"](function (error) {
+        // 失敗
         _this.isError = true;
 
         _this.flash("アカウントの削除に失敗しました。しばらく経ってから再度お試しください。", "error", {
@@ -2107,11 +2121,13 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this2 = this;
 
+    // 画面表示時
     // アカウント一覧取得
     axios.get("/account/get", {}).then(function (res) {
       _this2.accounts = res.data;
       _this2.isLoading = false;
     })["catch"](function (error) {
+      // Todo:エラーメッセージ出す
       _this2.isError = true;
     });
   },
@@ -2149,6 +2165,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2157,6 +2174,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   props: ["accounts"],
   mounted: function mounted() {
+    // 前回選択していたTwitterアカウントをセレクトボックス上選択する
     if (localStorage.selectedId) {
       this.selectedId = localStorage.selectedId;
     }
@@ -2181,6 +2199,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
 /* harmony import */ var _StringListManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StringListManager */ "./resources/js/components/StringListManager.vue");
+//
 //
 //
 //
@@ -2431,6 +2450,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2451,9 +2471,11 @@ __webpack_require__.r(__webpack_exports__);
     axios.get("/account/status").then(function (res) {
       _this.accountStatuses = res.data;
       _this.isLoading = false;
-    })["catch"](function (error) {});
+    })["catch"](function (error) {// Todo:なんか表示する
+    });
   },
   computed: {
+    // Twitterアカウントが１件以上登録されているか
     existsAccount: function existsAccount() {
       return this.accountStatuses.length > 0;
     }
@@ -2471,6 +2493,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -2512,6 +2535,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -2524,10 +2548,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   mounted: function mounted() {
     if (this.tweet) {
+      // 予約済みツイート
       this.content = this.tweet.content;
       this.requestDate = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.tweet.submit_date).format("YYYY-MM-DDTHH:mm");
       this.id = this.tweet.id;
     } else {
+      // 新規
       this.requestDate = moment__WEBPACK_IMPORTED_MODULE_0___default()().add(1, "days").format("YYYY-MM-DDTHH:mm");
     }
   },
@@ -2536,20 +2562,22 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       // ツイート予約をDBへ更新または挿入する
-      if (!this.validTweet()) return;
+      if (!this.validTweet()) return; // ajax
+
       axios.post("/account/tweet", {
         content: this.content,
         submit_date: this.requestDate,
         account_id: localStorage.selectedId,
         reserved_tweet_id: this.id
       }).then(function (res) {
+        // 成功
         var content = _this.content;
-        var submit_date = moment__WEBPACK_IMPORTED_MODULE_0___default()(_this.requestDate).format("YYYY-MM-DD HH:mm");
+        var submit_date = moment__WEBPACK_IMPORTED_MODULE_0___default()(_this.requestDate).format("YYYY-MM-DD HH:mm"); // フォームの表示をクリア
 
-        _this.formInit();
+        _this.formInit(); // Tweetが追加された時のイベントを親に通知する
+
 
         _this.$emit("addedTweet", {
-          // Tweetが追加された時のイベントを親に通知する
           content: content,
           submit_date: submit_date,
           id: res.data.id
@@ -2560,6 +2588,7 @@ __webpack_require__.r(__webpack_exports__);
           important: true
         });
       })["catch"](function (error) {
+        // 失敗
         _this.isError = true;
 
         _this.flash("ツイートを予約に失敗しました。しばらく経ってから再度お試しください。", "error", {
@@ -2569,6 +2598,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     formInit: function formInit() {
+      // フォームの表示をクリア
       this.content = "";
       this.requestDate = moment__WEBPACK_IMPORTED_MODULE_0___default()().add(1, "days").format("YYYY-MM-DDTHH:mm");
     },
@@ -2595,18 +2625,22 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     start: function start() {
+      // 日付け用
       var start = moment__WEBPACK_IMPORTED_MODULE_0___default()();
       return start.format("YYYY-MM-DDTHH:mm");
     },
     end: function end() {
+      // 日付け用
       var start = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.start);
       var end = start.add(1, "years").endOf("day");
       return end.format("YYYY-MM-DDTHH:mm");
     },
     count: function count() {
+      // 文字数用
       return this.content.length;
     },
     isOverContent: function isOverContent() {
+      // 文字数用
       return this.content.length > 140;
     }
   },
@@ -2627,6 +2661,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
 /* harmony import */ var _ReserveTweetForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReserveTweetForm */ "./resources/js/components/ReserveTweetForm.vue");
 /* harmony import */ var _ReservedTweetList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ReservedTweetList */ "./resources/js/components/ReservedTweetList.vue");
+//
 //
 //
 //
@@ -2688,16 +2723,20 @@ __webpack_require__.r(__webpack_exports__);
     onChangeAccount: function onChangeAccount() {
       var _this = this;
 
-      this.isLoading = true;
+      // 選択中のTwitterアカウント変更時
+      this.isLoading = true; // アカウント情報を取得
+
       axios.get("/account/get", {}).then(function (res) {
         _this.accounts = res.data;
         var targetId;
-        targetId = localStorage.selectedId;
+        targetId = localStorage.selectedId; // 予約済みツイートを取得
+
         axios.get("/account/tweet", {
           params: {
             account_id: targetId
           }
         }).then(function (res) {
+          // 成功
           _this.tweets.splice(0, _this.tweets.length);
 
           res.data.forEach(function (e) {
@@ -2705,9 +2744,11 @@ __webpack_require__.r(__webpack_exports__);
           });
           _this.isLoading = false;
         })["catch"](function (error) {
+          // 失敗
           _this.isError = true;
         });
       })["catch"](function (error) {
+        // 失敗 Todo:なんかだす？
         _this.isError = true;
       });
     },
@@ -2727,7 +2768,8 @@ __webpack_require__.r(__webpack_exports__);
     axios.get("/account/get", {}).then(function (res) {
       _this2.accounts = res.data;
       var targetId;
-      targetId = localStorage.selectedId;
+      targetId = localStorage.selectedId; // Twitterアカウントが選択されているか？
+
       var isSelectedAccount = false;
 
       _this2.accounts.forEach(function (x) {
@@ -2745,7 +2787,8 @@ __webpack_require__.r(__webpack_exports__);
 
         _this2.isLoading = false;
         return;
-      }
+      } // 予約済みツイート取得
+
 
       axios.get("/account/tweet", {
         params: {
@@ -2764,6 +2807,7 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   computed: {
+    // Twitterアカウントが１件以上登録されているか
     existsAccount: function existsAccount() {
       return this.accounts.length > 0;
     }
@@ -2799,6 +2843,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2816,15 +2861,18 @@ __webpack_require__.r(__webpack_exports__);
     this.tmpTweet = Object.create(this.value);
   },
   methods: {
+    // 予約済みツイートを編集する
     toEditMode: function toEditMode() {
       this.isEdit = true;
     },
-    onAddedTweet: function onAddedTweet(tweet) {
+    // 予約済みツイートの編集が完了した 
+    onEditCompleted: function onEditCompleted(tweet) {
       this.tweet.content = tweet.content;
       this.tweet.submit_date = tweet.submit_date;
       this.tmpTweet = Object.create(this.tweet);
       this.isEdit = false;
     },
+    // 予約済みツイートの編集がキャンセルされた
     canselEdit: function canselEdit() {
       this.isEdit = false;
       this.tweet.content = this.tmpTweet.content;
@@ -2861,6 +2909,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2877,12 +2926,15 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {},
   methods: {
+    // 予約済みツイートを削除
     deleteTweet: function deleteTweet(tweet) {
       var _this = this;
 
+      // 確認用ダイアログを表示
       if (!window.confirm("ツイートの予約を削除しますか？")) {
         return;
-      }
+      } // ajax
+
 
       axios["delete"]("/account/tweet", {
         params: {
@@ -2890,7 +2942,8 @@ __webpack_require__.r(__webpack_exports__);
           id: tweet.id
         }
       }).then(function (res) {
-        var index = _this.tweets.indexOf(tweet); // key番目から１つ削除
+        // 成功
+        var index = _this.tweets.indexOf(tweet); // dataからも削除
 
 
         _this.tweets.splice(index, 1);
@@ -2900,6 +2953,7 @@ __webpack_require__.r(__webpack_exports__);
           important: true
         });
       })["catch"](function (error) {
+        // 失敗
         _this.isError = true;
 
         _this.flash("ツイートの削除に失敗しました。しばらく経ってから再度お試しください。", "error", {
@@ -2923,6 +2977,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -56759,11 +56814,7 @@ var render = function() {
           }
         ]
       },
-      [
-        _c("span", { staticClass: "p-message-1" }, [
-          _vm._v("\n     Loading...\n    ")
-        ])
-      ]
+      [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
     ),
     _vm._v(" "),
     _c(
@@ -57653,7 +57704,7 @@ var render = function() {
         ? _c("reserve-tweet-form", {
             staticClass: "u-mb-2",
             attrs: { tweet: _vm.tweet },
-            on: { addedTweet: _vm.onAddedTweet }
+            on: { addedTweet: _vm.onEditCompleted }
           })
         : _vm._e(),
       _vm._v(" "),
