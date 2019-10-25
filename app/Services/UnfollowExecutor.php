@@ -56,6 +56,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (Exception $e) {
                 // その他例外
+                logger($e);
             }
         }
     }
@@ -79,7 +80,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                     $this->getFollowedAccounts($cursor, $followedAccounts, $twitterAccount);
                     // 処理中情報をクリア
                     $operationStatus->fill(array('unfollowing_target_cursor' => "-1"))->save();
-                } catch (TwitterRestrictionException $e) {
+                } catch (Exception $e) {
                     // 処理中情報をDBに格納
                     $operationStatus->fill(array('unfollowing_target_cursor' => $cursor))->save();
                     throw $e;

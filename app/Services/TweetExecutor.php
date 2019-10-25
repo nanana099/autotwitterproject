@@ -79,6 +79,7 @@ class TweetExecutor implements ITwitterFunctionExecutor
                 // 凍結フラグを1へ変更
             } catch (Exception $e) {
                 // その他例外
+                logger($e);
             }
         }
     }

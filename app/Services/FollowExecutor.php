@@ -66,11 +66,11 @@ class FollowExecutor implements ITwitterFunctionExecutor
                             $this->getFollowers($targetAccount, $twitterAccount, $prevTargetAccountCursor, $targetAccountFollowers);
                             // 処理中情報をクリア
                             $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
-                        } catch (TwitterRestrictionException $e) {
+                        } catch (Exception $e) {
                             // 処理中情報をDBに格納
                             $operationStatus->fill(array('following_target_account' => $targetAccount,'following_target_account_cursor' => $prevTargetAccountCursor))->save();
                             throw $e;
-                        }
+                        } 
                     } finally {
                         // ターゲットアカウントのフォロワーを取得中にAPI制限にかかっても、取得できた分はフォロー処理をしたいので、以下の処理はfinallyに記述している
                         // フォロー対象を取得
@@ -95,6 +95,8 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 'is_follow' => 0,
                 'is_flozen'=>1,
                 'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
+            } catch(Exception $e){
+                logger($e);
             }
         }
     }

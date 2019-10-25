@@ -133,8 +133,8 @@ class TwitterAccount
         $result = get_object_vars($this->twitter->post(
             $resourceName,
             array(
-                    'status' => $msg,
-                )
+                'status' => $msg,
+            )
         ));
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
@@ -152,8 +152,8 @@ class TwitterAccount
             $this->twitter->post(
                 $resourceName,
                 array(
-                        'user_id' => $user_id,
-                    )
+                    'user_id' => $user_id,
+                )
             )
         );
         // エラーチェック
@@ -170,8 +170,8 @@ class TwitterAccount
         $result = get_object_vars($this->twitter->post(
             $resourceName,
             array(
-                    'user_id' => $user_id,
-                )
+                'user_id' => $user_id,
+            )
         ));
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
@@ -179,7 +179,7 @@ class TwitterAccount
     }
 
     // 自アカウントのフォロワー数を取得する
-    public function getMyFollowedList($cursor)
+    public function getMyFollowedList(string $cursor)
     {
         $resourceName = "friends/ids";
 
@@ -207,8 +207,8 @@ class TwitterAccount
         $result = get_object_vars($this->twitter->get(
             $resourceName,
             array(
-                    'user_id' => $this->user_id
-                )
+                'user_id' => $this->user_id
+            )
         ));
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
@@ -224,9 +224,9 @@ class TwitterAccount
         $result = get_object_vars($this->twitter->post(
             $resourceName,
             array(
-                    'id' => $id,
-                    'include_entities' => false
-                )
+                'id' => $id,
+                'include_entities' => false
+            )
         ));
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
@@ -244,11 +244,11 @@ class TwitterAccount
         $result = get_object_vars($this->twitter->get(
             $resourceName,
             array(
-                    'q' => $word,
-                    'lang' => 'ja',
-                    'locale' => 'ja',
-                    'result_type' => 'recent', // 最近のツイートを検索結果として取得
-                    'count' => 1, // 最大取得件数
+                'q' => $word,
+                'lang' => 'ja',
+                'locale' => 'ja',
+                'result_type' => 'recent', // 最近のツイートを検索結果として取得
+                'count' => 1, // 最大取得件数
             )
         ));
         // エラーチェック
@@ -299,8 +299,8 @@ class TwitterAccount
         $result = get_object_vars($this->twitter->get(
             $resourceName,
             array(
-                    'user_id' => $this->user_id,
-                )
+                'user_id' => $this->user_id,
+            )
         ));
         return $result;
     }
@@ -314,8 +314,8 @@ class TwitterAccount
         $result = $this->twitter->get(
             $resourceName,
             array(
-                    'user_id' => $user_ids,
-                )
+                'user_id' => $user_ids,
+            )
         );
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
@@ -331,12 +331,12 @@ class TwitterAccount
         $result = get_object_vars($this->twitter->get(
             $resourceName,
             array(
-                    'screen_name' => $screen_name,
-                    'count' => 200, // 取得件数
-                    'status' => false,
-                    'include_user_entities' => false,
-                    'cursor' => $cursor
-                )
+                'screen_name' => $screen_name,
+                'count' => 200, // 取得件数
+                'status' => false,
+                'include_user_entities' => false,
+                'cursor' => $cursor
+            )
         ));
 
         // 存在しないアカウントを$screen_nameに指定するとTwitterAPIはエラーになる。しかしシステム上は正常扱いにするため、ここでチェック

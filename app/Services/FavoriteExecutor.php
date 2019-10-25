@@ -64,6 +64,7 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                 // メール送信
             } catch (Exception $e) {
                 // その他例外
+                logger($e);
             }
         }
     }
