@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use Abraham\TwitterOAuth\TwitterOAuth;
-use App\Services\TwitterAPIErrorChecker;
-use App\Exceptions\TwitterRestrictionException;
-use App\TwitterapiCalledLog;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use App\TwitterapiCalledLog;
+use App\Services\TwitterAPIErrorChecker;
+use App\Exceptions\TwitterRestrictionException;
 
 // Twitterアカウントのオブジェクト
 class TwitterAccount
@@ -16,7 +16,7 @@ class TwitterAccount
     private $user_id;
     // Twitterアカウントのscreen_name(Twitter内で一意ではない、ユーザーが変更可能なID)
     private $screen_name;
-    /** @var TwitterOAuth */
+    // TwitterAuth
     private $twitter;
     // TwitterAPIのリソースの使用状況
     private $apiLimit ;
@@ -64,22 +64,25 @@ class TwitterAccount
         $this->postCalledResourceHistory();
     }
 
-    // TwitterAPIの関数の使用回数制限の判定
+    // TwitterAPIの使用回数制限を判定する
     private function checkLimit(string $resourceName)
     {
-        // 一部のTwitterAPIのリソースは、利用状況がTwitterAPIで確認できないので、自分で管理している情報に照らしあわせてチェックする
+        // 一部のTwitterAPIのリソースは、利用状況がTwitterAPIで確認できない。システムで管理している情報に照らしあわせてチェックする
         if (in_array($resourceName, $this::MANAGE_LIMIT_RESOURCE)) {
             if ($resourceName === self::FRIENDSHIPS_CREATE) {
                 // １５分制限
                 if ($this->calledCountFriendshipsCreateBefore15Minute + $this->calledCountFriendshipsCreateNow >= $this::FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE) {
+                    logger()->debug('フレンドシップ制限：firndships/createの１５分制限'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
                 // ２４時間制限
                 if ($this->calledCountFriendshipsCreateBefore24Hour + $this->calledCountFriendshipsCreateNow >= $this::FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR) {
+                    logger()->debug('フレンドシップ制限：firndships/createの２４時間制限'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
                 // １５分制限（フレンドシップ全体）
                 if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE) {
+                    logger()->debug('フレンドシップ制限：フレンドシップ全体（１５分）'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
                 $this->calledCountFriendshipsCreateNow++;
@@ -88,10 +91,12 @@ class TwitterAccount
             if ($resourceName === self::FRIENDSHIPS_DESTROY) {
                 // ２４時間制限
                 if ($this->calledCountFriendshipsDestroyBefore24Hour + $this->calledCountFriendshipsDestroyNow >= $this::FRIENDHSIPS_DESTROY_LIMIT_PER_24HOUR) {
+                    logger()->debug('フレンドシップ制限：firndships/destroyの２４時間制限'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
                 // １５分制限（フレンドシップ全体）
                 if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE) {
+                    logger()->debug('フレンドシップ制限：フレンドシップ全体（１５分）'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
                 $this->calledCountFriendshipsDestroyNow++;
@@ -100,6 +105,7 @@ class TwitterAccount
             if ($resourceName === self::FRIENDSHIPS_LOOKUP) {
                 // １５分制限（フレンドシップ全体）
                 if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE) {
+                    logger()->debug('フレンドシップ制限：フレンドシップ全体（１５分）'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
                 $this->calledCountFriendshipsLookupNow++;
@@ -114,6 +120,7 @@ class TwitterAccount
         $resource_child = '/'.$resourceName;
         if (!empty($this->apiLimit[$resource_parent][$resource_child])) {
             if ($this->apiLimit[$resource_parent][$resource_child]['remaining'] > 0) {
+                // １回使用
                 $this->apiLimit[$resource_parent][$resource_child]['remaining'] -= 1;
             } else {
                 throw new TwitterRestrictionException();
@@ -121,10 +128,7 @@ class TwitterAccount
         }
     }
 
-    /**
-     * つぶやきを投稿する
-     * @param string $msg
-     */
+    // つぶやきを投稿する
     public function postTweet(string $msg)
     {
         $resourceName = "statuses/update";
@@ -220,7 +224,7 @@ class TwitterAccount
         return $result['followers_count'];
     }
 
-    // 指定のツイートに対して「いいね」をする
+    // 指定のツイートを「いいね」をする
     public function favorite(string $id)
     {
         $resourceName = "favorites/create";
@@ -310,6 +314,7 @@ class TwitterAccount
             return false;
         }
     }
+
     // 自アカウントの情報を取得する
     public function getMyAccountInfo()
     {
@@ -392,7 +397,7 @@ class TwitterAccount
         return $result;
     }
 
-
+    // 一部リソースの利用状況計算用
     private function getAmountCountCalledFriendshipsBefore15Minute()
     {
         return
@@ -404,6 +409,7 @@ class TwitterAccount
         $this->calledCountFriendshipsLookupNow ;
     }
 
+    // 一部リソースの利用状況を示す変数を初期化
     private function getCalledResourceHistory()
     {
         $this->calledCountFriendshipsCreateBefore15Minute   = 0;
@@ -418,6 +424,7 @@ class TwitterAccount
         $this->setCalledResourceSountBefore24Hour();
     }
 
+    // 一部リソースの利用状況をDBに保存
     private function postCalledResourceHistory()
     {
         if ($this->calledCountFriendshipsCreateNow > 0) {
@@ -431,6 +438,7 @@ class TwitterAccount
         }
     }
 
+    // 一部リソースの利用状況をDBから取得、フィールド変数に格納
     private function setCalledResourceSountBefore15Minute()
     {
         $now = new Carbon();
@@ -457,6 +465,7 @@ class TwitterAccount
         }
     }
 
+    // 一部リソースの利用状況をDBから取得、フィールド変数に格納
     private function setCalledResourceSountBefore24Hour()
     {
         $now = new Carbon();
@@ -483,6 +492,7 @@ class TwitterAccount
         }
     }
 
+    // ログ出力用
     private function log(string $resourceName, ...$args)
     {
         try {

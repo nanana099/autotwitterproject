@@ -1,21 +1,22 @@
 <?php
 namespace App\Services;
 
-// use App\Account;
-// use App\AccountSetting;
-use Illuminate\Support\Facades\DB;
 use \Exception;
-use App\Exceptions\TwitterRestrictionException;
-use App\Exceptions\TwitterFlozenException;
+use Illuminate\Support\Facades\DB;
 use App\ReservedTweet;
-use App\Account;
+use App\Exceptions\TwitterFlozenException;
+use App\Exceptions\TwitterRestrictionException;
 
 class TweetExecutor implements ITwitterFunctionExecutor
 {
+    // 投稿するツイート
     private $tweets = [];
+
+    // 準備
     public function prepare()
     {
         logger()->info('TweetExecutor：prepare-start');
+
         // 対象リストの作成
         $this->tweets = DB::select(
             'SELECT 
@@ -34,13 +35,8 @@ class TweetExecutor implements ITwitterFunctionExecutor
             ORDER BY r.account_id
             '
         );
-        logger()->info('TweetExecutor：prepare-end'.' 対象件数：'.count($this->tweets));
-    }
 
-    // TwitterAPIを用いて、つぶやきを投稿する
-    private function postTweet(TwitterAccount $twitterAccount, $tweet)
-    {
-        $twitterAccount->postTweet($tweet->content);
+        logger()->info('TweetExecutor：prepare-end'.' 対象件数：'.count($this->tweets));
     }
 
     // DBからツイートの予約情報を削除する
@@ -72,6 +68,7 @@ class TweetExecutor implements ITwitterFunctionExecutor
                 $this->postTweet($twitterAccount, $tweet);
                 $this->deleteTweetOnDB($tweet->id);
             } catch (TwitterRestrictionException $e) {
+                // Todo:DBに停止日時格納すべき？
                 // API制限のエラー
                 $skipAccountId = $tweet->account_id;
                 // 前回停止時間を更新
@@ -86,6 +83,11 @@ class TweetExecutor implements ITwitterFunctionExecutor
             }
         }
         logger()->info('TweetExecutor：execute-end');
+    }
 
+    // TwitterAPIを用いて、つぶやきを投稿する
+    private function postTweet(TwitterAccount $twitterAccount, $tweet)
+    {
+        $twitterAccount->postTweet($tweet->content);
     }
 }

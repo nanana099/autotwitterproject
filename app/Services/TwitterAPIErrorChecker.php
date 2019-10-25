@@ -25,7 +25,7 @@ class TwitterAPIErrorChecker
             $result = get_object_vars($result);
         }
         if (!empty($result['errors'])) {
-            logger($result['errors']);
+            logger()->debug($result['errors']);
 
             $errorCode = $result['errors'][0]->code;
 

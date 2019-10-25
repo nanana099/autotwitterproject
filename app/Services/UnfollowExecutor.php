@@ -1,24 +1,26 @@
 <?php
 namespace App\Services;
 
-use App\Account;
-use Illuminate\Support\Facades\DB;
-use \Exception;
-use App\Exceptions\TwitterRestrictionException;
-use App\Exceptions\TwitterFlozenException;
-use App\UnfollowedUser;
-use Illuminate\Support\Carbon;
 use \DateTime;
+use \Exception;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
+use App\Account;
 use App\OperationStatus;
+use App\UnfollowedUser;
+use App\Exceptions\TwitterFlozenException;
+use App\Exceptions\TwitterRestrictionException;
 
 class UnfollowExecutor implements ITwitterFunctionExecutor
 {
+    // 自動アンフォロー実行アカウント
     private $accounts = [];
+
+    // 準備
     public function prepare()
     {
         logger()->info('UnfollowExecutorr：prepare-start');
         // 対象リストの作成
-        // フォロワー数が5000以上 または アンフォローが「稼働中」のアカウントは、自動アンフォロー実行対象のアカウント
         $this->accounts = DB::select(
             'SELECT
                 accounts.id,
@@ -35,22 +37,26 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 AND operation_statuses.unfollow_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
                 '
         );
+        // 条件：フォロワー数が5000以上 または アンフォローが「稼働中」
         foreach ($this->accounts as $key => $account) {
             // Twitterアカウントのインスタンス作成
             $twitterAccount = new TwitterAccount($account->access_token);
             try {
                 if ($twitterAccount->getMyFollowersCount() <= 5000) {
                     if (!$account->is_unfollow) {
-                        // アカウントが強制起動条件（フォローが5000超え)でも「稼働中」でもない場合は、処理対象から外す
+                        // 対象から外す
                         unset($this->accounts[$key]);
                     }
                 }
             } catch (TwitterRestrictionException $e) {
                 // APIの回数制限
+                // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
                 OperationStatus::where('account_id', $account->id)->first()->fill(array(
                     'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (TwitterFlozenException $e) {
                 // 凍結
+                // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
+                // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
                 OperationStatus::where('account_id', $account->id)->first()->fill(array(
                 'is_unfollow' => 0,
                 'is_flozen'=>1,
@@ -63,7 +69,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
         logger()->info('UnfollowExecutor：prepare-end'.' 対象件数（アカウント）：'.count($this->accounts));
     }
 
-
+    // 実行
     public function execute()
     {
         logger()->info('UnfollowExecutor：execute-start');
@@ -78,17 +84,19 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
             $followedAccounts = [];
 
             try {
-                // フォロー済みアカウントを取得
                 try {
+                    // フォロー中のアカウントを取得
                     $this->getFollowedAccounts($cursor, $followedAccounts, $twitterAccount);
-                    // 処理中情報をクリア
+                    // 進捗情報をクリア
                     $operationStatus->fill(array('unfollowing_target_cursor' => "-1"))->save();
                 } catch (Exception $e) {
-                    // 処理中情報をDBに格納
+                    // 進捗情報をDBに格納
                     $operationStatus->fill(array('unfollowing_target_cursor' => $cursor))->save();
                     throw $e;
                 } finally {
-                    // アンフォロー候補のアカウントを取得
+                    // フォロー中のアカウント取得中にAPI制限にかかる場合でもアンフォロー処理を行いたいのでfinally句に処理を記述
+
+                    // アンフォローするアカウントを抽出
                     $unfollowTargetAccounts = $this->getUnFollowTargetAccounts($followedAccounts, $account);
 
                     // アンフォロー
@@ -96,10 +104,13 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 }
             } catch (TwitterRestrictionException $e) {
                 // APIの回数制限
+                // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
                 OperationStatus::where('account_id', $account->id)->first()->fill(array(
                     'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (TwitterFlozenException $e) {
                 // 凍結
+                // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
+                // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
                 OperationStatus::where('account_id', $account->id)->first()->fill(array(
                     'is_unfollow' => 0,
                     'is_flozen'=>1,
@@ -113,7 +124,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
         logger()->info('UnfollowExecutor：execute-end');
     }
 
-    // フォロー済みアカウントを取得する
+    // フォロー中のアカウントを取得する
     private function getFollowedAccounts(string &$cursor, array &$followedAccounts, TwitterAccount $twitterAccount)
     {
         do {
@@ -122,11 +133,12 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
         } while ($cursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
     }
 
-    // アンフォロー候補のアカウントを取得する
+    // アンフォローするアカウントを取得する
     private function getUnFollowTargetAccounts($followedAccounts, $account)
     {
-        // フォローしてからn日経過しているアカウントのみ対象とする。（フォローチャーン対策）
-        // memo:TwitterAPIからフォローした日時を取得する手段がないため、システム上フォロー日時がわかるアカウントだけを対象とする。
+        // 条件：フォローしてからn日経過している
+        // memo:フォローチャーン対策として、n日経過を待つ。
+        //      TwitterAPIからフォローした日時を取得する手段がないため、システム上フォロー日時がわかるアカウントだけを対象とする。
         $unfollowTargetAccounts = [];
         $unfollowTargetAccounts = json_decode(Account::find($account->id)->followedUsers()->where('followed_at', '<=', Carbon::today()->subDay($account->days_unfollow_user))->get(['user_id'])->pluck('user_id'));
         $unfollowTargetAccounts = array_values(array_intersect($followedAccounts, $unfollowTargetAccounts));
@@ -170,6 +182,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 // アンフォロー実行
                 if (!$isFollowed) {
                     $twitterAccount->unfollow($friendship->id_str);
+                    // アンフォローできたアカウントはDBに記録しておく
                     (new UnfollowedUser(array('user_id' => $friendship->id_str, 'account_id' => $account_id)))->save();
                     $unfollowedAccounts[] = $friendship->id_str;
                 }
@@ -190,6 +203,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
             // アンフォロー実行
             if (!$isActive) {
                 $twitterAccount->unfollow($unfollowTargetAccount);
+                // アンフォローできたアカウントはDBに記録しておく
                 (new UnfollowedUser(array('user_id' => $unfollowTargetAccount, 'account_id' => $account_id)))->save();
             }
         }
