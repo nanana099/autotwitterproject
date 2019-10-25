@@ -123,6 +123,7 @@ class TwitterAccount
                 // １回使用
                 $this->apiLimit[$resource_parent][$resource_child]['remaining'] -= 1;
             } else {
+                logger()->debug('リソース回数制限'.' '.$resourceName." ".$this->user_id);
                 throw new TwitterRestrictionException();
             }
         }

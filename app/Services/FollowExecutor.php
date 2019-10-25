@@ -72,17 +72,19 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 foreach ($targetAccounts as $targetAccount) {
                     try {
                         try {
+                            // 処理中のターゲットアカウントをDBに保存（次回の実行時に使う）
+                            $operationStatus->fill(array('following_target_account' => $targetAccount))->save();
+
                             // ターゲットアカウントのフォロワーを取得
                             $this->getFollowers($targetAccount, $twitterAccount, $prevTargetAccountCursor, $targetAccountFollowers);
 
-                            // 進捗情報をクリア Todo:なんか違う？ターゲットアカウントもクリアしていいの？
-                            $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
-
+                            // cursorを一番最初にする
+                            $operationStatus->fill(array('following_target_account_cursor' => "-1"))->save();
                         } catch (Exception $e) {
                             // 進捗情報をDBに記録
-                            $operationStatus->fill(array('following_target_account' => $targetAccount,'following_target_account_cursor' => $prevTargetAccountCursor))->save();
+                            $operationStatus->fill(array('following_target_account_cursor' => $prevTargetAccountCursor))->save();
                             throw $e;
-                        } 
+                        }
                     } finally {
                         // ターゲットアカウントのフォロワー取得中にAPI制限にかかる場合でもフォロー処理を行いたいのでfinally句に処理を記述
 
@@ -98,6 +100,11 @@ class FollowExecutor implements ITwitterFunctionExecutor
                         }
                     }
                 }
+                // すべてのターゲットアカウントに対する処理が終了した場合
+                $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
+                OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                    'is_follow' => 0,
+                    'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (TwitterRestrictionException $e) {
                 // APIの回数制限
                 // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
@@ -111,7 +118,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 'is_follow' => 0,
                 'is_flozen'=>1,
                 'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
-            } catch(Exception $e){
+            } catch (Exception $e) {
                 logger()->error($e);
             }
         }
