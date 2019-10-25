@@ -74,7 +74,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
                             // ターゲットアカウントのフォロワーを取得
                             $this->getFollowers($targetAccount, $twitterAccount, $prevTargetAccountCursor, $targetAccountFollowers);
 
-                            // 進捗情報をクリア
+                            // 進捗情報をクリア Todo:なんか違う？ターゲットアカウントもクリアしていいの？
                             $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
 
                         } catch (Exception $e) {
