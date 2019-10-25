@@ -18,7 +18,6 @@ class OperationStatus extends Model
         'tweet_stopped_at',
         'following_target_account',
         'following_target_account_cursor',
-        'unfollowing_step',
-        'unfollowing_target_account',
+        'unfollowing_target_cursor',
     ];
 }

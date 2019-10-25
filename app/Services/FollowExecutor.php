@@ -78,8 +78,10 @@ class FollowExecutor implements ITwitterFunctionExecutor
                         // フォロー実行
                         foreach ($followUsers as $followUser) {
                             $twitterAccount->follow($followUser);
+
                             // フォローできたらDBへ格納
-                            (new FollowedUser(array('user_id' => $followUser, 'account_id' => $account->id, 'followed_at' => Carbon::now())))->save();
+                            // (new FollowedUser(array('user_id' => $followUser, 'account_id' => $account->id, 'followed_at' => Carbon::now())))->save();
+                            FollowedUser::updateOrCreate(array('user_id' => $followUser, 'account_id' => $account->id), array('followed_at' => Carbon::now()));
                         }
                     }
                 }

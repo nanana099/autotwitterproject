@@ -162,7 +162,7 @@ class TwitterAccount
     }
 
     // ユーザーをフォローする
-    public function follow(int $user_id)
+    public function follow(string $user_id)
     {
         $resourceName =  "friendships/create";
 
@@ -172,6 +172,26 @@ class TwitterAccount
             array(
                     'user_id' => $user_id,
                 )
+        ));
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+        return $result;
+    }
+
+    // 自アカウントのフォロワー数を取得する
+    public function getMyFollowedList($cursor)
+    {
+        $resourceName = "friends/ids";
+
+        $this->checkLimit($resourceName);
+        $result = get_object_vars($this->twitter->get(
+            $resourceName,
+            array(
+                'user_id' => $this->user_id,
+                'stringify_ids' => true,
+                'count' => 5000,
+                'cursor' => $cursor
+            )
         ));
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
@@ -319,7 +339,7 @@ class TwitterAccount
                 )
         ));
 
-        // 存在しないアカウントを指定するとTwitterAPIはエラーになる。しかしシステム上は正常扱いにするため、ここでチェック
+        // 存在しないアカウントを$screen_nameに指定するとTwitterAPIはエラーになる。しかしシステム上は正常扱いにするため、ここでチェック
         if (!empty($result['errors'])) {
             $errorCode = $result['errors'][0]->code;
             if ($errorCode === 34) {
@@ -391,9 +411,10 @@ class TwitterAccount
         $calledLog = DB::table('twitterapi_called_logs')
         ->select(DB::raw('SUM(count) as count, resource_name'))
         ->where('user_id', '=', $this->user_id)
-        ->whereTime('created_at', '>', $now->subMinute(15))
+        ->where('created_at', '>', $now->subMinute(15))
         ->groupBy('resource_name')
         ->get();
+
         foreach ($calledLog as $val) {
             switch ($val->resource_name) {
                 case self::FRIENDSHIPS_CREATE:
@@ -417,7 +438,7 @@ class TwitterAccount
         $calledLog = DB::table('twitterapi_called_logs')
         ->select(DB::raw('SUM(count) as count, resource_name'))
         ->where('user_id', '=', $this->user_id)
-        ->whereTime('created_at', '>', $now->subHour(24))
+        ->where('created_at', '>', $now->subHour(24))
         ->groupBy('resource_name')
         ->get();
         foreach ($calledLog as $val) {
