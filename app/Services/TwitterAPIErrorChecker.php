@@ -12,6 +12,7 @@ class TwitterAPIErrorChecker
     private const ACCOUNT_SUSPENDED = 64;       // アカウントが凍結された
     private const RATE_LIMIT_EXCEEDED = 88;     // TwitterAPIのリクエスト制限が上限に達した
     private const EXPIRED_TOKEN_CODE = 89;      // アクセストークンの期限が切れている
+    private const CANT_FOLLOW_TEMPORARY = 161;      // 一時的にフォロー不可
     private const CANT_READ_BLOCKED = 179;      // ブロックされているためアクセス不可
     private const OVER_CAPACITY = 130;          // Twitterが高負荷状態
     private const USER_UPDATE_LIMITE_EXCEEDED = 185; // ユーザー投稿回数が制限を超えた
@@ -30,9 +31,11 @@ class TwitterAPIErrorChecker
             $errorCode = $result['errors'][0]->code;
 
             if ($errorCode === self::RATE_LIMIT_EXCEEDED) {
-                throw new TwitterRestrictionException($errorCode); // 凍結中
+                throw new TwitterRestrictionException($errorCode);
+            } elseif ($errorCode === self::CANT_FOLLOW_TEMPORARY) {
+                throw new TwitterRestrictionException($errorCode);
             } elseif ($errorCode === self::ACCOUNT_SUSPENDED) {
-                throw new TwitterFlozenException($errorCode); //API制限
+                throw new TwitterFlozenException($errorCode);
             } else {
                 throw new TwitterException($errorCode);// その他例外
             }
