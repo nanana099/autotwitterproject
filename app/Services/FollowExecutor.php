@@ -4,10 +4,12 @@ namespace App\Services;
 use \Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Collection;
 use App\Account;
 use App\FollowedUser;
 use App\OperationStatus;
+use App\Mail\PlainText;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
 
@@ -71,79 +73,68 @@ class FollowExecutor implements ITwitterFunctionExecutor
             try {
                 foreach ($targetAccounts as $targetAccount) {
                     try {
-                        try {
-                            // 処理中のターゲットアカウントをDBに保存（次回の実行時に使う）
-                            $operationStatus->fill(array('following_target_account' => $targetAccount))->save();
+                        // 処理中のターゲットアカウントをDBに保存（次回の実行時に使う）
+                        $operationStatus->fill(array('following_target_account' => $targetAccount))->save();
+                        do {
+                            // 0:カーソルの終点 -1：カーソルの始点（前回のターゲットアカウントのフォロワー参照完了時 「0」になるので、始点に移動）
+                            if ($prevTargetAccountCursor === "0") {
+                                $prevTargetAccountCursor = "-1";
+                            }
 
-                            // ターゲットアカウントのフォロワーを取得
-                            $this->getFollowers($targetAccount, $twitterAccount, $prevTargetAccountCursor, $targetAccountFollowers);
+                            // ターゲットアカウントのフォロワー
+                            $targetAccountFollowers = [];
 
-                            // cursorを一番最初にする
-                            $operationStatus->fill(array('following_target_account_cursor' => "-1"))->save();
-                        } catch (Exception $e) {
-                            // 進捗情報をDBに記録
-                            $operationStatus->fill(array('following_target_account_cursor' => $prevTargetAccountCursor))->save();
-                            // 
-                            OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                                        'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
-                            throw $e;
-                        }
-                    } finally {
-                        // ターゲットアカウントのフォロワー取得中にAPI制限にかかる場合でもフォロー処理を行いたいのでfinally句に処理を記述
+                            // ターゲットアカウントのフォロワー取得（最大200件ごと）
+                            $response = $twitterAccount->getFollowerList($targetAccount, $prevTargetAccountCursor);
+                            $targetAccountFollowers = array_merge($targetAccountFollowers, empty($response['users']) ? [] : $response['users']);
 
-                        // フォローするアカウントを抽出
-                        $followUsers = $this->getFollowUsers($targetAccountFollowers, $followedUsers, $unfollowedUsers, $keywords);
+                            // フォローするアカウントを抽出
+                            $followUsers = $this->getFollowUsers($targetAccountFollowers, $followedUsers, $unfollowedUsers, $keywords);
 
-                        // フォロー実行
-                        foreach ($followUsers as $followUser) {
-                            $twitterAccount->follow($followUser);
+                            foreach ($followUsers as $followUser) {
+                                // フォロー実行
+                                $twitterAccount->follow($followUser);
 
-                            // フォローできたアカウントをDBに登録
-                            FollowedUser::updateOrCreate(array('user_id' => $followUser, 'account_id' => $account->id), array('followed_at' => Carbon::now()));
-                        }
+                                // フォローできたアカウントをDBに登録
+                                FollowedUser::updateOrCreate(array('user_id' => $followUser, 'account_id' => $account->id), array('followed_at' => Carbon::now()));
+                            }
+                        } while ($prevTargetAccountCursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
+
+                        // ターゲットアカウントのフォロワーをすべて参照し終えたら、カーソルを先頭に戻す
+                        $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
+
+                    } catch (Exception $e) {
+                        // ターゲットアカウントのフォロワーリスト取得 or フォロー実行で失敗
+                        // 進捗情報をDBに記録
+                        $operationStatus->fill(array('following_target_account_cursor' => $prevTargetAccountCursor, 'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
+                        throw $e;
                     }
                 }
+
                 // すべてのターゲットアカウントに対する処理が終了した場合
-                $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
-                OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                    'is_follow' => 0,
-                    'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
+                $operationStatus->fill(array('following_target_account' => "",
+                                            'following_target_account_cursor' => "-1",
+                                            'is_follow' => 0,
+                                            'follow_stopped_at' => date('Y/m/d H:i:s')
+                                            ))->save();
             } catch (TwitterRestrictionException $e) {
                 // APIの回数制限
                 // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
-                OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                    'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
+                $operationStatus->fill(array('follow_stopped_at' => date('Y/m/d H:i:s')
+                                            ))->save();
             } catch (TwitterFlozenException $e) {
                 // 凍結
                 // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
                 // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
-                OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                'is_follow' => 0,
-                'is_flozen'=>1,
-                'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
+                $operationStatus->fill(array('is_follow' => 0,
+                                        'is_flozen'=>1,
+                                        'follow_stopped_at' => date('Y/m/d H:i:s')
+                                            ))->save();
             } catch (Exception $e) {
                 logger()->error($e);
             }
         }
         logger()->info('FollowExecutor：execute-end');
-    }
-
-    // ターゲットアカウントのフォロワーを取得する
-    private function getFollowers(string $targetAccount, TwitterAccount $twitterAccount, string &$cursor, array &$followers)
-    {
-        // ターゲットアカウントのフォロワー取得（フォロワーリスト）
-        // １回のリクエストで200件のフォロワーしか取れないので、最後のフォロワーに行き着くまでループする。
-        // なお、途中でAPIの回数制限になった場合は、次回実行時に途中から再開できるように、
-        // 当関数の呼び元で、「処理中のターゲットアカウント」「ターゲットアカウントのフォロワーのカーソル」をDBに保管する。
-        do {
-            $response = $twitterAccount->getFollowerList($targetAccount, $cursor);
-            $followers = array_merge($followers, empty($response['users']) ? [] : $response['users']);
-        } while ($cursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
-
-        // 全件完了すると、"0"になる。次回の取得時にそのまま使うと、一覧が取得できなくなるので、一番最初のカーソルの"-1"を入れておく
-        if($cursor === "0"){
-            $cursor = "-1";
-        }
     }
 
     // フォロー対象のアカウントを、アカウントリストから抽出する。
