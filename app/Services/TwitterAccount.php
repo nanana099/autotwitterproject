@@ -272,7 +272,7 @@ class TwitterAccount
                 'lang' => 'ja',
                 'locale' => 'ja',
                 'result_type' => 'recent', // 最近のツイートを検索結果として取得
-                'count' => 15, // 取得件数
+                'count' => 15, // 取得件数 Todo:これだとう？引き数で指定したほうが良くない？あと１５はどう？いいねの対象になるからこのくらいでもいいのか。多すぎると凍結するかもだし
             )
         ));
         // エラーチェック
@@ -362,7 +362,7 @@ class TwitterAccount
             $resourceName,
             array(
                 'screen_name' => $screen_name,
-                'count' => 200, // 取得件数
+                'count' => 200, // 取得件数 200が最大
                 'status' => false,
                 'include_user_entities' => false,
                 'cursor' => $cursor
