@@ -139,6 +139,11 @@ class FollowExecutor implements ITwitterFunctionExecutor
             $response = $twitterAccount->getFollowerList($targetAccount, $cursor);
             $followers = array_merge($followers, empty($response['users']) ? [] : $response['users']);
         } while ($cursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
+
+        // 全件完了すると、"0"になる。次回の取得時にそのまま使うと、一覧が取得できなくなるので、一番最初のカーソルの"-1"を入れておく
+        if($cursor === "0"){
+            $cursor = "-1";
+        }
     }
 
     // フォロー対象のアカウントを、アカウントリストから抽出する。
@@ -147,7 +152,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
         $resultList =[];
         foreach ($followers as $targetAccountFollower) {
             $isContinue = false;
-
+            // Todo:フォロー済みあかうんとをTwitterAPIでとりたい→フォロー済みは、アカウント登録時に、全部テーブルにINSERTしちゃうか？
             // 確認：フォロー済みでないか
             foreach ($followedUsers as $followedUser) {
                 if ($followedUser->user_id === $targetAccountFollower->id_str) {
