@@ -25,12 +25,14 @@ class TwitterAccount
     private const FRIENDSHIPS_DESTROY   = 'friendships/destroy';
     private const FRIENDSHIPS_LOOKUP    = 'friendships/lookup';
     private const MANAGE_LIMIT_RESOURCE =[self::FRIENDSHIPS_CREATE,self::FRIENDSHIPS_DESTROY,self::FRIENDSHIPS_LOOKUP]; // 自前で呼び出し回数を制限したいリソース名
-    private const FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE = 15;   // friendships/createの15分上限
-    private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR = 1000;   // friendships/createの２４時間上限
-    private const FRIENDHSIPS_DESTROY_LIMIT_PER_24HOUR = 1000;  // friendships/destroyの２４時間上限
-    private const FRIENDSHIPS_LIMIT_PER_15MINUTE = 170;         // friendshipsの１５分上限
+    private const FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE_ACCOUNT = 15;   // friendships/createの15分上限（１アカウント）
+    private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_ACCOUNT = 1000;   // friendships/createの２４時間上限（１アカウント）
+    private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_APP = 500;        // friendships/createの２４時間上限（１アカウント）仕様上1000だが、実際は600あたりから制限がかかる
+    private const FRIENDHSIPS_DESTROY_LIMIT_PER_24HOUR_ACCOUNT = 1000;  // friendships/destroyの２４時間上限（１アカウント）
+    private const FRIENDSHIPS_LIMIT_PER_15MINUTE_ACCOUNT = 170;         // friendshipsの１５分上限（１アカウント）
     private $calledCountFriendshipsCreateBefore15Minute;
     private $calledCountFriendshipsCreateBefore24Hour;
+    private $calledCountFriendshipsCreateBefore24HourApp;
     private $calledCountFriendshipsDestroyBefore15Minute;
     private $calledCountFriendshipsDestroyBefore24Hour;
     private $calledCountFriendshipsLookupBefore15Minute;
@@ -70,18 +72,23 @@ class TwitterAccount
         // 一部のTwitterAPIのリソースは、利用状況がTwitterAPIで確認できない。システムで管理している情報に照らしあわせてチェックする
         if (in_array($resourceName, $this::MANAGE_LIMIT_RESOURCE)) {
             if ($resourceName === self::FRIENDSHIPS_CREATE) {
-                // １５分制限
-                if ($this->calledCountFriendshipsCreateBefore15Minute + $this->calledCountFriendshipsCreateNow >= $this::FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE) {
+                // 24時間制限（アプリ全体）
+                if ($this->calledCountFriendshipsCreateBefore24HourApp + $this->calledCountFriendshipsCreateNow >= $this::FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_APP) {
+                    logger()->debug('フレンドシップ制限：firndships/createの２４時間制限（アプリ全体）'." ".$this->user_id);
+                    throw new TwitterRestrictionException();
+                }
+                // １５分制限(アカウントごと)
+                if ($this->calledCountFriendshipsCreateBefore15Minute + $this->calledCountFriendshipsCreateNow >= $this::FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE_ACCOUNT) {
                     logger()->debug('フレンドシップ制限：firndships/createの１５分制限'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
-                // ２４時間制限
-                if ($this->calledCountFriendshipsCreateBefore24Hour + $this->calledCountFriendshipsCreateNow >= $this::FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR) {
+                // ２４時間制限(アカウントごと)
+                if ($this->calledCountFriendshipsCreateBefore24Hour + $this->calledCountFriendshipsCreateNow >= $this::FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_ACCOUNT) {
                     logger()->debug('フレンドシップ制限：firndships/createの２４時間制限'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
-                // １５分制限（フレンドシップ全体）
-                if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE) {
+                // １５分制限(アカウントごと)（フレンドシップ全体）
+                if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE_ACCOUNT) {
                     logger()->debug('フレンドシップ制限：フレンドシップ全体（１５分）'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
@@ -89,13 +96,13 @@ class TwitterAccount
             }
 
             if ($resourceName === self::FRIENDSHIPS_DESTROY) {
-                // ２４時間制限
-                if ($this->calledCountFriendshipsDestroyBefore24Hour + $this->calledCountFriendshipsDestroyNow >= $this::FRIENDHSIPS_DESTROY_LIMIT_PER_24HOUR) {
+                // ２４時間制限(アカウントごと)
+                if ($this->calledCountFriendshipsDestroyBefore24Hour + $this->calledCountFriendshipsDestroyNow >= $this::FRIENDHSIPS_DESTROY_LIMIT_PER_24HOUR_ACCOUNT) {
                     logger()->debug('フレンドシップ制限：firndships/destroyの２４時間制限'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
-                // １５分制限（フレンドシップ全体）
-                if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE) {
+                // １５分制限(アカウントごと)（フレンドシップ全体）
+                if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE_ACCOUNT) {
                     logger()->debug('フレンドシップ制限：フレンドシップ全体（１５分）'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
@@ -103,8 +110,8 @@ class TwitterAccount
             }
 
             if ($resourceName === self::FRIENDSHIPS_LOOKUP) {
-                // １５分制限（フレンドシップ全体）
-                if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE) {
+                // １５分制限(アカウントごと)（フレンドシップ全体）
+                if ($this->getAmountCountCalledFriendshipsBefore15Minute() >= $this::FRIENDSHIPS_LIMIT_PER_15MINUTE_ACCOUNT) {
                     logger()->debug('フレンドシップ制限：フレンドシップ全体（１５分）'." ".$this->user_id);
                     throw new TwitterRestrictionException();
                 }
@@ -128,7 +135,8 @@ class TwitterAccount
             }
         }
     }
-    public function getScreenName(){
+    public function getScreenName()
+    {
         return $this->screen_name;
     }
 
@@ -418,6 +426,7 @@ class TwitterAccount
     {
         $this->calledCountFriendshipsCreateBefore15Minute   = 0;
         $this->calledCountFriendshipsCreateBefore24Hour     = 0;
+        $this->calledCountFriendshipsCreateBefore24HourApp  = 0;
         $this->calledCountFriendshipsDestroyBefore15Minute  = 0;
         $this->calledCountFriendshipsDestroyBefore24Hour    = 0;
         $this->calledCountFriendshipsLookupBefore15Minute   = 0;
@@ -472,9 +481,8 @@ class TwitterAccount
     // 一部リソースの利用状況をDBから取得、フィールド変数に格納
     private function setCalledResourceSountBefore24Hour()
     {
+        // 過去２４時間の呼出履歴（アカウントごと）
         $now = new Carbon();
-        
-        // 過去２４時間の呼出履歴
         $calledLog = DB::table('twitterapi_called_logs')
         ->select(DB::raw('SUM(count) as count, resource_name'))
         ->where('user_id', '=', $this->user_id)
@@ -491,6 +499,21 @@ class TwitterAccount
                     break;
                 case self::FRIENDSHIPS_LOOKUP:
                     // 不要
+                    break;
+            }
+        }
+
+        // 過去２４時間の呼出履歴（アプリケーション全体）
+        $now = new Carbon();
+        $calledLog = DB::table('twitterapi_called_logs')
+        ->select(DB::raw('SUM(count) as count, resource_name'))
+        ->where('created_at', '>', $now->subHour(24))
+        ->groupBy('resource_name')
+        ->get();
+        foreach ($calledLog as $val) {
+            switch ($val->resource_name) {
+                case self::FRIENDSHIPS_CREATE:// アプリ全体で制限があるのはフォローだけ
+                    $this->calledCountFriendshipsCreateBefore24HourApp = $val->count;
                     break;
             }
         }
