@@ -128,6 +128,9 @@ class TwitterAccount
             }
         }
     }
+    public function getScreenName(){
+        return $this->screen_name;
+    }
 
     // つぶやきを投稿する
     public function postTweet(string $msg)
