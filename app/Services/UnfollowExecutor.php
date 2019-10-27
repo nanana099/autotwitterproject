@@ -86,40 +86,46 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
 
             try {
                 try {
-                    // フォロー中のアカウントを取得
-                    $this->getFollowedAccounts($cursor, $followedAccounts, $twitterAccount);
+                    do {
+                        // 0:カーソルの終点 -1：カーソルの始点（前回のフォローリスト参照が完了した場合、 「0」になることがあるので、始点に移動）
+                        if ($cursor ==="0") {
+                            $cursor = "-1";
+                        }
+                        
+                        // アンフォローするアカウント
+                        $unfollowTargetAccounts = [];
+
+                        // フォロー中のアカウントを取得
+                        $response = $twitterAccount->getMyFollowedList($cursor);
+                        $followedAccounts = array_merge($followedAccounts, empty($response['ids']) ? [] : $response['ids']);
+
+                        // アンフォローするアカウントを抽出
+                        $unfollowTargetAccounts = $this->getUnFollowTargetAccounts($followedAccounts, $account);
+
+                        // アンフォロー
+                        $this->unfollow($unfollowTargetAccounts, $twitterAccount, $account);
+                    } while ($cursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
+
                     // 進捗情報をクリア
                     $operationStatus->fill(array('unfollowing_target_cursor' => "-1"))->save();
                 } catch (Exception $e) {
                     // 進捗情報をDBに格納
-                    $operationStatus->fill(array('unfollowing_target_cursor' => $cursor))->save();
-                    OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                        'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();                    
+                    $operationStatus->fill(array('unfollowing_target_cursor' => $cursor,'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
                     throw $e;
-                } finally {
-                    // フォロー中のアカウント取得中にAPI制限にかかる場合でもアンフォロー処理を行いたいのでfinally句に処理を記述
-
-                    // アンフォローするアカウントを抽出
-                    $unfollowTargetAccounts = $this->getUnFollowTargetAccounts($followedAccounts, $account);
-
-                    // アンフォロー
-                    $this->unfollow($unfollowTargetAccounts, $twitterAccount, $account);
                 }
-
                 // すべてのターゲットアカウントに対する処理が終了した場合
-                OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                    'is_unfollow' => 0,
-                    'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
+                $operationStatus->fill(array( 'is_unfollow' => 0,
+                    'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (TwitterRestrictionException $e) {
                 // APIの回数制限
                 // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
-                OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                $operationStatus->fill(array(
                     'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
             } catch (TwitterFlozenException $e) {
                 // 凍結
                 // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
                 // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
-                OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                $operationStatus->fill(array(
                     'is_unfollow' => 0,
                     'is_flozen'=>1,
                     'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
@@ -130,15 +136,6 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
         }
 
         logger()->info('UnfollowExecutor：execute-end');
-    }
-
-    // フォロー中のアカウントを取得する
-    private function getFollowedAccounts(string &$cursor, array &$followedAccounts, TwitterAccount $twitterAccount)
-    {
-        do {
-            $response = $twitterAccount->getMyFollowedList($cursor);
-            $followedAccounts = array_merge($followedAccounts, empty($response['ids']) ? [] : $response['ids']);
-        } while ($cursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
     }
 
     // アンフォローするアカウントを取得する
