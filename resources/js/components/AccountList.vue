@@ -14,7 +14,8 @@
         ></account-item>
       </ul>
       <span class="p-message-1" v-else>
-        <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません
+        <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません。
+        <a href="/mypage/monitor">アカウント一覧</a>から登録してください。
       </span>
       <flash-message class="p-flash_message--fixed"></flash-message>
     </div>

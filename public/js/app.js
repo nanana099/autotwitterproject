@@ -2067,6 +2067,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "AccountList",
@@ -2199,6 +2200,7 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
 /* harmony import */ var _StringListManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StringListManager */ "./resources/js/components/StringListManager.vue");
+//
 //
 //
 //
@@ -2661,6 +2663,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
 /* harmony import */ var _ReserveTweetForm__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReserveTweetForm */ "./resources/js/components/ReserveTweetForm.vue");
 /* harmony import */ var _ReservedTweetList__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ReservedTweetList */ "./resources/js/components/ReservedTweetList.vue");
+//
 //
 //
 //
@@ -56845,7 +56848,11 @@ var render = function() {
             )
           : _c("span", { staticClass: "p-message-1" }, [
               _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
-              _vm._v("Twitterアカウントが登録されていません\n    ")
+              _vm._v("Twitterアカウントが登録されていません。\n      "),
+              _c("a", { attrs: { href: "/mypage/monitor" } }, [
+                _vm._v("アカウント一覧")
+              ]),
+              _vm._v("から登録してください。\n    ")
             ]),
         _vm._v(" "),
         _c("flash-message", { staticClass: "p-flash_message--fixed" })
@@ -57254,7 +57261,11 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "p-message-1" }, [
       _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
-      _vm._v("Twitterアカウントが登録されていません\n        ")
+      _vm._v("Twitterアカウントが登録されていません。\n          "),
+      _c("a", { attrs: { href: "/mypage/monitor" } }, [
+        _vm._v("アカウント一覧")
+      ]),
+      _vm._v("から登録してください。\n        ")
     ])
   }
 ]
@@ -57280,7 +57291,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h2", { staticClass: "c-title" }, [_vm._v("稼働状況")]),
+    _c("h2", { staticClass: "c-title" }, [_vm._v("アカウント一覧・稼働状況")]),
     _vm._v(" "),
     _c("section", { staticClass: "p-section" }, [
       _c(
@@ -57657,7 +57668,11 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("span", { staticClass: "p-message-1" }, [
       _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
-      _vm._v("Twitterアカウントが登録されていません\n        ")
+      _vm._v("Twitterアカウントが登録されていません。\n          "),
+      _c("a", { attrs: { href: "/mypage/monitor" } }, [
+        _vm._v("アカウント一覧")
+      ]),
+      _vm._v("から登録してください。\n        ")
     ])
   }
 ]

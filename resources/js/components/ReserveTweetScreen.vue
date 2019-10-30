@@ -15,7 +15,8 @@
       <div v-show="!isLoading">
         <div v-show="!existsAccount">
           <span class="p-message-1">
-            <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません
+            <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません。
+            <a href="/mypage/monitor">アカウント一覧</a>から登録してください。
           </span>
         </div>
         <div v-show="existsAccount">

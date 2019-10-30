@@ -1,7 +1,7 @@
 <template>
   <!-- 自動機能稼働状況の一覧 -->
   <div>
-    <h2 class="c-title">稼働状況</h2>
+    <h2 class="c-title">アカウント一覧・稼働状況</h2>
     <section class="p-section">
       <div v-show="isLoading">
         <span class="p-message-1">
