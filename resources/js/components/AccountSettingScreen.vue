@@ -23,6 +23,19 @@
         <div v-show="existsAccount">
           <fieldset class="c-form-fieldset">
             <legend>自動フォロー関連</legend>
+
+            <div class="c-form-group">
+              <label for="email" class="c-form-group__label">
+                ・ターゲットアカウント
+                <span class="u-fs-4">@マークを除いたユーザー名を指定してください。</span>
+              </label>
+              <string-list-manager
+                v-model="targetAccountArray"
+                :placeholder="'例）tanakaTaro'"
+                :maxLength="20"
+                :maxCount="20"
+              ></string-list-manager>
+            </div>
             <div class="c-form-group">
               <label for="keyword-follow" class="c-form-group__label">
                 ・フォローキーワード
@@ -30,11 +43,12 @@
                   <a href="/help/keyword" class="u-fs-4" target="_blank">キーワードの指定について</a>
                 </span>
               </label>
-              <string-list-manager v-model="followKeywordArray" :placeholder="'例）HTML (※50文字まで)'" :maxLength="50" :maxCount="20"></string-list-manager>
-            </div>
-            <div class="c-form-group">
-              <label for="email" class="c-form-group__label">・ターゲットアカウント</label>
-              <string-list-manager v-model="targetAccountArray" :placeholder="'例）tanakaTaro'" :maxLength="20" :maxCount="20"></string-list-manager>
+              <string-list-manager
+                v-model="followKeywordArray"
+                :placeholder="'例）HTML (※50文字まで)'"
+                :maxLength="50"
+                :maxCount="20"
+              ></string-list-manager>
             </div>
           </fieldset>
           <fieldset class="c-form-fieldset">
@@ -79,7 +93,12 @@
                   <a href="/help/keyword" class="u-fs-4" target="_blank">キーワードの指定について</a>
                 </span>
               </label>
-              <string-list-manager v-model="favoriteKeywordArray" :placeholder="'例）東京(※50文字まで)'" :maxLength="50" :maxCount="20"></string-list-manager>
+              <string-list-manager
+                v-model="favoriteKeywordArray"
+                :placeholder="'例）東京(※50文字まで)'"
+                :maxLength="50"
+                :maxCount="20"
+              ></string-list-manager>
             </div>
           </fieldset>
 
@@ -144,9 +163,11 @@ export default {
         });
     },
     saveSetting: function() {
+      // バリデーション
       this.setting.days_unfollow_user === 0 ||
+      this.setting.days_unfollow_user < 7 ||
       this.setting.days_unfollow_user > 999
-        ? (this.msgDaysUnfollowUser = "1~999を入力してください")
+        ? (this.msgDaysUnfollowUser = "7~999を入力してください")
         : (this.msgDaysUnfollowUser = "");
 
       if (this.msgDaysUnfollowUser !== "") {

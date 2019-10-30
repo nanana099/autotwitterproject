@@ -2297,6 +2297,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2338,7 +2357,8 @@ __webpack_require__.r(__webpack_exports__);
     saveSetting: function saveSetting() {
       var _this2 = this;
 
-      this.setting.days_unfollow_user === 0 || this.setting.days_unfollow_user > 999 ? this.msgDaysUnfollowUser = "1~999を入力してください" : this.msgDaysUnfollowUser = "";
+      // バリデーション
+      this.setting.days_unfollow_user === 0 || this.setting.days_unfollow_user < 7 || this.setting.days_unfollow_user > 999 ? this.msgDaysUnfollowUser = "7~999を入力してください" : this.msgDaysUnfollowUser = "";
 
       if (this.msgDaysUnfollowUser !== "") {
         // エラーがある場合は保存処理しない
@@ -57063,37 +57083,6 @@ var render = function() {
                     _vm._v(" "),
                     _c("string-list-manager", {
                       attrs: {
-                        placeholder: "例）HTML (※50文字まで)",
-                        maxLength: 50,
-                        maxCount: 20
-                      },
-                      model: {
-                        value: _vm.followKeywordArray,
-                        callback: function($$v) {
-                          _vm.followKeywordArray = $$v
-                        },
-                        expression: "followKeywordArray"
-                      }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "c-form-group" },
-                  [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "c-form-group__label",
-                        attrs: { for: "email" }
-                      },
-                      [_vm._v("・ターゲットアカウント")]
-                    ),
-                    _vm._v(" "),
-                    _c("string-list-manager", {
-                      attrs: {
                         placeholder: "例）tanakaTaro",
                         maxLength: 20,
                         maxCount: 20
@@ -57104,6 +57093,30 @@ var render = function() {
                           _vm.targetAccountArray = $$v
                         },
                         expression: "targetAccountArray"
+                      }
+                    })
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "c-form-group" },
+                  [
+                    _vm._m(2),
+                    _vm._v(" "),
+                    _c("string-list-manager", {
+                      attrs: {
+                        placeholder: "例）HTML (※50文字まで)",
+                        maxLength: 50,
+                        maxCount: 20
+                      },
+                      model: {
+                        value: _vm.followKeywordArray,
+                        callback: function($$v) {
+                          _vm.followKeywordArray = $$v
+                        },
+                        expression: "followKeywordArray"
                       }
                     })
                   ],
@@ -57233,7 +57246,7 @@ var render = function() {
                   "div",
                   { staticClass: "c-form-group" },
                   [
-                    _vm._m(2),
+                    _vm._m(3),
                     _vm._v(" "),
                     _c("string-list-manager", {
                       attrs: {
@@ -57287,6 +57300,21 @@ var staticRenderFns = [
       ]),
       _vm._v("から登録してください。\n        ")
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "c-form-group__label", attrs: { for: "email" } },
+      [
+        _vm._v("\n              ・ターゲットアカウント\n              "),
+        _c("span", { staticClass: "u-fs-4" }, [
+          _vm._v("@マークを除いたユーザー名を指定してください。")
+        ])
+      ]
+    )
   },
   function() {
     var _vm = this
