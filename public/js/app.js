@@ -2287,6 +2287,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -57037,14 +57047,7 @@ var render = function() {
                   "div",
                   { staticClass: "c-form-group" },
                   [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "c-form-group__label",
-                        attrs: { for: "keyword-follow" }
-                      },
-                      [_vm._v("・フォローキーワード")]
-                    ),
+                    _vm._m(1),
                     _vm._v(" "),
                     _c("string-list-manager", {
                       attrs: { placeholder: "例）HTML" },
@@ -57210,14 +57213,7 @@ var render = function() {
                   "div",
                   { staticClass: "c-form-group" },
                   [
-                    _c(
-                      "label",
-                      {
-                        staticClass: "c-form-group__label",
-                        attrs: { for: "email" }
-                      },
-                      [_vm._v("・いいねキーワード")]
-                    ),
+                    _vm._m(2),
                     _vm._v(" "),
                     _c("string-list-manager", {
                       attrs: { placeholder: "例）プログラミング" },
@@ -57267,6 +57263,50 @@ var staticRenderFns = [
       ]),
       _vm._v("から登録してください。\n        ")
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "c-form-group__label", attrs: { for: "keyword-follow" } },
+      [
+        _vm._v("\n              ・フォローキーワード\n              "),
+        _c("span", [
+          _c(
+            "a",
+            {
+              staticClass: "u-fs-4",
+              attrs: { href: "/help/keyword", target: "_blank" }
+            },
+            [_vm._v("キーワードの指定について")]
+          )
+        ])
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "label",
+      { staticClass: "c-form-group__label", attrs: { for: "email" } },
+      [
+        _vm._v("\n              ・いいねキーワード\n              "),
+        _c("span", [
+          _c(
+            "a",
+            {
+              staticClass: "u-fs-4",
+              attrs: { href: "/help/keyword", target: "_blank" }
+            },
+            [_vm._v("キーワードの指定について")]
+          )
+        ])
+      ]
+    )
   }
 ]
 render._withStripped = true

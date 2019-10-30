@@ -20,6 +20,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/help/keyword', function () {
+    return view('help.keyword');
+})->name('help.keyword');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/mypage/monitor', function () {

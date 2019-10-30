@@ -24,7 +24,12 @@
           <fieldset class="c-form-fieldset">
             <legend>自動フォロー関連</legend>
             <div class="c-form-group">
-              <label for="keyword-follow" class="c-form-group__label">・フォローキーワード</label>
+              <label for="keyword-follow" class="c-form-group__label">
+                ・フォローキーワード
+                <span>
+                  <a href="/help/keyword" class="u-fs-4" target="_blank">キーワードの指定について</a>
+                </span>
+              </label>
               <string-list-manager v-model="followKeywordArray" :placeholder="'例）HTML'"></string-list-manager>
             </div>
             <div class="c-form-group">
@@ -68,7 +73,12 @@
           <fieldset class="c-form-fieldset">
             <legend>自動いいね関連</legend>
             <div class="c-form-group">
-              <label for="email" class="c-form-group__label">・いいねキーワード</label>
+              <label for="email" class="c-form-group__label">
+                ・いいねキーワード
+                <span>
+                  <a href="/help/keyword" class="u-fs-4" target="_blank">キーワードの指定について</a>
+                </span>
+              </label>
               <string-list-manager v-model="favoriteKeywordArray" :placeholder="'例）プログラミング'"></string-list-manager>
             </div>
           </fieldset>
