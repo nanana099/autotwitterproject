@@ -60,7 +60,9 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
                 // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
                 OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                'is_follow' => 0,
                 'is_unfollow' => 0,
+                'is_favorite' => 0,
                 'is_flozen'=>1,
                 'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
 
