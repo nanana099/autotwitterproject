@@ -12,6 +12,7 @@ use App\OperationStatus;
 use App\Mail\PlainText;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
+use App\User;
 
 // 自動フォロー実行クラス
 class FollowExecutor implements ITwitterFunctionExecutor
@@ -55,6 +56,8 @@ class FollowExecutor implements ITwitterFunctionExecutor
             // ユーザーが設定したターゲットアカウント
             $targetAccounts = empty($account->target_accounts) ? [] : explode(',', $account->target_accounts);
             $accountFromDB = Account::find($account->id);
+            // アカウントを所持するユーザー
+            $user = $accountFromDB->user()->get()[0];
             // フォロー済みリスト（３０日以内にフォロー済みのアカウント）
             $followedUsers = $accountFromDB->followedUsers()->where('followed_at', '>=', Carbon::today()->subDay(30))->get();
             // アンフォロー済みリストをDBから取得
@@ -102,7 +105,6 @@ class FollowExecutor implements ITwitterFunctionExecutor
 
                         // ターゲットアカウントのフォロワーをすべて参照し終えたら、カーソルを先頭に戻す
                         $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
-
                     } catch (Exception $e) {
                         // ターゲットアカウントのフォロワーリスト取得 or フォロー実行で失敗
                         // 進捗情報をDBに記録
@@ -117,6 +119,8 @@ class FollowExecutor implements ITwitterFunctionExecutor
                                             'is_follow' => 0,
                                             'follow_stopped_at' => date('Y/m/d H:i:s')
                                             ))->save();
+                
+                MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FOLLOW_COMPLATED);
             } catch (TwitterRestrictionException $e) {
                 // APIの回数制限
                 // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
@@ -127,9 +131,12 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
                 // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
                 $operationStatus->fill(array('is_follow' => 0,
+                                        'is_unfollow' => 0,
+                                        'is_favorite' => 0,
                                         'is_flozen'=>1,
                                         'follow_stopped_at' => date('Y/m/d H:i:s')
                                             ))->save();
+                MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
             } catch (Exception $e) {
                 logger()->error($e);
             }

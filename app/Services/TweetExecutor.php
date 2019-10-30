@@ -3,6 +3,7 @@ namespace App\Services;
 
 use \Exception;
 use Illuminate\Support\Facades\DB;
+use App\Account;
 use App\ReservedTweet;
 use App\OperationStatus;
 use App\Exceptions\TwitterFlozenException;
@@ -82,9 +83,16 @@ class TweetExecutor implements ITwitterFunctionExecutor
                 // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
                 // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
                 OperationStatus::where('account_id', $tweet->account_id)->first()->fill(array(
+                'is_follow' => 0,
                 'is_unfollow' => 0,
+                'is_favorite' => 0,
                 'is_flozen'=>1,
                 'tweet_stopped_at' => date('Y/m/d H:i:s')))->save();
+
+                $accountFromDB = Account::find($tweet->account_id);
+                // アカウントを所持するユーザー
+                $user = $accountFromDB->user()->get()[0];
+                MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
             } catch (Exception $e) {
                 // その他例外
                 logger()->error($e);
