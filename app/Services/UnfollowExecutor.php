@@ -28,6 +28,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 accounts.access_token,
                 account_settings.days_inactive_user,
                 account_settings.days_unfollow_user,
+                account_settings.bool_unfollow_inactive,
                 operation_statuses.is_unfollow
             FROM accounts
             INNER JOIN account_settings
@@ -174,8 +175,11 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
         // アンフォロー済みのユーザーをターゲットのリストから削除
         $unfollowTargetAccouts = array_values(array_diff($unfollowTargetAccouts, $unfollowedAccounts));
 
-        // 非アクティブのアカウントをアンフォローする
-        $this->unfollowBasedOnActiveStatus($twitterAccount, $unfollowTargetAccouts, $account->days_inactive_user, $account->id);
+        // 非アクティブ基準のアンフォロー実行はユーザーが設定できる
+        if ($account->bool_unfollow_inactive) {        
+            // 非アクティブのアカウントをアンフォローする
+            $this->unfollowBasedOnActiveStatus($twitterAccount, $unfollowTargetAccouts, $account->days_inactive_user, $account->id);
+        }
     }
 
     // フォロー返しの有無に基づいて、アンフォローを実行
