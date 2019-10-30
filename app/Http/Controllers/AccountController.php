@@ -22,7 +22,7 @@ class AccountController extends Controller
         
         if (Auth::user()->accounts()->count() >= $max_account) {
             // １ユーザーが登録できるアカウント数に上限を設ける
-            // Todo:なんかページ返す？
+            return redirect()->route('mypage.monitor')->with('flash_message_error', '登録できるアカウントは'.$max_account.'個までです。');
         } else {
             $authUrl = TwitterAuth::getAuthorizeUrl();
             return redirect($authUrl);
