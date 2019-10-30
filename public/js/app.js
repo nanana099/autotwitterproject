@@ -3019,8 +3019,8 @@ __webpack_require__.r(__webpack_exports__);
       errorMsg: ""
     };
   },
-  props: ["value", "placeholder"],
-  // value:参照元からセレクトボックスに表示する配列を受け取る
+  props: ["value", "placeholder", "maxLength", "maxCount"],
+  // value:参照元からセレクトボックスに表示する配列を受け取る maxLength:文字列最大長 maxCount:文字列の個数最大
   watch: {
     value: function value() {
       this.ary = this.value;
@@ -3041,6 +3041,16 @@ __webpack_require__.r(__webpack_exports__);
         return;
       }
 
+      if (this.addStr.length > this.maxLength) {
+        this.errorMsg = "文字列が長すぎます";
+        return;
+      }
+
+      if (this.ary.length >= this.maxCount) {
+        this.errorMsg = "これ以上追加できません";
+        return;
+      }
+
       this.errorMsg = ""; // 要素の追加処理
 
       if (!this.ary.some(function (x) {
@@ -3048,6 +3058,8 @@ __webpack_require__.r(__webpack_exports__);
       })) {
         this.ary.push(this.addStr);
         this.addStr = "";
+      } else {
+        this.errorMsg = "すでに追加済みです";
       }
     },
     // 配列から要素を削除
@@ -57050,7 +57062,11 @@ var render = function() {
                     _vm._m(1),
                     _vm._v(" "),
                     _c("string-list-manager", {
-                      attrs: { placeholder: "例）HTML" },
+                      attrs: {
+                        placeholder: "例）HTML (※50文字まで)",
+                        maxLength: 50,
+                        maxCount: 20
+                      },
                       model: {
                         value: _vm.followKeywordArray,
                         callback: function($$v) {
@@ -57077,7 +57093,11 @@ var render = function() {
                     ),
                     _vm._v(" "),
                     _c("string-list-manager", {
-                      attrs: { placeholder: "例）tanakaTaro" },
+                      attrs: {
+                        placeholder: "例）tanakaTaro",
+                        maxLength: 20,
+                        maxCount: 20
+                      },
                       model: {
                         value: _vm.targetAccountArray,
                         callback: function($$v) {
@@ -57216,7 +57236,11 @@ var render = function() {
                     _vm._m(2),
                     _vm._v(" "),
                     _c("string-list-manager", {
-                      attrs: { placeholder: "例）プログラミング" },
+                      attrs: {
+                        placeholder: "例）東京(※50文字まで)",
+                        maxLength: 50,
+                        maxCount: 20
+                      },
                       model: {
                         value: _vm.favoriteKeywordArray,
                         callback: function($$v) {

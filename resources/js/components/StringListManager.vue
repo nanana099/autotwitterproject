@@ -25,7 +25,7 @@ export default {
       errorMsg: ""
     };
   },
-  props: ["value", "placeholder"], // value:参照元からセレクトボックスに表示する配列を受け取る
+  props: ["value", "placeholder","maxLength","maxCount"], // value:参照元からセレクトボックスに表示する配列を受け取る maxLength:文字列最大長 maxCount:文字列の個数最大
   watch: {
     value() {
       this.ary = this.value;
@@ -42,12 +42,22 @@ export default {
         this.errorMsg = "','を含むことはできません";
         return;
       }
+      if(this.addStr.length > this.maxLength){
+        this.errorMsg = "文字列が長すぎます";
+        return ;
+      }
+      if(this.ary.length >= this.maxCount){
+        this.errorMsg = "これ以上追加できません";
+        return ;
+      }
       this.errorMsg = "";
 
       // 要素の追加処理
       if (!this.ary.some(x => x === this.addStr)) {
         this.ary.push(this.addStr);
         this.addStr = "";
+      }else{
+        this.errorMsg = "すでに追加済みです";
       }
     },
     // 配列から要素を削除
