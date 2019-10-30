@@ -26,7 +26,7 @@ class TwitterAccount
     private const FRIENDSHIPS_LOOKUP    = 'friendships/lookup';
     private const MANAGE_LIMIT_RESOURCE =[self::FRIENDSHIPS_CREATE,self::FRIENDSHIPS_DESTROY,self::FRIENDSHIPS_LOOKUP]; // 自前で呼び出し回数を制限したいリソース名
     private const FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE_ACCOUNT = 15;   // friendships/createの15分上限（１アカウント）
-    private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_ACCOUNT = 1000;   // friendships/createの２４時間上限（１アカウント）
+    private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_ACCOUNT = 320;   // friendships/createの２４時間上限（１アカウント）
     private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_APP = 500;        // friendships/createの２４時間上限（１アカウント）仕様上1000だが、実際は600あたりから制限がかかる
     private const FRIENDHSIPS_DESTROY_LIMIT_PER_24HOUR_ACCOUNT = 1000;  // friendships/destroyの２４時間上限（１アカウント）
     private const FRIENDSHIPS_LIMIT_PER_15MINUTE_ACCOUNT = 170;         // friendshipsの１５分上限（１アカウント）

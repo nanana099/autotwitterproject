@@ -29,11 +29,11 @@ class Kernel extends ConsoleKernel
         // ツイート
         $schedule->command('command:tweet')->withoutOverlapping()->runInBackground();
         // フォロー
-        $schedule->command('command:follow')->withoutOverlapping()->everyFifteenMinutes();
+        $schedule->command('command:follow')->withoutOverlapping()->everyTenMinutes();
         // アンフォロー
-        $schedule->command('command:unfollow')->withoutOverlapping()->everyFifteenMinutes();
+        $schedule->command('command:unfollow')->withoutOverlapping()->everyTenMinutes();
         // いいね
-        $schedule->command('command:favorite')->withoutOverlapping()->everyFifteenMinutes();
+        $schedule->command('command:favorite')->withoutOverlapping()->everyTenMinutes();
     }
 
     /**
