@@ -22,7 +22,7 @@
                         class="c-form-group__text form-control @error('email') is-invalid @enderror" name="email"
                         value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
                     @error('email')
-                    <span class="c-c-invalid-feedback" role="alert">
+                    <span class="c-invalid-feedback" role="alert">
                         {{ $message }}
                     </span>
                     @enderror
@@ -37,7 +37,7 @@
                         required autocomplete="current-password">
 
                     @error('password')
-                    <span class="c-c-invalid-feedback" role="alert">
+                    <span class="c-invalid-feedback" role="alert">
                         {{ $message }}
                     </span>
                     @enderror
