@@ -1,8 +1,8 @@
 .c-align-item {
-  -center {
+  &-center {
     align-items: center !important;
   }
-  -start {
+  &-start {
     align-items: start !important;
   }
 }

@@ -254,11 +254,11 @@ body {
   }
 }
 
-.c-align-item -center {
+.c-align-item-center {
   align-items: center !important;
 }
 
-.c-align-item -start {
+.c-align-item-start {
   align-items: start !important;
 }
 
