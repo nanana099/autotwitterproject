@@ -53,4 +53,9 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/account/tweet', 'AccountController@postTweet')->name('account.tweet.post');
     Route::delete('/account/tweet', 'AccountController@destroyTweet')->name('account.tweet.destroy');
     Route::get('/account/callback', 'AccountController@callback');
+
+    Route::get('/user/editinfo', 'UserController@getinfo')->name('user.getinfo');
+    Route::post('/user/editinfo', 'UserController@editinfo')->name('user.editinfo');
+    Route::get('/user/editpass', 'UserController@getpass')->name('user.getpass');
+    Route::post('/user/editpass', 'UserController@editpass')->name('user.editpass');
 });
