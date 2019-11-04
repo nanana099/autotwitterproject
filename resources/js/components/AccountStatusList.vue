@@ -13,7 +13,7 @@
           <account-status
             v-for="accountStatus in accountStatuses"
             :key="accountStatus.id"
-            :accounsStatus="accountStatus"
+            :accountStatus="accountStatus"
           ></account-status>
         </ul>
         <span class="p-message-1" v-else>
@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import AccountStatus from "./AccounsStatus";
+import AccountStatus from "./AccountStatus";
 import AccountAddButton from "./AccountAddButton";
 
 export default {
