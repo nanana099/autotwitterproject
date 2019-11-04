@@ -1,0 +1,13 @@
+.c-card {
+  background: #ffffff;
+  &__header {
+    padding: $space-m;
+    background: #eeeeee;
+  }
+  &__body {
+    padding: $space-m;
+    @include mq("md") {
+      padding: $space-xl;
+    }
+  }
+}

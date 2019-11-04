@@ -1,0 +1,22 @@
+.c-btn {
+    padding: $space-xs $space-m;
+    background: #ffffff;
+    color: #000000;
+    font-size: 1.2rem;
+    cursor: pointer;
+    @include mq("sm") {
+      font-size: $font-size-base;
+    }
+    &--primary {
+      background: $blue;
+      color: #ffffff;
+    }
+    &--danger {
+      background: $danger;
+      color: #ffffff;
+    }
+    &--large {
+      font-size: 1.4rem;
+      padding: $space-s $space-xl;
+    }
+  }

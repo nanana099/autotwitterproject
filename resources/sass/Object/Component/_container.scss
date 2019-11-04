@@ -1,0 +1,9 @@
+.c-container {
+  width: $site-width-sp;
+  @include mq("lg") {
+    width: $site-width-pc;
+  }
+  box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+}

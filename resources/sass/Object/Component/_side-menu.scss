@@ -1,0 +1,11 @@
+
+.c-side-menu {
+    &__title {
+      font-size: 1.6rem;
+      margin-bottom: $space-l;
+    }
+    &__list {
+      list-style: none;
+      margin-bottom: $space-m;
+    }
+  }

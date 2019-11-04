@@ -1,0 +1,19 @@
+.p-reserve-history {
+  background: #ffffff;
+  padding: $space-m;
+  box-sizing: border-box;
+  background: #eeeeee;
+  -webkit-box-shadow: 3px 3px 0px 0px rgba(189, 189, 189, 1);
+  -moz-box-shadow: 3px 3px 0px 0px rgba(189, 189, 189, 1);
+  box-shadow: 3px 3px 0px 0px rgba(189, 189, 189, 1);
+  margin-bottom: $space-m;
+  white-space: pre-line;
+  &__content {
+    margin-bottom: $space-s;
+    word-break: break-all;
+  }
+  &__date {
+    margin-bottom: $space-s;
+    font-size: 1.2rem;
+  }
+}

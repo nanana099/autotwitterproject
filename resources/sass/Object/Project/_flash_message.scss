@@ -1,0 +1,21 @@
+
+.p-flash_message {
+    display: flex;
+    justify-content: center;
+    padding-top: $space-l;
+    padding-bottom: $space-l;
+    &--success {
+      background: #00e882;
+      color: #ffffff;
+    }
+    &--error {
+      background: $danger;
+      color: #ffffff;
+    }
+    &--fixed {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+  }

@@ -1,0 +1,9 @@
+
+.c-title {
+    font-size: 2.8rem;
+    margin-bottom: $space-xl;
+  
+    @include mq("sm") {
+      margin-bottom: $space-5l;
+    }
+  }

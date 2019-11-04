@@ -1,0 +1,8 @@
+.c-site-logo {
+  font-size: 1.3rem;
+  @include mq("sm") {
+    font-size: 2rem;
+  }
+  color: #ffffff;
+  text-decoration: none;
+}
