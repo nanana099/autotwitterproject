@@ -18,6 +18,7 @@ class AccountController extends Controller
     // システムにTwitterアカウントを追加する
     public function add()
     {
+        logger()->info('hoge');
         // 登録可能なアカウントを制限する
         $max_account = 10;
         
