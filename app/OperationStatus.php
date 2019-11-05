@@ -20,4 +20,11 @@ class OperationStatus extends Model
         'following_target_account_cursor',
         'unfollowing_target_cursor',
     ];
+
+    protected $casts = [
+        'is_follow' => 'boolean',
+        'is_unfollow' => 'boolean',
+        'is_favorite' => 'boolean',
+        'is_flozen' => 'boolean',
+      ];
 }
