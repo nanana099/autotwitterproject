@@ -162,7 +162,7 @@ class AccountController extends Controller
             logger()->error($e);
             throw $e;
         }
-    }
+    } 
 
     // 指定のアカウントに予約ツイートを登録する
     public function postTweet(Request $request)
