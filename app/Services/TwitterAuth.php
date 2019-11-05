@@ -78,7 +78,7 @@ class TwitterAuth
             return $twitter->oauth('oauth/access_token', array('oauth_token' => $oauth_token, 'oauth_verifier' => $oauth_verifier));
         } elseif (!empty(Request::get("denied"))) {
             // 「キャンセル」をクリックして帰ってきた時
-            exit ;
+            return false;
         }
     }
 }

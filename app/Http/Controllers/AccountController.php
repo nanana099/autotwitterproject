@@ -45,6 +45,11 @@ class AccountController extends Controller
     public function callback()
     {
         $accessToken = TwitterAuth::getAccessToken();
+        if (!$accessToken) {
+            // アプリの認証をキャンセルした場合
+            return redirect()->route('mypage.monitor')->with('flash_message_error', 'アカウントを追加できませんでした。');
+        }
+
         $twitter_user_id = $accessToken['user_id'];
         $account = Account::where('twitter_user_id', $twitter_user_id)->get();
 
