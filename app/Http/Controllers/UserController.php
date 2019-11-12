@@ -43,6 +43,6 @@ class UserController extends Controller
         $user->password = bcrypt($request->get('password'));
         $user->save();
 
-        return redirect()->route('mypage.monitor')->with('flash_message_success', 'ユーザー情報を更新しました。');
+        return redirect()->route('mypage.monitor')->with('flash_message_success', 'パスワードを更新しました。');
     }
 }
