@@ -172,7 +172,15 @@ export default {
 
       if (this.msgDaysUnfollowUser !== "") {
         // エラーがある場合は保存処理しない
-        return;
+         this.flash(
+            "エラーが発生しました。入力内容をご確認ください。",
+            "error",
+            {
+              timeout: 0,
+              important: false
+            }
+          );
+        return; 
       }
 
       // 設定保存

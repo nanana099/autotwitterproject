@@ -2006,7 +2006,6 @@ __webpack_require__.r(__webpack_exports__);
       _this2.accounts = res.data;
       _this2.isLoading = false;
     })["catch"](function (error) {
-      // Todo:エラーメッセージ出す
       _this2.isError = true;
     });
   },
@@ -2240,6 +2239,10 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.msgDaysUnfollowUser !== "") {
         // エラーがある場合は保存処理しない
+        this.flash("エラーが発生しました。入力内容をご確認ください。", "error", {
+          timeout: 0,
+          important: false
+        });
         return;
       } // 設定保存
 
@@ -2503,8 +2506,7 @@ __webpack_require__.r(__webpack_exports__);
     axios.get("/account/status").then(function (res) {
       _this.accountStatuses = res.data;
       _this.isLoading = false;
-    })["catch"](function (error) {// Todo:なんか表示する
-    });
+    })["catch"](function (error) {});
   },
   computed: {
     // Twitterアカウントが１件以上登録されているか
@@ -2781,7 +2783,6 @@ __webpack_require__.r(__webpack_exports__);
           _this.isError = true;
         });
       })["catch"](function (error) {
-        // 失敗 Todo:なんかだす？
         _this.isError = true;
       });
     },
