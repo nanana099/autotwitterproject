@@ -30,7 +30,7 @@
 
                     @error('name')
                     <span class="c-invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        {{ $message }}
                     </span>
                     @enderror
                 </div>

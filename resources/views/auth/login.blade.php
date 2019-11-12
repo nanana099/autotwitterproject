@@ -16,7 +16,7 @@
                         value="{{ old('email') }}" required autocomplete="email" autofocus>
                     @error('email')
                     <span class="c-invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        {{ $message }}
                     </span>
                     @enderror
                 </div>
@@ -30,7 +30,7 @@
 
                     @error('password')
                     <span class="c-invalid-feedback" role="alert">
-                        <strong>{{ $message }}</strong>
+                        {{ $message }}
                     </span>
                     @enderror
                 </div>
