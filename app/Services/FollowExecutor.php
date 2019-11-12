@@ -153,7 +153,6 @@ class FollowExecutor implements ITwitterFunctionExecutor
         $resultList =[];
         foreach ($followers as $targetAccountFollower) {
             $isContinue = false;
-            // Todo:フォロー済みあかうんとをTwitterAPIでとりたい→フォロー済みは、アカウント登録時に、全部テーブルにINSERTしちゃうか？
             // 確認：フォロー済みでないか
             foreach ($followedUsers as $followedUser) {
                 if ($followedUser->user_id === $targetAccountFollower->id_str) {

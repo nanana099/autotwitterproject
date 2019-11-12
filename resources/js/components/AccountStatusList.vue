@@ -51,7 +51,6 @@ export default {
         this.isLoading = false;
       })
       .catch(error => {
-        // Todo:なんか表示する
       });
   },
   computed: {

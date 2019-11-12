@@ -89,7 +89,6 @@ export default {
             });
         })
         .catch(error => {
-          // 失敗 Todo:なんかだす？
           this.isError = true;
         });
     },

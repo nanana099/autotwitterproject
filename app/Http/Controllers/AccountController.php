@@ -65,7 +65,6 @@ class AccountController extends Controller
                 $screen_name = $twitterAccountInfo['screen_name'];
                 $image_url = $twitterAccountInfo['profile_image_url_https'];
             
-                // mytodo: アクセストークン暗号化
                 // accounts：アカウント情報管理用。行がなければINSERT。行があればUPDATE（アクセストークン切れ等の場合更新が必要だから）
                 // account_settings：アカウントの設定管理用。行がなければINSERT。行があれば何もしない
                 // operation_statuses：アカウントの稼働状況管理よう。行がなければINSERT。行があれば何もしない

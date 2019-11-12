@@ -36,16 +36,12 @@ class TwitterAuth
      */
     public static function getAuthorizeUrl()
     {
-        // myTodo:リクエストトークン取得失敗の例外処理
-        // myTodo:認証済みなら、認証画面にアクセスさせない？(アクセストークンが再発行されるかも？)
-
         $twitter = new TwitterOAuth(self::getApiKey(), self::getApiSecretKey());
         //リクエストトークン取得
         $callbackUrl = self::getCallbackUrl();
         $request_token = $twitter->oauth('oauth/request_token', array('oauth_callback' => $callbackUrl));
         // $request_token = $twitter->oauth('oauth/request_token', array('oauth_callback' => self::getCallbackUrl()));
             
-        
         //認証用URL取得
         $url = $twitter->url('oauth/authorize', array('oauth_token' => $request_token['oauth_token']));
 
@@ -59,8 +55,6 @@ class TwitterAuth
      */
     public static function getAccessToken()
     {
-        // myTodo:ユーザーが認証をキャンセルした場合（＝deniedという値がクエリ文字列に入る）の処理
-
         if (!empty(Request::get('oauth_token')) && !empty(Request::get('oauth_verifier'))) {
             // 「連携アプリを認証」をクリックして帰ってきた時
 
