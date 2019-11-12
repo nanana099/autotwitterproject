@@ -270,7 +270,7 @@ class TwitterAccount
     }
 
     // 指定のキーワードでツイートを検索する
-    public function searchTweets(string $word)
+    public function searchTweets(string $word,int $count = 15)
     {
         $resourceName = "search/tweets";
         $this->log($resourceName, $word);
@@ -283,7 +283,7 @@ class TwitterAccount
                 'lang' => 'ja',
                 'locale' => 'ja',
                 'result_type' => 'recent', // 最近のツイートを検索結果として取得
-                'count' => 15, // 取得件数 Todo:これだとう？引き数で指定したほうが良くない？あと１５はどう？いいねの対象になるからこのくらいでもいいのか。多すぎると凍結するかもだし
+                'count' => $count, // 取得件数 
             )
         ));
         // エラーチェック
