@@ -470,6 +470,28 @@ body {
   color: #ffffff;
 }
 
+.p-help {
+  margin: 20px 10px;
+}
+
+.p-help__description {
+  margin-bottom: 15px;
+}
+
+.p-help__table {
+  border: 2px solid #929191;
+}
+
+.p-help__row {
+  border: 2px solid #929191;
+  padding: 10px;
+}
+
+.p-help__col {
+  border: 2px solid #929191;
+  padding: 10px;
+}
+
 .p-flash_message {
   display: flex;
   justify-content: center;

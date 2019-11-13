@@ -1,0 +1,18 @@
+.p-help{
+    margin: $space-l $space-s;
+    &__description{ 
+        margin-bottom: $space-m;
+    }
+    &__table{
+        border: 2px solid #929191;
+    }
+    &__row{
+        border: 2px solid #929191;
+        padding: $space-s;
+    }
+
+    &__col{
+        border: 2px solid #929191;
+        padding: $space-s;
+    }
+}
