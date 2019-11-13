@@ -23,7 +23,9 @@
         <div v-show="existsAccount">
           <fieldset class="c-form-fieldset">
             <legend>自動フォロー関連</legend>
-
+            <span class="u-fs-4">
+              <i class="fas fa-info-circle"></i>「ターゲットアカウント」のフォロワーのうち、「フォローキーワード」をプロフィールに含むアカウントを自動でフォローします。
+            </span>
             <div class="c-form-group">
               <label for="email" class="c-form-group__label">
                 ・ターゲットアカウント
@@ -53,6 +55,9 @@
           </fieldset>
           <fieldset class="c-form-fieldset">
             <legend>自動アンフォロー関連</legend>
+            <span class="u-fs-4">
+              <i class="fas fa-info-circle"></i>ご指定の設定で自動でアンフォローを行います。
+            </span>
             <div class="c-form-group">
               <div>
                 <label for class>
@@ -88,6 +93,10 @@
           </fieldset>
           <fieldset class="c-form-fieldset">
             <legend>自動いいね関連</legend>
+
+            <span class="u-fs-4">
+              <i class="fas fa-info-circle"></i>「いいねキーワード」を含むツイートを自動でいいねします。
+            </span>
             <div class="c-form-group">
               <label for="email" class="c-form-group__label">
                 ・いいねキーワード
@@ -200,7 +209,7 @@ export default {
           target_accounts: this.targetAccountArray.join(",")
         })
         .then(res => {
-          this.flash("設定を保存しました", "success", {
+          this.flash("設定を保存しました。「アカウント一覧・稼働状況」から稼働状況を変更できます。", "success", {
             timeout: 5000,
             important: true
           });

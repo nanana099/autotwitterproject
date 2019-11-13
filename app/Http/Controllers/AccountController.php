@@ -72,7 +72,7 @@ class AccountController extends Controller
                 AccountSetting::firstOrCreate(['account_id' => $account['id']], ['target_accounts' => '']);
                 OperationStatus::firstOrCreate(['account_id' =>$account['id']]);
     
-                return redirect()->route('mypage.monitor')->with('flash_message_success', 'Twitterアカウントの登録に成功しました。');
+                return redirect()->route('mypage.monitor')->with('flash_message_success', 'Twitterアカウントの登録に成功しました。自動化するためには「設定」を行いましょう！');
             } catch (Exception $e) {
                 logger()->error($e);
                 return redirect()->route('mypage.monitor')->with('flash_message_error', '現在、アカウントが追加できません。しばらく立ってから再度お試しください。');

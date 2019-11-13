@@ -2198,6 +2198,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2264,7 +2273,7 @@ __webpack_require__.r(__webpack_exports__);
         keyword_favorite: this.favoriteKeywordArray.join(","),
         target_accounts: this.targetAccountArray.join(",")
       }).then(function (res) {
-        _this2.flash("設定を保存しました", "success", {
+        _this2.flash("設定を保存しました。「アカウント一覧・稼働状況」から稼働状況を変更できます。", "success", {
           timeout: 5000,
           important: true
         });
@@ -57001,11 +57010,13 @@ var render = function() {
                 _c("fieldset", { staticClass: "c-form-fieldset" }, [
                   _c("legend", [_vm._v("自動フォロー関連")]),
                   _vm._v(" "),
+                  _vm._m(1),
+                  _vm._v(" "),
                   _c(
                     "div",
                     { staticClass: "c-form-group" },
                     [
-                      _vm._m(1),
+                      _vm._m(2),
                       _vm._v(" "),
                       _c("string-list-manager", {
                         attrs: {
@@ -57029,7 +57040,7 @@ var render = function() {
                     "div",
                     { staticClass: "c-form-group" },
                     [
-                      _vm._m(2),
+                      _vm._m(3),
                       _vm._v(" "),
                       _c("string-list-manager", {
                         attrs: {
@@ -57052,6 +57063,8 @@ var render = function() {
                 _vm._v(" "),
                 _c("fieldset", { staticClass: "c-form-fieldset" }, [
                   _c("legend", [_vm._v("自動アンフォロー関連")]),
+                  _vm._v(" "),
+                  _vm._m(4),
                   _vm._v(" "),
                   _c("div", { staticClass: "c-form-group" }, [
                     _c("div", [
@@ -57181,11 +57194,13 @@ var render = function() {
                 _c("fieldset", { staticClass: "c-form-fieldset" }, [
                   _c("legend", [_vm._v("自動いいね関連")]),
                   _vm._v(" "),
+                  _vm._m(5),
+                  _vm._v(" "),
                   _c(
                     "div",
                     { staticClass: "c-form-group" },
                     [
-                      _vm._m(3),
+                      _vm._m(6),
                       _vm._v(" "),
                       _c("string-list-manager", {
                         attrs: {
@@ -57245,6 +57260,17 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "u-fs-4" }, [
+      _c("i", { staticClass: "fas fa-info-circle" }),
+      _vm._v(
+        "「ターゲットアカウント」のフォロワーのうち、「フォローキーワード」をプロフィールに含むアカウントを自動でフォローします。\n          "
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c(
       "label",
       { staticClass: "c-form-group__label", attrs: { for: "email" } },
@@ -57277,6 +57303,26 @@ var staticRenderFns = [
         ])
       ]
     )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "u-fs-4" }, [
+      _c("i", { staticClass: "fas fa-info-circle" }),
+      _vm._v("ご指定の設定で自動でアンフォローを行います。\n          ")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "u-fs-4" }, [
+      _c("i", { staticClass: "fas fa-info-circle" }),
+      _vm._v(
+        "「いいねキーワード」を含むツイートを自動でいいねします。\n          "
+      )
+    ])
   },
   function() {
     var _vm = this
