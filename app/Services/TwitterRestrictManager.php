@@ -188,14 +188,11 @@ class TwitterRestrictManager
         ->groupBy('resource_name')
         ->get();
         foreach ($calledLog as $val) {
-            logger(print_r($val,true));
             switch ($val->resource_name) {
                 case self::FRIENDSHIPS_CREATE:
-                    logger('piyo');
                     $this->calledCountFriendshipsCreateBefore24HourApp = $val->count;
                     break;
                 case self::FAVORITES_CREATE:
-                    logger('hoge');
                     $this->calledCountFavoritesCreateBefore24HourApp = $val->count;
                     break;
             }
