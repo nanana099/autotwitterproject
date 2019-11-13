@@ -10,6 +10,7 @@ class Account extends Model
     protected $fillable = ['twitter_user_id','access_token', 'user_id', 'screen_name', 'image_url'];
 
     protected $casts = [
+        'id' => 'integer',
         'user_id' => 'integer',
       ];
 

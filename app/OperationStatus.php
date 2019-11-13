@@ -22,9 +22,11 @@ class OperationStatus extends Model
     ];
 
     protected $casts = [
+        'id' => 'integer',
         'is_follow' => 'boolean',
         'is_unfollow' => 'boolean',
         'is_favorite' => 'boolean',
         'is_flozen' => 'boolean',
+        'account_id' => 'integer',
       ];
 }

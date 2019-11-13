@@ -11,4 +11,9 @@ class ReservedTweet extends Model
         'submit_date',
         'account_id'
     ];
+
+    protected $casts = [
+        'id' => 'integer',
+        'account_id' => 'integer',
+      ];
 }

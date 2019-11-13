@@ -17,4 +17,14 @@ class AccountSetting extends Model
         'account_id',
         'target_accounts'
     ];
+
+    protected $casts = [
+        'id' => 'integer',
+        'days_inactive_user' => 'integer',
+        'days_unfollow_user' => 'integer',
+        'num_max_unfollow_per_day' => 'integer',
+        'num_user_start_unfollow' => 'integer',
+        'bool_unfollow_inactive' => 'boolean',
+        'account_id' => 'integer',
+      ];
 }
