@@ -4,9 +4,7 @@
     <h2 class="c-title">アカウント一覧・稼働状況</h2>
     <section class="p-section">
       <div v-show="isLoading">
-        <span class="p-message-1">
-          Loading...
-        </span>
+        <span class="p-message-1">Loading...</span>
       </div>
       <div v-show="!isLoading">
         <ul class="p-monitor-list" v-if="existsAccount">
@@ -24,6 +22,7 @@
         </div>
       </div>
     </section>
+    <flash-message class="p-flash_message--fixed"></flash-message>
   </div>
 </template>
 
@@ -39,7 +38,7 @@ export default {
   data: function() {
     return {
       accountStatuses: [],
-      isLoading : true
+      isLoading: true
     };
   },
   created: function() {
@@ -51,6 +50,14 @@ export default {
         this.isLoading = false;
       })
       .catch(error => {
+          this.flash(
+            "情報の取得に失敗しました。しばらく経ってから再度お試しください",
+            "error",
+            {
+              timeout: 0,
+              important: false
+            }
+          );
       });
   },
   computed: {

@@ -2006,7 +2006,10 @@ __webpack_require__.r(__webpack_exports__);
       _this2.accounts = res.data;
       _this2.isLoading = false;
     })["catch"](function (error) {
-      _this2.isError = true;
+      _this2.flash("情報の取得に失敗しました。しばらく経ってから再度お試しください", "error", {
+        timeout: 0,
+        important: false
+      });
     });
   },
   computed: {
@@ -2077,7 +2080,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AccountSelectBox__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AccountSelectBox */ "./resources/js/components/AccountSelectBox.vue");
 /* harmony import */ var _StringListManager__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./StringListManager */ "./resources/js/components/StringListManager.vue");
-//
 //
 //
 //
@@ -2312,10 +2314,16 @@ __webpack_require__.r(__webpack_exports__);
         res.data[0].keyword_favorite !== "" ? _this3.favoriteKeywordArray = res.data[0].keyword_favorite.split(",") : _this3.favoriteKeywordArray = [];
         _this3.isLoading = false;
       })["catch"](function (error) {
-        _this3.isError = true;
+        _this3.flash("情報の取得に失敗しました。しばらく経ってから再度お試しください", "error", {
+          timeout: 0,
+          important: false
+        });
       });
     })["catch"](function (error) {
-      _this3.isError = true;
+      _this3.flash("情報の取得に失敗しました。しばらく経ってから再度お試しください", "error", {
+        timeout: 0,
+        important: false
+      });
     });
   },
   computed: {
@@ -2488,7 +2496,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2509,7 +2516,12 @@ __webpack_require__.r(__webpack_exports__);
     axios.get("/account/status").then(function (res) {
       _this.accountStatuses = res.data;
       _this.isLoading = false;
-    })["catch"](function (error) {});
+    })["catch"](function (error) {
+      _this.flash("情報の取得に失敗しました。しばらく経ってから再度お試しください", "error", {
+        timeout: 0,
+        important: false
+      });
+    });
   },
   computed: {
     // Twitterアカウントが１件以上登録されているか
@@ -2626,8 +2638,6 @@ __webpack_require__.r(__webpack_exports__);
         });
       })["catch"](function (error) {
         // 失敗
-        _this.isError = true;
-
         _this.flash("ツイートを予約に失敗しました。しばらく経ってから再度お試しください。", "error", {
           timeout: 0,
           important: false
@@ -2739,6 +2749,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -2783,10 +2794,16 @@ __webpack_require__.r(__webpack_exports__);
           _this.isLoading = false;
         })["catch"](function (error) {
           // 失敗
-          _this.isError = true;
+          _this.flash("情報の取得に失敗しました。しばらく経ってから再度お試しください", "error", {
+            timeout: 0,
+            important: false
+          });
         });
       })["catch"](function (error) {
-        _this.isError = true;
+        _this.flash("情報の取得に失敗しました。しばらく経ってから再度お試しください", "error", {
+          timeout: 0,
+          important: false
+        });
       });
     },
     addTweetList: function addTweetList(tweet) {
@@ -2837,10 +2854,16 @@ __webpack_require__.r(__webpack_exports__);
         });
         _this2.isLoading = false;
       })["catch"](function (error) {
-        _this2.isError = true;
+        _this2.flash("情報の取得に失敗しました。しばらく経ってから再度お試しください", "error", {
+          timeout: 0,
+          important: false
+        });
       });
     })["catch"](function (error) {
-      _this2.isError = true;
+      _this2.flash("情報の取得に失敗しました。しばらく経ってから再度お試しください", "error", {
+        timeout: 0,
+        important: false
+      });
     });
   },
   computed: {
@@ -56744,62 +56767,65 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.isLoading,
-            expression: "isLoading"
-          }
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.isLoading,
+              expression: "isLoading"
+            }
+          ]
+        },
+        [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: !_vm.isLoading,
+              expression: "!isLoading"
+            }
+          ]
+        },
+        [
+          _vm.existsAccount
+            ? _c(
+                "ul",
+                { staticClass: "p-monitor-list" },
+                _vm._l(_vm.accounts, function(account) {
+                  return _c("account-item", {
+                    key: account.id,
+                    attrs: { account: account },
+                    on: { deleteAccount: _vm.onDeleteAccount }
+                  })
+                }),
+                1
+              )
+            : _c("span", { staticClass: "p-message-1" }, [
+                _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
+                _vm._v("Twitterアカウントが登録されていません。\n      "),
+                _c("a", { attrs: { href: "/mypage/monitor" } }, [
+                  _vm._v("アカウント一覧")
+                ]),
+                _vm._v("から登録してください。\n    ")
+              ])
         ]
-      },
-      [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: !_vm.isLoading,
-            expression: "!isLoading"
-          }
-        ]
-      },
-      [
-        _vm.existsAccount
-          ? _c(
-              "ul",
-              { staticClass: "p-monitor-list" },
-              _vm._l(_vm.accounts, function(account) {
-                return _c("account-item", {
-                  key: account.id,
-                  attrs: { account: account },
-                  on: { deleteAccount: _vm.onDeleteAccount }
-                })
-              }),
-              1
-            )
-          : _c("span", { staticClass: "p-message-1" }, [
-              _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
-              _vm._v("Twitterアカウントが登録されていません。\n      "),
-              _c("a", { attrs: { href: "/mypage/monitor" } }, [
-                _vm._v("アカウント一覧")
-              ]),
-              _vm._v("から登録してください。\n    ")
-            ]),
-        _vm._v(" "),
-        _c("flash-message", { staticClass: "p-flash_message--fixed" })
-      ],
-      1
-    )
-  ])
+      ),
+      _vm._v(" "),
+      _c("flash-message", { staticClass: "p-flash_message--fixed" })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -56895,299 +56921,311 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "p-select-account" }, [
-      _c(
-        "label",
-        { staticClass: "p-select-account__label", attrs: { for: "" } },
-        [
-          _vm._v("\n      操作中のアカウント：\n      "),
-          _c("account-select-box", {
-            attrs: { accounts: _vm.accounts },
-            on: { changeAccount: _vm.onChangeAccount }
-          })
-        ],
-        1
-      )
-    ]),
-    _vm._v(" "),
-    _c("section", { staticClass: "p-section" }, [
-      _c("h2", { staticClass: "c-title" }, [_vm._v("設定")]),
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "p-select-account" }, [
+        _c(
+          "label",
+          { staticClass: "p-select-account__label", attrs: { for: "" } },
+          [
+            _vm._v("\n      操作中のアカウント：\n      "),
+            _c("account-select-box", {
+              attrs: { accounts: _vm.accounts },
+              on: { changeAccount: _vm.onChangeAccount }
+            })
+          ],
+          1
+        )
+      ]),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.isLoading,
-              expression: "isLoading"
-            }
-          ]
-        },
-        [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: !_vm.isLoading,
-              expression: "!isLoading"
-            }
-          ]
-        },
-        [
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !_vm.existsAccount,
-                  expression: "!existsAccount"
-                }
-              ]
-            },
-            [_vm._m(0)]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.existsAccount,
-                  expression: "existsAccount"
-                }
-              ]
-            },
-            [
-              _c("fieldset", { staticClass: "c-form-fieldset" }, [
-                _c("legend", [_vm._v("自動フォロー関連")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "c-form-group" },
-                  [
-                    _vm._m(1),
-                    _vm._v(" "),
-                    _c("string-list-manager", {
-                      attrs: {
-                        placeholder: "例）tanakaTaro",
-                        maxLength: 20,
-                        maxCount: 20
-                      },
-                      model: {
-                        value: _vm.targetAccountArray,
-                        callback: function($$v) {
-                          _vm.targetAccountArray = $$v
+      _c("section", { staticClass: "p-section" }, [
+        _c("h2", { staticClass: "c-title" }, [_vm._v("設定")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.isLoading,
+                expression: "isLoading"
+              }
+            ]
+          },
+          [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.isLoading,
+                expression: "!isLoading"
+              }
+            ]
+          },
+          [
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.existsAccount,
+                    expression: "!existsAccount"
+                  }
+                ]
+              },
+              [_vm._m(0)]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.existsAccount,
+                    expression: "existsAccount"
+                  }
+                ]
+              },
+              [
+                _c("fieldset", { staticClass: "c-form-fieldset" }, [
+                  _c("legend", [_vm._v("自動フォロー関連")]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "c-form-group" },
+                    [
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("string-list-manager", {
+                        attrs: {
+                          placeholder: "例）tanakaTaro",
+                          maxLength: 20,
+                          maxCount: 20
                         },
-                        expression: "targetAccountArray"
-                      }
-                    })
-                  ],
-                  1
-                ),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "c-form-group" },
-                  [
-                    _vm._m(2),
-                    _vm._v(" "),
-                    _c("string-list-manager", {
-                      attrs: {
-                        placeholder: "例）HTML (※50文字まで)",
-                        maxLength: 50,
-                        maxCount: 20
-                      },
-                      model: {
-                        value: _vm.followKeywordArray,
-                        callback: function($$v) {
-                          _vm.followKeywordArray = $$v
+                        model: {
+                          value: _vm.targetAccountArray,
+                          callback: function($$v) {
+                            _vm.targetAccountArray = $$v
+                          },
+                          expression: "targetAccountArray"
+                        }
+                      })
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "c-form-group" },
+                    [
+                      _vm._m(2),
+                      _vm._v(" "),
+                      _c("string-list-manager", {
+                        attrs: {
+                          placeholder: "例）HTML (※50文字まで)",
+                          maxLength: 50,
+                          maxCount: 20
                         },
-                        expression: "followKeywordArray"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c("fieldset", { staticClass: "c-form-fieldset" }, [
-                _c("legend", [_vm._v("自動アンフォロー関連")]),
+                        model: {
+                          value: _vm.followKeywordArray,
+                          callback: function($$v) {
+                            _vm.followKeywordArray = $$v
+                          },
+                          expression: "followKeywordArray"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "c-form-group" }, [
-                  _c("div", [
-                    _c("label", { attrs: { for: "" } }, [
-                      _vm._v(
-                        "\n                ・フォローしてから\n                "
-                      ),
+                _c("fieldset", { staticClass: "c-form-fieldset" }, [
+                  _c("legend", [_vm._v("自動アンフォロー関連")]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "c-form-group" }, [
+                    _c("div", [
+                      _c("label", { attrs: { for: "" } }, [
+                        _vm._v(
+                          "\n                ・フォローしてから\n                "
+                        ),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model.number",
+                              value: _vm.setting.days_unfollow_user,
+                              expression: "setting.days_unfollow_user",
+                              modifiers: { number: true }
+                            }
+                          ],
+                          staticClass: "form-control",
+                          attrs: {
+                            id: "",
+                            type: "number",
+                            min: "1",
+                            max: "999"
+                          },
+                          domProps: { value: _vm.setting.days_unfollow_user },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.setting,
+                                "days_unfollow_user",
+                                _vm._n($event.target.value)
+                              )
+                            },
+                            blur: function($event) {
+                              return _vm.$forceUpdate()
+                            }
+                          }
+                        }),
+                        _vm._v(
+                          "\n                日間、フォローが返って来ない場合にアンフォローする\n              "
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "u-fs-4" }, [
+                      _vm._v("※７日以上をご指定ください")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "span",
+                      {
+                        staticClass: "c-invalid-feedback",
+                        attrs: { role: "alert" }
+                      },
+                      [_vm._v(_vm._s(_vm.msgDaysUnfollowUser))]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "c-form-group" }, [
+                    _c("label", { attrs: { for: "unfollow-inactive" } }, [
+                      _vm._v("\n              ・\n              "),
                       _c("input", {
                         directives: [
                           {
                             name: "model",
-                            rawName: "v-model.number",
-                            value: _vm.setting.days_unfollow_user,
-                            expression: "setting.days_unfollow_user",
-                            modifiers: { number: true }
+                            rawName: "v-model",
+                            value: _vm.setting.bool_unfollow_inactive,
+                            expression: "setting.bool_unfollow_inactive"
                           }
                         ],
-                        staticClass: "form-control",
-                        attrs: { id: "", type: "number", min: "1", max: "999" },
-                        domProps: { value: _vm.setting.days_unfollow_user },
+                        attrs: {
+                          type: "checkbox",
+                          name: "unfollow-inactive",
+                          id: "unfollow-inactive"
+                        },
+                        domProps: {
+                          checked: Array.isArray(
+                            _vm.setting.bool_unfollow_inactive
+                          )
+                            ? _vm._i(_vm.setting.bool_unfollow_inactive, null) >
+                              -1
+                            : _vm.setting.bool_unfollow_inactive
+                        },
                         on: {
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
+                          change: function($event) {
+                            var $$a = _vm.setting.bool_unfollow_inactive,
+                              $$el = $event.target,
+                              $$c = $$el.checked ? true : false
+                            if (Array.isArray($$a)) {
+                              var $$v = null,
+                                $$i = _vm._i($$a, $$v)
+                              if ($$el.checked) {
+                                $$i < 0 &&
+                                  _vm.$set(
+                                    _vm.setting,
+                                    "bool_unfollow_inactive",
+                                    $$a.concat([$$v])
+                                  )
+                              } else {
+                                $$i > -1 &&
+                                  _vm.$set(
+                                    _vm.setting,
+                                    "bool_unfollow_inactive",
+                                    $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                                  )
+                              }
+                            } else {
+                              _vm.$set(
+                                _vm.setting,
+                                "bool_unfollow_inactive",
+                                $$c
+                              )
                             }
-                            _vm.$set(
-                              _vm.setting,
-                              "days_unfollow_user",
-                              _vm._n($event.target.value)
-                            )
-                          },
-                          blur: function($event) {
-                            return _vm.$forceUpdate()
                           }
                         }
                       }),
                       _vm._v(
-                        "\n                日間、フォローが返って来ない場合にアンフォローする\n              "
+                        "\n              15日間投稿の無いユーザーをアンフォローする\n            "
                       )
                     ])
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "u-fs-4" }, [
-                    _vm._v("※７日以上をご指定ください")
-                  ]),
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("fieldset", { staticClass: "c-form-fieldset" }, [
+                  _c("legend", [_vm._v("自動いいね関連")]),
                   _vm._v(" "),
                   _c(
-                    "span",
-                    {
-                      staticClass: "c-invalid-feedback",
-                      attrs: { role: "alert" }
-                    },
-                    [_vm._v(_vm._s(_vm.msgDaysUnfollowUser))]
+                    "div",
+                    { staticClass: "c-form-group" },
+                    [
+                      _vm._m(3),
+                      _vm._v(" "),
+                      _c("string-list-manager", {
+                        attrs: {
+                          placeholder: "例）東京(※50文字まで)",
+                          maxLength: 50,
+                          maxCount: 20
+                        },
+                        model: {
+                          value: _vm.favoriteKeywordArray,
+                          callback: function($$v) {
+                            _vm.favoriteKeywordArray = $$v
+                          },
+                          expression: "favoriteKeywordArray"
+                        }
+                      })
+                    ],
+                    1
                   )
                 ]),
                 _vm._v(" "),
-                _c("div", { staticClass: "c-form-group" }, [
-                  _c("label", { attrs: { for: "unfollow-inactive" } }, [
-                    _vm._v("\n              ・\n              "),
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.setting.bool_unfollow_inactive,
-                          expression: "setting.bool_unfollow_inactive"
-                        }
-                      ],
-                      attrs: {
-                        type: "checkbox",
-                        name: "unfollow-inactive",
-                        id: "unfollow-inactive"
-                      },
-                      domProps: {
-                        checked: Array.isArray(
-                          _vm.setting.bool_unfollow_inactive
-                        )
-                          ? _vm._i(_vm.setting.bool_unfollow_inactive, null) >
-                            -1
-                          : _vm.setting.bool_unfollow_inactive
-                      },
-                      on: {
-                        change: function($event) {
-                          var $$a = _vm.setting.bool_unfollow_inactive,
-                            $$el = $event.target,
-                            $$c = $$el.checked ? true : false
-                          if (Array.isArray($$a)) {
-                            var $$v = null,
-                              $$i = _vm._i($$a, $$v)
-                            if ($$el.checked) {
-                              $$i < 0 &&
-                                _vm.$set(
-                                  _vm.setting,
-                                  "bool_unfollow_inactive",
-                                  $$a.concat([$$v])
-                                )
-                            } else {
-                              $$i > -1 &&
-                                _vm.$set(
-                                  _vm.setting,
-                                  "bool_unfollow_inactive",
-                                  $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                                )
-                            }
-                          } else {
-                            _vm.$set(_vm.setting, "bool_unfollow_inactive", $$c)
-                          }
-                        }
-                      }
-                    }),
-                    _vm._v(
-                      "\n              15日間投稿の無いユーザーをアンフォローする\n            "
-                    )
-                  ])
+                _c("div", { staticClass: "c-justify-content-end" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "c-btn c-btn--primary c-btn--large u-mr-2",
+                      on: { click: _vm.saveSetting }
+                    },
+                    [_vm._v("保存")]
+                  )
                 ])
-              ]),
-              _vm._v(" "),
-              _c("fieldset", { staticClass: "c-form-fieldset" }, [
-                _c("legend", [_vm._v("自動いいね関連")]),
-                _vm._v(" "),
-                _c(
-                  "div",
-                  { staticClass: "c-form-group" },
-                  [
-                    _vm._m(3),
-                    _vm._v(" "),
-                    _c("string-list-manager", {
-                      attrs: {
-                        placeholder: "例）東京(※50文字まで)",
-                        maxLength: 50,
-                        maxCount: 20
-                      },
-                      model: {
-                        value: _vm.favoriteKeywordArray,
-                        callback: function($$v) {
-                          _vm.favoriteKeywordArray = $$v
-                        },
-                        expression: "favoriteKeywordArray"
-                      }
-                    })
-                  ],
-                  1
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "c-justify-content-end" }, [
-                _c(
-                  "button",
-                  {
-                    staticClass: "c-btn c-btn--primary c-btn--large u-mr-2",
-                    on: { click: _vm.saveSetting }
-                  },
-                  [_vm._v("保存")]
-                )
-              ]),
-              _vm._v(" "),
-              _c("flash-message", { staticClass: "p-flash_message--fixed" })
-            ],
-            1
-          )
-        ]
-      )
-    ])
-  ])
+              ]
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("flash-message", { staticClass: "p-flash_message--fixed" })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {
@@ -57390,71 +57428,75 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h2", { staticClass: "c-title" }, [_vm._v("アカウント一覧・稼働状況")]),
-    _vm._v(" "),
-    _c("section", { staticClass: "p-section" }, [
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.isLoading,
-              expression: "isLoading"
-            }
-          ]
-        },
-        [
-          _c("span", { staticClass: "p-message-1" }, [
-            _vm._v("\n        Loading...\n      ")
-          ])
-        ]
-      ),
+  return _c(
+    "div",
+    [
+      _c("h2", { staticClass: "c-title" }, [
+        _vm._v("アカウント一覧・稼働状況")
+      ]),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: !_vm.isLoading,
-              expression: "!isLoading"
-            }
-          ]
-        },
-        [
-          _vm.existsAccount
-            ? _c(
-                "ul",
-                { staticClass: "p-monitor-list" },
-                _vm._l(_vm.accountStatuses, function(accountStatus) {
-                  return _c("account-status", {
-                    key: accountStatus.id,
-                    attrs: { accountStatus: accountStatus }
-                  })
-                }),
-                1
-              )
-            : _c("span", { staticClass: "p-message-1" }, [
-                _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
-                _vm._v(
-                  "自動化したいTwitterアカウントを追加してください\n      "
+      _c("section", { staticClass: "p-section" }, [
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.isLoading,
+                expression: "isLoading"
+              }
+            ]
+          },
+          [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.isLoading,
+                expression: "!isLoading"
+              }
+            ]
+          },
+          [
+            _vm.existsAccount
+              ? _c(
+                  "ul",
+                  { staticClass: "p-monitor-list" },
+                  _vm._l(_vm.accountStatuses, function(accountStatus) {
+                    return _c("account-status", {
+                      key: accountStatus.id,
+                      attrs: { accountStatus: accountStatus }
+                    })
+                  }),
+                  1
                 )
-              ]),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "c-justify-content-start" },
-            [_c("account-add-button")],
-            1
-          )
-        ]
-      )
-    ])
-  ])
+              : _c("span", { staticClass: "p-message-1" }, [
+                  _c("i", { staticClass: "fas fa-info-circle u-mr-2" }),
+                  _vm._v(
+                    "自動化したいTwitterアカウントを追加してください\n      "
+                  )
+                ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "c-justify-content-start" },
+              [_c("account-add-button")],
+              1
+            )
+          ]
+        )
+      ]),
+      _vm._v(" "),
+      _c("flash-message", { staticClass: "p-flash_message--fixed" })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -57617,149 +57659,157 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "p-select-account" }, [
-      _c(
-        "label",
-        { staticClass: "p-select-account__label", attrs: { for: "" } },
-        [
-          _vm._v("\n      操作中のアカウント：\n      "),
-          _c("account-select-box", {
-            attrs: { accounts: _vm.accounts },
-            on: { changeAccount: _vm.onChangeAccount }
-          })
-        ],
-        1
-      )
-    ]),
-    _vm._v(" "),
-    _c("section", { staticClass: "p-section" }, [
-      _c("h2", { staticClass: "c-title" }, [_vm._v("自動ツイート予約")]),
+  return _c(
+    "div",
+    [
+      _c("div", { staticClass: "p-select-account" }, [
+        _c(
+          "label",
+          { staticClass: "p-select-account__label", attrs: { for: "" } },
+          [
+            _vm._v("\n      操作中のアカウント：\n      "),
+            _c("account-select-box", {
+              attrs: { accounts: _vm.accounts },
+              on: { changeAccount: _vm.onChangeAccount }
+            })
+          ],
+          1
+        )
+      ]),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.isLoading,
-              expression: "isLoading"
-            }
+      _c("section", { staticClass: "p-section" }, [
+        _c("h2", { staticClass: "c-title" }, [_vm._v("自動ツイート予約")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.isLoading,
+                expression: "isLoading"
+              }
+            ]
+          },
+          [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.isLoading,
+                expression: "!isLoading"
+              }
+            ]
+          },
+          [
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: !_vm.existsAccount,
+                    expression: "!existsAccount"
+                  }
+                ]
+              },
+              [_vm._m(0)]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.existsAccount,
+                    expression: "existsAccount"
+                  }
+                ]
+              },
+              [
+                _c("reserve-tweet-form", {
+                  on: { addedTweet: _vm.addTweetList }
+                })
+              ],
+              1
+            )
           ]
-        },
-        [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
-      ),
+        )
+      ]),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: !_vm.isLoading,
-              expression: "!isLoading"
-            }
+      _c("section", { staticClass: "p-section" }, [
+        _c("h2", { staticClass: "c-title" }, [_vm._v("予約済みツイート")]),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: _vm.isLoading,
+                expression: "isLoading"
+              }
+            ]
+          },
+          [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            directives: [
+              {
+                name: "show",
+                rawName: "v-show",
+                value: !_vm.isLoading,
+                expression: "!isLoading"
+              }
+            ]
+          },
+          [
+            _c(
+              "div",
+              {
+                directives: [
+                  {
+                    name: "show",
+                    rawName: "v-show",
+                    value: _vm.existsAccount,
+                    expression: "existsAccount"
+                  }
+                ]
+              },
+              [
+                _c("reserved-tweet-list", {
+                  model: {
+                    value: _vm.tweets,
+                    callback: function($$v) {
+                      _vm.tweets = $$v
+                    },
+                    expression: "tweets"
+                  }
+                })
+              ],
+              1
+            )
           ]
-        },
-        [
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: !_vm.existsAccount,
-                  expression: "!existsAccount"
-                }
-              ]
-            },
-            [_vm._m(0)]
-          ),
-          _vm._v(" "),
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.existsAccount,
-                  expression: "existsAccount"
-                }
-              ]
-            },
-            [
-              _c("reserve-tweet-form", { on: { addedTweet: _vm.addTweetList } })
-            ],
-            1
-          )
-        ]
-      )
-    ]),
-    _vm._v(" "),
-    _c("section", { staticClass: "p-section" }, [
-      _c("h2", { staticClass: "c-title" }, [_vm._v("予約済みツイート")]),
+        )
+      ]),
       _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.isLoading,
-              expression: "isLoading"
-            }
-          ]
-        },
-        [_c("span", { staticClass: "p-message-1" }, [_vm._v("Loading...")])]
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: !_vm.isLoading,
-              expression: "!isLoading"
-            }
-          ]
-        },
-        [
-          _c(
-            "div",
-            {
-              directives: [
-                {
-                  name: "show",
-                  rawName: "v-show",
-                  value: _vm.existsAccount,
-                  expression: "existsAccount"
-                }
-              ]
-            },
-            [
-              _c("reserved-tweet-list", {
-                model: {
-                  value: _vm.tweets,
-                  callback: function($$v) {
-                    _vm.tweets = $$v
-                  },
-                  expression: "tweets"
-                }
-              })
-            ],
-            1
-          )
-        ]
-      )
-    ])
-  ])
+      _c("flash-message", { staticClass: "p-flash_message--fixed" })
+    ],
+    1
+  )
 }
 var staticRenderFns = [
   function() {

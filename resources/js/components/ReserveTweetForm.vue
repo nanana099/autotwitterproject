@@ -81,8 +81,6 @@ export default {
         })
         .catch(error => {
           // 失敗
-          this.isError = true;
-
           this.flash(
             "ツイートを予約に失敗しました。しばらく経ってから再度お試しください。",
             "error",

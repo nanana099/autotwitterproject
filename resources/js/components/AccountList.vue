@@ -17,8 +17,8 @@
         <i class="fas fa-info-circle u-mr-2"></i>Twitterアカウントが登録されていません。
         <a href="/mypage/monitor">アカウント一覧</a>から登録してください。
       </span>
-      <flash-message class="p-flash_message--fixed"></flash-message>
     </div>
+    <flash-message class="p-flash_message--fixed"></flash-message>
   </div>
 </template>
 
@@ -90,7 +90,14 @@ export default {
         this.isLoading = false;
       })
       .catch(error => {
-        this.isError = true;
+        this.flash(
+          "情報の取得に失敗しました。しばらく経ってから再度お試しください",
+          "error",
+          {
+            timeout: 0,
+            important: false
+          }
+        );
       });
   },
   computed: {
