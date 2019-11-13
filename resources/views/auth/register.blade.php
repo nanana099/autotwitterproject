@@ -24,7 +24,6 @@
 
 
                 <div class="c-form-group">
-                <span class="u-fs-5"> *印は入力必須です。</span>
                 <label for="email" class="c-form-group__label">ユーザーID*<span class="u-fs-5">10文字以下で入力してください</span></label>
                     <input id="name" type="text"
                         class="c-form-group__text form-control @error('name') is-invalid @enderror" name="name"
