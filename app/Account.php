@@ -9,6 +9,10 @@ class Account extends Model
     // protected $guarded = ['id'];
     protected $fillable = ['twitter_user_id','access_token', 'user_id', 'screen_name', 'image_url'];
 
+    protected $casts = [
+        'user_id' => 'integer',
+      ];
+
     public function user()
     {
         return $this->belongsTo('App\User');
