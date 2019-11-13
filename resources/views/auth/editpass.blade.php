@@ -26,7 +26,8 @@
                 </div>
 
                 <div class="c-form-group ">
-                    <label for="password" class="c-form-group__label">新しいパスワード*<span class="u-fs-5">8文字以上で入力してください</span></label>
+                    <label for="password" class="c-form-group__label">新しいパスワード*<span
+                            class="u-fs-5">8文字以上で入力してください</span></label>
 
                     <input id="password" type="password"
                         class="c-form-group__text form-control @error('password') is-invalid @enderror" name="password"
@@ -54,11 +55,11 @@
                     </button>
                 </div>
 
-                <a class="u-d-block" href="{{ route('mypage.monitor') }}">
-                    &lt;&#032;TOPへ戻る
-                </a>
             </div>
         </div>
     </div>
 </form>
+@endsection
+@section('sidebar')
+@include('components.sidebar')
 @endsection

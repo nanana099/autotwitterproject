@@ -21,8 +21,6 @@
                     </span>
                     @enderror
                 </div>
-
-
                 <div class="c-form-group">
                     <label for="email" class="c-form-group__label">ユーザーID*<span class="u-fs-5">10文字以下で入力してください</span></label>
                     <input id="name" type="text"
@@ -41,12 +39,12 @@
                         この内容で登録
                     </button>
                 </div>
-
-                <a class="u-d-block" href="{{ route('mypage.monitor') }}">
-                        &lt;&#032;TOPへ戻る
-                    </a>
             </div>
         </div>
     </div>
 </form>
+@endsection
+
+@section('sidebar')
+@include('components.sidebar')
 @endsection
