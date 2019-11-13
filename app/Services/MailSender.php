@@ -31,9 +31,7 @@ class MailSender
 
     以下の手順で自動機能を復旧させてください。
     ①Twitterにアクセスし、アカウントの凍結を解除する
-        https://twitter.com/login?lang=ja
     ②神ったーにアクセスし、稼働状況画面より自動機能を稼働させる
-        https://hoge
     
     
     以上、よろしくお願いいたします。

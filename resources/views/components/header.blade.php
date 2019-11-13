@@ -2,7 +2,7 @@
     <div class="c-container c-justify-content-between c-align-item-center">
         <a class="c-site-logo" href="{{ route('mypage.monitor') }}">
             <h1 class="">
-                神ったー
+                    {{ config('app.name', '神ったー') }}
             </h1>
         </a>
         <nav class="c-gnav">

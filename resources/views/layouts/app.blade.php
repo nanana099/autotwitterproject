@@ -11,7 +11,7 @@
     <meta name="description" content="お使いのTwitterアカウントを自動化するサービスです。フォロー、アンフォロー、いいねの自動化や、ツイート投稿の予約をご利用いただけます。">
     <meta name="keywords" content="Twitter,Twitter 自動化,ツイート 予約">
 
-    <title>神ったー</title>
+    <title>{{ config('app.name', '神ったー') }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>

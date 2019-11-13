@@ -1,3 +1,3 @@
 {{$text}}
 
-神ったー：https://www.google.co.jp
+{{ config('app.name', '神ったー') }}：{{ config('app.url', '') }}
