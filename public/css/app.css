@@ -495,18 +495,17 @@ body {
 .p-flash_message {
   display: flex;
   justify-content: center;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding: 20px 10px;
 }
 
 .p-flash_message--success {
-  background: #00e882;
-  color: #ffffff;
+  background: #dff0d8;
+  color: #3c763d;
 }
 
 .p-flash_message--error {
-  background: #dc4834;
-  color: #ffffff;
+  background: #f2dede;
+  color: #a94442;
 }
 
 .p-flash_message--fixed {

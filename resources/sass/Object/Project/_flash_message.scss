@@ -2,15 +2,14 @@
 .p-flash_message {
     display: flex;
     justify-content: center;
-    padding-top: $space-l;
-    padding-bottom: $space-l;
+    padding: $space-l $space-s;
     &--success {
-      background: #00e882;
-      color: #ffffff;
+      background: #dff0d8;
+      color: #3c763d;
     }
     &--error {
-      background: $danger;
-      color: #ffffff;
+      background: #f2dede;
+      color: #a94442;
     }
     &--fixed {
       position: fixed;
