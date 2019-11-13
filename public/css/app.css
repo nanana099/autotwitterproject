@@ -521,7 +521,7 @@ body {
   align-items: center;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 400px) {
   .p-monitor-list__buttons {
     justify-content: flex-start;
     margin-right: 0;

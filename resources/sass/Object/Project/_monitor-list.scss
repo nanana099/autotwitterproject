@@ -14,7 +14,7 @@
     justify-content: flex-start;
     margin-right: $space-m;
     width: 100%;
-    @include mq("md") {
+    @include mq("sm") {
       justify-content: flex-start;
       margin-right: 0;
       width: auto;
