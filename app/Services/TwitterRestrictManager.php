@@ -216,7 +216,6 @@ class TwitterRestrictManager
     // リソース回数制限判定用
     public function check(string $resourceName)
     {
-        logger(print_r($this, true));
         // 一部のTwitterAPIのリソースは、利用状況がTwitterAPIで確認できない。システムで管理している情報に照らしあわせてチェックする
         if (in_array($resourceName, $this::MANAGE_LIMIT_RESOURCE)) {
             if ($resourceName === self::FRIENDSHIPS_CREATE) {
