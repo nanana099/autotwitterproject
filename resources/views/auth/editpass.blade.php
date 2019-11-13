@@ -9,9 +9,10 @@
                 パスワード変更
             </div>
             <div class="c-card__body">
+                <span class="u-fs-5"> *印は入力必須です。</span>
 
                 <div class="c-form-group ">
-                    <label for="password-current" class="c-form-group__label">現在のパスワード</label>
+                    <label for="password-current" class="c-form-group__label">現在のパスワード*</label>
 
                     <input id="password-current" type="password"
                         class="c-form-group__text form-control @error('password-current') is-invalid @enderror"
@@ -25,7 +26,7 @@
                 </div>
 
                 <div class="c-form-group ">
-                    <label for="password" class="c-form-group__label">新しいパスワード</label>
+                    <label for="password" class="c-form-group__label">新しいパスワード*<span class="u-fs-5">8文字以上で入力してください</span></label>
 
                     <input id="password" type="password"
                         class="c-form-group__text form-control @error('password') is-invalid @enderror" name="password"
@@ -40,7 +41,7 @@
 
 
                 <div class="c-form-group ">
-                    <label for="password-confirm" class="c-form-group__label">新しいパスワード（再入力）</label>
+                    <label for="password-confirm" class="c-form-group__label">新しいパスワード（再入力）*</label>
 
                     <input id="password-confirm" type="password" class="c-form-group__text form-control"
                         name="password_confirmation" required autocomplete="new-password">

@@ -9,8 +9,9 @@
                 会員情報編集
             </div>
             <div class="c-card__body">
+                <span class="u-fs-5"> *印は入力必須です。</span>
                 <div class="c-form-group">
-                    <label for="email" class="c-form-group__label">e-mail</label>
+                    <label for="email" class="c-form-group__label">e-mail*</label>
                     <input id="email" type="email"
                         class="c-form-group__text form-control @error('email') is-invalid @enderror" name="email"
                         value="{{ old('email' , $email) }}" required autocomplete="email" autofocus>
@@ -23,7 +24,7 @@
 
 
                 <div class="c-form-group">
-                    <label for="email" class="c-form-group__label">ユーザーID</label>
+                    <label for="email" class="c-form-group__label">ユーザーID*<span class="u-fs-5">10文字以下で入力してください</span></label>
                     <input id="name" type="text"
                         class="c-form-group__text form-control @error('name') is-invalid @enderror" name="name"
                         value="{{ old('name', $name) }}" required autocomplete="name">

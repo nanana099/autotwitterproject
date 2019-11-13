@@ -9,8 +9,9 @@
                 会員登録
             </div>
             <div class="c-card__body">
+                <span class="u-fs-5"> *印は入力必須です。</span>
                 <div class="c-form-group">
-                    <label for="email" class="c-form-group__label">e-mail</label>
+                    <label for="email" class="c-form-group__label">e-mail*</label>
                     <input id="email" type="email"
                         class="c-form-group__text form-control @error('email') is-invalid @enderror" name="email"
                         value="{{ old('email') }}" required autocomplete="email" autofocus>
@@ -23,7 +24,8 @@
 
 
                 <div class="c-form-group">
-                    <label for="email" class="c-form-group__label">ユーザーID</label>
+                <span class="u-fs-5"> *印は入力必須です。</span>
+                <label for="email" class="c-form-group__label">ユーザーID*<span class="u-fs-5">10文字以下で入力してください</span></label>
                     <input id="name" type="text"
                         class="c-form-group__text form-control @error('name') is-invalid @enderror" name="name"
                         value="{{ old('name') }}" required autocomplete="name">
@@ -36,7 +38,7 @@
                 </div>
 
                 <div class="c-form-group ">
-                    <label for="password" class="c-form-group__label">パスワード</label>
+                    <label for="password" class="c-form-group__label">パスワード*<span class="u-fs-5">8文字以上で入力してください</span></label>
 
                     <input id="password" type="password"
                         class="c-form-group__text form-control @error('password') is-invalid @enderror" name="password"
@@ -51,7 +53,7 @@
 
 
                 <div class="c-form-group ">
-                    <label for="password-confirm" class="c-form-group__label">パスワード（再入力）</label>
+                    <label for="password-confirm" class="c-form-group__label">パスワード（再入力）*</label>
 
                     <input id="password-confirm" type="password" class="c-form-group__text form-control"
                         name="password_confirmation" required autocomplete="new-password">

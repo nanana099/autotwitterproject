@@ -55,6 +55,7 @@
             <legend>自動アンフォロー関連</legend>
             <div class="c-form-group">
               <div>
+
                 <label for class>
                   ・フォローしてから
                   <input
@@ -68,6 +69,8 @@
                   日間、フォローが返って来ない場合にアンフォローする
                 </label>
               </div>
+                <div class="u-fs-4">※７日以上をご指定ください</div>
+
               <span class="c-invalid-feedback" role="alert">{{msgDaysUnfollowUser}}</span>
             </div>
 
@@ -172,15 +175,15 @@ export default {
 
       if (this.msgDaysUnfollowUser !== "") {
         // エラーがある場合は保存処理しない
-         this.flash(
-            "エラーが発生しました。入力内容をご確認ください。",
-            "error",
-            {
-              timeout: 0,
-              important: false
-            }
-          );
-        return; 
+        this.flash(
+          "エラーが発生しました。入力内容をご確認ください。",
+          "error",
+          {
+            timeout: 0,
+            important: false
+          }
+        );
+        return;
       }
 
       // 設定保存

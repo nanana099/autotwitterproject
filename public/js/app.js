@@ -2193,6 +2193,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -57061,6 +57064,10 @@ var render = function() {
                         "\n                日間、フォローが返って来ない場合にアンフォローする\n              "
                       )
                     ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "u-fs-4" }, [
+                    _vm._v("※７日以上をご指定ください")
                   ]),
                   _vm._v(" "),
                   _c(
