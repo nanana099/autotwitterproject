@@ -24,6 +24,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "es6-promise": "^4.2.8",
         "laravel-mix-polyfill": "^1.1.0",
         "vue-ctk-date-time-picker": "^2.2.0",
         "vue-flash-message": "^0.7.2"

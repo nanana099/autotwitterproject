@@ -5,6 +5,7 @@
  */
 
 require('./bootstrap');
+import 'es6-promise/auto';
 
 window.Vue = require('vue');
 
