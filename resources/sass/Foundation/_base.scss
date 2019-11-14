@@ -1,9 +1,19 @@
+$breakpoints: (
+  "sm": "screen and (min-width: 400px)",
+  "md": "screen and (min-width: 768px)",
+  "lg": "screen and (min-width: 1000px)",
+  "xl": "screen and (min-width: 1200px)"
+) !default;
+
+
+// ブレークポイント
 @mixin mq($breakpoint: md) {
   @media #{map-get($breakpoints, $breakpoint)} {
     @content;
   }
 }
 
+// IEのみ適用
 @mixin ie() {
   @media all and (-ms-high-contrast: none) {
     @content;
@@ -25,13 +35,6 @@ body {
   flex-direction: column;
 
   @include ie() {
-    height: 100%;
+    height: 100vh;
   }
 }
-
-$breakpoints: (
-  "sm": "screen and (min-width: 400px)",
-  "md": "screen and (min-width: 768px)",
-  "lg": "screen and (min-width: 1000px)",
-  "xl": "screen and (min-width: 1200px)"
-) !default;
