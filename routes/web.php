@@ -18,7 +18,7 @@ Route::get('/', function () {
     } else {
         return view('top');
     }
-});
+})->name('top');
 
 Auth::routes();
 

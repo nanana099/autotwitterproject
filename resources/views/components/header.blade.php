@@ -1,6 +1,6 @@
 <header id="header">
     <div class="c-container c-justify-content-between c-align-item-center">
-        <a class="c-site-logo" href="{{ route('mypage.monitor') }}">
+        <a class="c-site-logo" href="{{ route('top') }}">
             <h1 class="">
                     {{ config('app.name', '神ったー') }}
             </h1>
