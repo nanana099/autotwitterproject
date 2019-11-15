@@ -486,6 +486,16 @@ body {
   }
 }
 
+.p-top--fluid {
+  height: 100%;
+}
+
+@media all and (-ms-high-contrast: none) {
+  .p-top--fluid {
+    height: auto;
+  }
+}
+
 .p-top__container {
   line-height: 1.5;
   background: #29A1F2;
@@ -517,9 +527,15 @@ body {
 }
 
 .p-top__paragraph2 {
-  font-size: 2rem;
+  font-size: 2.4rem;
   color: #ffffff;
   font-weight: 700;
+}
+
+@media screen and (min-width: 400px) {
+  .p-top__paragraph2 {
+    font-size: 3rem;
+  }
 }
 
 @media screen and (min-width: 768px) {

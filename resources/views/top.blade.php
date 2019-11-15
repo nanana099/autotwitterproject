@@ -24,21 +24,26 @@
 <body>
     <div id="app">
         @include('components.header')
-        <main class="c-container u-bg-main u-h-fluid">
+        <main class="c-container u-bg-main p-top--fluid">
             <div class="p-top__container">
                 <div class="p-top__container--1">
                     <p class="p-top__paragraph1">
                         「フォロー」「フォロー」「フォロー」「フォロー」…<br>
-                        「いいね」「いいね」「いいね」「いいね」…<br>
+                        「いいね」「いいね」「いいね」…<br>
+                        「忘れずにこのツイートを２０時に投稿しなきゃ」…<br>
                         ………<br>……<br>…<br><br><br>
                     </p>
                     <p class="p-top__paragraph2">
-                        「これ、人間の仕事じゃない。」
+                        「これ、人間の仕事？」
                     </p>
                 </div>
                 <div class="p-top__container--1">
                     <p class="p-top__paragraph3">
                         あなたに代わり、神ったーが不眠不休で<br>Twitterアカウントを運用します。
+                    </p>
+                    <p class="p-top__paragraph4">
+                        ーアカウント管理ー<br>
+                        アカウントを１０つまで登録できます。<br>
                     </p>
                     <p class="p-top__paragraph4">
                         ー自動化ー<br>
