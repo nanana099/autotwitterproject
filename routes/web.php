@@ -13,12 +13,14 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/', function () {
-    return redirect()->route('login');
+    if (Auth::check()) {
+        return redirect()->route('mypage.monitor');
+    } else {
+        return view('top');
+    }
 });
 
 Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/help/keyword', function () {
     return view('help.keyword');

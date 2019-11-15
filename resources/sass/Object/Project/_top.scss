@@ -1,0 +1,54 @@
+.p-top {
+  &__container {
+    line-height: 1.5;
+    background: $color-main;
+    margin-top: $space-s;
+    margin-bottom: $space-s;
+    padding: $space-3l $space-s;
+    @include mq("md") {
+      padding: 100px $space-8l $space-8l $space-8l;
+    }
+    &--1 {
+      text-align: center;
+      margin-bottom: 100px;
+    }
+  }
+  &__paragraph {
+    &1 {
+      font-size: 1rem;
+      color: #ffffff;
+      @include mq("md") {
+        font-size: 1.4rem;
+      }
+    }
+    &2 {
+      font-size: 2rem;
+      color: #ffffff;
+      font-weight: 700;
+      @include mq("md") {
+        font-size: 4rem;
+      }
+    }
+    &3 {
+      font-size: 1.4rem;
+      @include mq("md") {
+        font-size: 1.5rem;
+      }
+      color: #ffffff;
+      margin-bottom: $space-8l;
+    }
+    &4 {
+      font-size: 1.4rem;
+      @include mq("md") {
+        font-size: 1.5rem;
+      }
+      color: #ffffff;
+      margin-bottom: $space-l;
+    }
+  }
+  &--strong {
+    font-size: 2rem;
+    color: #ffffff;
+    font-weight: 800;
+  }
+}

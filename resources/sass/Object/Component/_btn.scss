@@ -1,22 +1,36 @@
 .c-btn {
-    padding: $space-xs $space-m;
-    background: #ffffff;
-    color: #000000;
-    font-size: 1.2rem;
-    cursor: pointer;
-    @include mq("sm") {
-      font-size: $font-size-base;
-    }
-    &--primary {
-      background: $blue;
-      color: #ffffff;
-    }
-    &--danger {
-      background: $danger;
-      color: #ffffff;
-    }
-    &--large {
-      font-size: 1.4rem;
-      padding: $space-s $space-xl;
-    }
+  padding: $space-xs $space-m;
+  background: #ffffff;
+  color: #000000;
+  font-size: 1.2rem;
+  cursor: pointer;
+  @include mq("sm") {
+    font-size: $font-size-base;
   }
+  &--primary {
+    background: $blue;
+    color: #ffffff;
+  }
+  &--danger {
+    background: $danger;
+    color: #ffffff;
+  }
+
+  &--accent {
+    background: #dca134;
+    color: #ffffff;
+  }
+  &--large {
+    font-size: 1.4rem;
+    padding: $space-s $space-xl;
+  }
+
+  &--large2 {
+    font-size: 1.6rem;
+    padding: $space-m $space-xxl;
+  }
+
+  &--circle {
+    border-radius: 10px;
+  }
+}
