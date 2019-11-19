@@ -206,7 +206,6 @@ class FollowExecutor implements ITwitterFunctionExecutor
 
         $x = true;
         foreach ($match as $str) {
-            print_r(4);
             if (preg_match("/".$str."/u", $target)) {
             }else{
                 $x = false;
