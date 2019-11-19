@@ -26,13 +26,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // ツイート
+        // 前提：サーバーのcronから各コマンドが毎分実行される。
+
+        // ツイート（毎分実行）
         $schedule->command('command:tweet')->withoutOverlapping()->runInBackground();
-        // フォロー
+        // フォロー（10分に一度実行）
         $schedule->command('command:follow')->withoutOverlapping()->everyTenMinutes();
-        // アンフォロー
+        // アンフォロー（10分に一度実行）
         $schedule->command('command:unfollow')->withoutOverlapping()->everyTenMinutes();
-        // いいね
+        // いいね（10分に一度実行）
         $schedule->command('command:favorite')->withoutOverlapping()->everyTenMinutes();
     }
 

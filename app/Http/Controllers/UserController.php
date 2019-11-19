@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
+    // ユーザー情報の取得
     public function getinfo()
     {
         $user = Auth::user();
@@ -20,6 +21,7 @@ class UserController extends Controller
         return view('auth.editinfo', compact('email', 'name'));
     }
 
+    // ユーザー情報を修正
     public function editinfo(UserInfoPost $request)
     {
         Auth::user()->fill($request->all())->save();
@@ -27,11 +29,13 @@ class UserController extends Controller
         return redirect()->route('mypage.monitor')->with('flash_message_success', 'ユーザー情報を更新しました。');
     }
 
+    // パスワード変更画面を取得
     public function getpass()
     {
         return view('auth.editpass');
     }
 
+    // パスワード変更
     public function editpass(UserPassPost $request)
     {
         // 現在のパスワードが正しいかを調べる
@@ -47,6 +51,7 @@ class UserController extends Controller
         return redirect()->route('mypage.monitor')->with('flash_message_success', 'パスワードを更新しました。');
     }
 
+    // ユーザーの退会処理
     public function retire(Request $request)
     {
         try {
