@@ -7,7 +7,7 @@ use App\OperationStatus;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\PlainText;
 
-// 自動いいね実行クラス
+// メール送信クラス
 class MailSender
 {
     public const EMAIL_FLOZEN = 0;

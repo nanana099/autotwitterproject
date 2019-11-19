@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-// ユーザーが指定する演算子を解析する
+// ユーザーが指定する演算子を解析し、適切な形式にして返却する
 class KeywordOperatorAnalyzer
 {
     // 「 OR 」を「|」（正規表現で「または」を表す）に置換する
