@@ -60,4 +60,8 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/user/editinfo', 'UserController@editinfo')->name('user.editinfo');
     Route::get('/user/editpass', 'UserController@getpass')->name('user.getpass');
     Route::post('/user/editpass', 'UserController@editpass')->name('user.editpass');
+    Route::get('/user/retire',function () {
+        return view('auth.retire');
+    });
+    Route::post('/user/retire', 'UserController@retire')->name('user.retire');
 });

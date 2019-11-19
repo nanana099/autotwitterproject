@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UserInfoPost;
 use App\Http\Requests\UserPassPost;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -45,4 +46,30 @@ class UserController extends Controller
 
         return redirect()->route('mypage.monitor')->with('flash_message_success', 'パスワードを更新しました。');
     }
+
+    public function retire(Request $request)
+    {
+        try {
+            $user = Auth::user();
+            $accounts = $user->accounts()->get();
+            DB::transaction(function () use ($accounts,$user) {
+                foreach($accounts as $account){
+                    // accountsテーブルに外部さん参照があるテーブルすべてを削除。
+                    $account->operationStatus->delete();
+                    $account->accountSetting->delete();
+                    $account->reservedTweets()->delete();
+                    $account->followedUsers()->delete();
+                    $account->unfollowedUsers()->delete();
+                    $account->delete();
+                }
+                $user->delete();
+            });
+            // return response()->json($account);
+        } catch (Exception $e) {
+            logger()->error($e);
+            throw $e;
+        }
+        return redirect('/');
+    }
+    
 }
