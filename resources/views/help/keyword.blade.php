@@ -30,19 +30,15 @@
             <tbody>
                 <tr class="p-help__row">
                     <td class="p-help__col">日本 サッカー</td>
-                    <td class="p-help__col">「日本」と「サッカー」という単語が含まれるツイート</td>
-                </tr>
-                <tr>
-                    <td class="p-help__col">"今日のサッカー"</td>
-                    <td class="p-help__col">「今日のサッカー」という単語をそのまま含むツイート</td>
+                    <td class="p-help__col">「日本」と「サッカー」を両方含む</td>
                 </tr>
                 <tr>
                     <td class="p-help__col">プログラマ OR エンジニア</td>
-                    <td class="p-help__col">「プログラマ」、あるいは「エンジニア」(又は両方)を含むツイート</td>
+                    <td class="p-help__col">「プログラマ」と「エンジニア」をどちらか、または両方含む</td>
                 </tr>
                 <tr>
                     <td class="p-help__col">インド -カレー</td>
-                    <td class="p-help__col">「インド」を含むが、「カレー」を含まないツイート</td>
+                    <td class="p-help__col">「インド」を含むが、「カレー」を含まない</td>
                 </tr>
             </tbody>
         </table>

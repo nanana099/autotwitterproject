@@ -4,15 +4,11 @@ namespace App\Services;
 use \Exception;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Collection;
 use App\Account;
 use App\FollowedUser;
-use App\OperationStatus;
-use App\Mail\PlainText;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
-use App\User;
 
 // 自動フォロー実行クラス
 class FollowExecutor implements ITwitterFunctionExecutor
@@ -30,8 +26,8 @@ class FollowExecutor implements ITwitterFunctionExecutor
                     accounts.access_token,
                     account_settings.keyword_follow,
                     account_settings.target_accounts
-            FROM accounts 
-              INNER JOIN account_settings 
+            FROM accounts
+              INNER JOIN account_settings
               ON accounts.id = account_settings.account_id
               INNER JOIN operation_statuses
               ON accounts.id = operation_statuses.account_id
@@ -73,7 +69,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 $prevTargetAccountCursor = $operationStatus->following_target_account_cursor;
                 // 処理済みのターゲットアカウントを配列から削除しておく
                 $targetAccounts = array_slice($targetAccounts, array_search($prevTargetAccount, $targetAccounts));
-    
+
                 try {
                     foreach ($targetAccounts as $targetAccount) {
                         try {
@@ -84,26 +80,26 @@ class FollowExecutor implements ITwitterFunctionExecutor
                                 if ($prevTargetAccountCursor === "0") {
                                     $prevTargetAccountCursor = "-1";
                                 }
-    
+
                                 // ターゲットアカウントのフォロワー
                                 $targetAccountFollowers = [];
-    
+
                                 // ターゲットアカウントのフォロワー取得（最大200件ごと）
                                 $response = $twitterAccount->getFollowerList($targetAccount, $prevTargetAccountCursor);
                                 $targetAccountFollowers = array_merge($targetAccountFollowers, empty($response['users']) ? [] : $response['users']);
-    
+
                                 // フォローするアカウントを抽出
                                 $followUsers = $this->getFollowUsers($targetAccountFollowers, $followedUsers, $unfollowedUsers, $keywords);
-    
+
                                 foreach ($followUsers as $followUser) {
                                     // フォロー実行
                                     $twitterAccount->follow($followUser);
-    
+
                                     // フォローできたアカウントをDBに登録
                                     FollowedUser::updateOrCreate(array('user_id' => $followUser, 'account_id' => $account->id), array('followed_at' => Carbon::now()));
                                 }
                             } while ($prevTargetAccountCursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
-    
+
                             // ターゲットアカウントのフォロワーをすべて参照し終えたら、カーソルを先頭に戻す
                             $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
                         } catch (Exception $e) {
@@ -113,14 +109,14 @@ class FollowExecutor implements ITwitterFunctionExecutor
                             throw $e;
                         }
                     }
-    
+
                     // すべてのターゲットアカウントに対する処理が終了した場合
                     $operationStatus->fill(array('following_target_account' => "",
                                                 'following_target_account_cursor' => "-1",
                                                 'is_follow' => 0,
                                                 'follow_stopped_at' => date('Y/m/d H:i:s')
                                                 ))->save();
-                    
+
                     MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FOLLOW_COMPLATED);
                 } catch (TwitterRestrictionException $e) {
                     // APIの回数制限
@@ -150,7 +146,9 @@ class FollowExecutor implements ITwitterFunctionExecutor
     // フォロー対象のアカウントを、アカウントリストから抽出する。
     private function getFollowUsers(array $followers, Collection $followedUsers, Collection $unfollowedUsers, array $keywords): array
     {
+        // フォロー対象アカウントのID格納用
         $resultList =[];
+
         foreach ($followers as $targetAccountFollower) {
             $isContinue = false;
             // 確認：フォロー済みでないか
@@ -177,12 +175,48 @@ class FollowExecutor implements ITwitterFunctionExecutor
 
             // 確認：プロフィールにキーワードを含むか（５０音が入っていない場合はフォロー対象から除く）
             foreach ($keywords as $keyword) {
-                if (preg_match("/[ぁ-ん]+|[ァ-ヴー]+/u", $targetAccountFollower->description) && (strpos($targetAccountFollower->description, $keyword) !== false)) {
-                    $resultList[] = $targetAccountFollower->id_str;
-                    break;
+                // 五十音が入っている場合のみ
+                if (preg_match("/[ぁ-ん]+|[ァ-ヴー]+/u", $targetAccountFollower->description)) {
+                    // ユーザーが指定したキーワードに合致するか調べ、フォロー対象か判定する
+                    if (self::match($targetAccountFollower->description, $keyword)) {
+                        $resultList[] = $targetAccountFollower->id_str;
+                        break;
+                    }
                 }
             }
         }
         return $resultList;
+    }
+
+    // $target:検査対象の文字列
+    // $keyword:ユーザーが指定したキーワード
+    public static function match($target, $keyword)
+    {
+        $a = KeywordOperatorAnalyzer::ReplaceStrORToPipe($keyword);
+        $b = KeywordOperatorAnalyzer::SeparateByNotOperator($a, true);
+        $c = KeywordOperatorAnalyzer::SeparateByNotOperator($a, false);
+        $match = KeywordOperatorAnalyzer::StrToArrayBySpace($b);
+        $notMatch = KeywordOperatorAnalyzer::StrToArrayBySpace($c);
+
+        foreach ($notMatch as $str) {
+            if (preg_match("/".$str."/u", $target)) {
+                return false;
+            }
+        }
+
+        $x = true;
+        foreach ($match as $str) {
+            print_r(4);
+            if (preg_match("/".$str."/u", $target)) {
+            }else{
+                $x = false;
+            }
+        }
+
+        if($x){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
