@@ -65,6 +65,13 @@ class AccountController extends Controller
                 $screen_name = $twitterAccountInfo['screen_name'];
                 $image_url = $twitterAccountInfo['profile_image_url_https'];
             
+                $msg = '';
+                if (count($account) > 0) {
+                    $msg = 'すでに登録されたアカウントです。';
+                }else{
+                    $msg = 'Twitterアカウントの登録に成功しました。自動化するためには「設定」を行いましょう！';                    
+                }
+
                 // accounts：アカウント情報管理用。行がなければINSERT。行があればUPDATE（アクセストークン切れ等の場合更新が必要だから）
                 // account_settings：アカウントの設定管理用。行がなければINSERT。行があれば何もしない
                 // operation_statuses：アカウントの稼働状況管理よう。行がなければINSERT。行があれば何もしない
@@ -72,7 +79,8 @@ class AccountController extends Controller
                 AccountSetting::firstOrCreate(['account_id' => $account['id']], ['target_accounts' => '']);
                 OperationStatus::firstOrCreate(['account_id' =>$account['id']]);
     
-                return redirect()->route('mypage.monitor')->with('flash_message_success', 'Twitterアカウントの登録に成功しました。自動化するためには「設定」を行いましょう！');
+                
+                return redirect()->route('mypage.monitor')->with('flash_message_success', $msg);
             } catch (Exception $e) {
                 logger()->error($e);
                 return redirect()->route('mypage.monitor')->with('flash_message_error', '現在、アカウントが追加できません。しばらく立ってから再度お試しください。');
@@ -161,7 +169,7 @@ class AccountController extends Controller
             logger()->error($e);
             throw $e;
         }
-    } 
+    }
 
     // 指定のアカウントに予約ツイートを登録する
     public function postTweet(Request $request)
