@@ -197,6 +197,13 @@ body {
   }
 }
 
+input,
+textarea,
+select {
+  border: 1px solid #333333;
+  box-sizing: border-box;
+}
+
 #header {
   padding: 15px;
   max-width: calc(100% + (2 * 15px));
