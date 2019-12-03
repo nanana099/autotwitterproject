@@ -7,5 +7,7 @@
     &__list {
       list-style: none;
       margin-bottom: $space-m;
+      display: flex;
+      justify-content: flex-start;
     }
   }

@@ -455,6 +455,8 @@ body {
 .c-side-menu__list {
   list-style: none;
   margin-bottom: 15px;
+  display: flex;
+  justify-content: flex-start;
 }
 
 .c-site-logo {
