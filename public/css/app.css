@@ -235,14 +235,18 @@ select {
 }
 
 #sidebar {
-  margin-top: 20px;
-  margin-bottom: 20px;
   padding: 15px;
   border: 1px solid transparent;
   box-sizing: border-box;
   display: inline-block;
-  width: 95%;
+  width: 100%;
+  height: 100%;
   background: #eeeeee;
+  position: fixed;
+  top: 0;
+  left: 0;
+  opacity: 0.9;
+  display: none;
 }
 
 @media screen and (min-width: 768px) {
@@ -250,6 +254,8 @@ select {
     width: 20%;
     margin-top: 60px;
     margin-bottom: 60px;
+    position: static;
+    display: block;
   }
 }
 
@@ -464,6 +470,45 @@ select {
   margin-bottom: 15px;
   display: flex;
   justify-content: flex-start;
+}
+
+.c-side-menu__btn-open {
+  width: 60px;
+  height: 60px;
+  background: #2af229;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  opacity: 0.5;
+  line-height: 60px;
+  text-align: center;
+  cursor: pointer;
+}
+
+@media screen and (min-width: 768px) {
+  .c-side-menu__btn-open {
+    display: none;
+  }
+}
+
+.c-side-menu__btn-close {
+  width: 60px;
+  height: 60px;
+  background: #2af229;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  opacity: 0.5;
+  line-height: 60px;
+  text-align: center;
+  cursor: pointer;
+  display: none;
+}
+
+@media screen and (min-width: 768px) {
+  .c-side-menu__btn-close {
+    display: none;
+  }
 }
 
 .c-site-logo {

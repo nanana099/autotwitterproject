@@ -1,13 +1,45 @@
-
 .c-side-menu {
-    &__title {
-      font-size: 1.6rem;
-      margin-bottom: $space-l;
+  &__title {
+    font-size: 1.6rem;
+    margin-bottom: $space-l;
+  }
+  &__list {
+    list-style: none;
+    margin-bottom: $space-m;
+    display: flex;
+    justify-content: flex-start;
+  }
+  &__btn {
+    &-open {
+      width: 60px;
+      height: 60px;
+      background: #2af229;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      opacity: 0.5;
+      line-height: 60px;
+      text-align: center;
+      cursor: pointer;
+      @include mq("md") {
+        display: none;
+      }
     }
-    &__list {
-      list-style: none;
-      margin-bottom: $space-m;
-      display: flex;
-      justify-content: flex-start;
+    &-close {
+      width: 60px;
+      height: 60px;
+      background: #2af229;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      opacity: 0.5;
+      line-height: 60px;
+      text-align: center;
+      cursor: pointer;
+      display: none;
+      @include mq("md") {
+        display: none;
+      }
     }
   }
+}

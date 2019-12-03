@@ -73151,6 +73151,30 @@ Vue.component('reserve-tweet--screen', __webpack_require__(/*! ./components/Rese
 
 var app = new Vue({
   el: '#app'
+}); // スマホ版メニューに関する処理
+
+$('.js-open-sidebar').on('click', function () {
+  $('.js-open-sidebar').hide();
+  $('.js-close-sidebar').show();
+  $('.js-target-sidebar').show();
+});
+$('.js-close-sidebar').on('click', function () {
+  $('.js-close-sidebar').hide();
+  $('.js-open-sidebar').show();
+  $('.js-target-sidebar').hide();
+});
+$(window).on('load resize', function () {
+  var w = $(this).width();
+
+  if (w < 768) {
+    $('.js-target-sidebar').hide();
+    $('.js-open-sidebar').show();
+    $('.js-close-sidebar').hide();
+  } else {
+    $('.js-target-sidebar').show();
+    $('.js-open-sidebar').hide();
+    $('.js-close-sidebar').hide();
+  }
 });
 
 /***/ }),
