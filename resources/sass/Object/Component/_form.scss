@@ -1,44 +1,43 @@
-
 .c-form {
-    &-fieldset {
-      margin-top: $space-l;
-      margin-bottom: $space-l;
-      @include mq("sm") {
-        margin-top: $space-3l;
-        margin-bottom: $space-3l;
-      }
-      border: 1px solid #eeeeee;
-      padding: $space-m;
+  &-fieldset {
+    margin-top: $space-l;
+    margin-bottom: $space-l;
+    @include mq("sm") {
+      margin-top: $space-3l;
+      margin-bottom: $space-3l;
     }
-    &-group {
-      margin-top: $space-l;
-      margin-bottom: $space-l;
-      &__label {
-        display: inline-block;
-        width: 100%;
-        margin-bottom: $space-s;
-        @include mq("md") {
-          margin-bottom: 0;
-        }
+    border: 1px solid #eeeeee;
+    padding: $space-m;
+  }
+  &-group {
+    margin-top: $space-l;
+    margin-bottom: $space-l;
+    &__label {
+      display: inline-block;
+      width: 100%;
+      margin-bottom: $space-s;
+      @include mq("md") {
+        margin-bottom: 0;
       }
-      &__text {
+    }
+    &__text {
+      width: 100%;
+      padding: $space-s;
+      @include mq("md") {
         width: 100%;
-        padding: $space-s;
-        @include mq("md") {
-          width: 100%;
-        }
-        box-sizing: border-box;
-        font-size: 1.8rem;
       }
-      &__select-multi {
-        width: 100%;
-        box-sizing: border-box;
-        padding: $space-xs $space-s;
-        font-size: 1.4rem;
-        @include mq("md") {
-          width: 100%;
-        }
-        height: 100px;
+      box-sizing: border-box;
+      font-size: 1.8rem;
+    }
+    &__select-multi {
+      width: 100%;
+      box-sizing: border-box;
+      padding: $space-xs $space-s;
+      font-size: 1.4rem;
+      @include mq("md") {
+        width: 30%;
       }
+      height: 100px;
     }
   }
+}

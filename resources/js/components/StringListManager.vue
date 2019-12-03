@@ -1,18 +1,29 @@
 <template>
   <!-- 文字列を複数選択可能セレクトボックスに表示・登録・削除するための部品 -->
-  <div>
+  <div class="p-strlist u-border u-mb-2">
+    <div class="c-align-item-start u-mb-2">
+      <input type="text" class="p-strlist__text-box" v-model="addStr" :placeholder="placeholder" />
+      <button class="c-btn c-btn--primary" @click="addTarget">&#043;</button>
+    </div>
+    <div class="c-align-item-end">
+      <select size="5" class="p-strlist__select-box" v-model="selectedStr" multiple>
+        <option v-for="target in ary" :value="target" :key="target">{{target}}</option>
+      </select>
+      <button class="c-btn c-btn--danger" @click="deleteTarget">&#045;</button>
+    </div>
+  </div>
+  <!-- 
     <div class="u-m-2">
       <input type="text" class="c-textbox--small" v-model="addStr" :placeholder="placeholder" />
       <button class="c-btn c-btn--primary" @click="addTarget">追加</button>
       <span class="c-invalid-feedback">{{errorMsg}}</span>
     </div>
-    <select size="5" class="c-form-group__select-multi u-mb-1" v-model="selectedStr" multiple>
-      <option v-for="target in ary" :value="target" :key="target">{{target}}</option>
-    </select>
-    <div class="c-justify-content-end">
+    <div class="c-justify-content-start">
+      <select size="5" class="c-form-group__select-multi u-mb-1" v-model="selectedStr" multiple>
+        <option v-for="target in ary" :value="target" :key="target">{{target}}</option>
+      </select>
       <button class="c-btn c-btn--danger" @click="deleteTarget">削除</button>
-    </div>
-  </div>
+  </div>-->
 </template>
 
 <script>
@@ -25,7 +36,7 @@ export default {
       errorMsg: ""
     };
   },
-  props: ["value", "placeholder","maxLength","maxCount"], // value:参照元からセレクトボックスに表示する配列を受け取る maxLength:文字列最大長 maxCount:文字列の個数最大
+  props: ["value", "placeholder", "maxLength", "maxCount"], // value:参照元からセレクトボックスに表示する配列を受け取る maxLength:文字列最大長 maxCount:文字列の個数最大
   watch: {
     value() {
       this.ary = this.value;
@@ -42,13 +53,13 @@ export default {
         this.errorMsg = "','を含むことはできません";
         return;
       }
-      if(this.addStr.length > this.maxLength){
+      if (this.addStr.length > this.maxLength) {
         this.errorMsg = "文字列が長すぎます";
-        return ;
+        return;
       }
-      if(this.ary.length >= this.maxCount){
+      if (this.ary.length >= this.maxCount) {
         this.errorMsg = "これ以上追加できません";
-        return ;
+        return;
       }
       this.errorMsg = "";
 
@@ -56,7 +67,7 @@ export default {
       if (!this.ary.some(x => x === this.addStr)) {
         this.ary.push(this.addStr);
         this.addStr = "";
-      }else{
+      } else {
         this.errorMsg = "すでに追加済みです";
       }
     },

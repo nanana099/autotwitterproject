@@ -1,8 +1,14 @@
 .c-align-item {
   &-center {
+    display: flex;
     align-items: center !important;
   }
   &-start {
-    align-items: start !important;
+    display: flex;
+    align-items: flex-start !important;
+  }
+  &-end {
+    display: flex;
+    align-items: flex-end !important;
   }
 }

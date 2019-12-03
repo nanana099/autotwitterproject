@@ -2213,6 +2213,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3069,6 +3097,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
 /* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__);
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -59876,6 +59915,36 @@ var render = function() {
                           },
                           expression: "followKeywordArray"
                         }
+                      }),
+                      _vm._v(" "),
+                      _c("string-list-manager", {
+                        attrs: {
+                          placeholder: "例）HTML (※50文字まで)",
+                          maxLength: 50,
+                          maxCount: 20
+                        },
+                        model: {
+                          value: _vm.followKeywordArray,
+                          callback: function($$v) {
+                            _vm.followKeywordArray = $$v
+                          },
+                          expression: "followKeywordArray"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("string-list-manager", {
+                        attrs: {
+                          placeholder: "例）HTML (※50文字まで)",
+                          maxLength: 50,
+                          maxCount: 20
+                        },
+                        model: {
+                          value: _vm.followKeywordArray,
+                          callback: function($$v) {
+                            _vm.followKeywordArray = $$v
+                          },
+                          expression: "followKeywordArray"
+                        }
                       })
                     ],
                     1
@@ -60022,6 +60091,36 @@ var render = function() {
                     { staticClass: "c-form-group" },
                     [
                       _vm._m(6),
+                      _vm._v(" "),
+                      _c("string-list-manager", {
+                        attrs: {
+                          placeholder: "例）東京(※50文字まで)",
+                          maxLength: 50,
+                          maxCount: 20
+                        },
+                        model: {
+                          value: _vm.favoriteKeywordArray,
+                          callback: function($$v) {
+                            _vm.favoriteKeywordArray = $$v
+                          },
+                          expression: "favoriteKeywordArray"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("string-list-manager", {
+                        attrs: {
+                          placeholder: "例）東京(※50文字まで)",
+                          maxLength: 50,
+                          maxCount: 20
+                        },
+                        model: {
+                          value: _vm.favoriteKeywordArray,
+                          callback: function($$v) {
+                            _vm.favoriteKeywordArray = $$v
+                          },
+                          expression: "favoriteKeywordArray"
+                        }
+                      }),
                       _vm._v(" "),
                       _c("string-list-manager", {
                         attrs: {
@@ -60877,8 +60976,8 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "u-m-2" }, [
+  return _c("div", { staticClass: "p-strlist u-border u-mb-2" }, [
+    _c("div", { staticClass: "c-align-item-start u-mb-2" }, [
       _c("input", {
         directives: [
           {
@@ -60888,7 +60987,7 @@ var render = function() {
             expression: "addStr"
           }
         ],
-        staticClass: "c-textbox--small",
+        staticClass: "p-strlist__text-box",
         attrs: { type: "text", placeholder: _vm.placeholder },
         domProps: { value: _vm.addStr },
         on: {
@@ -60904,56 +61003,52 @@ var render = function() {
       _c(
         "button",
         { staticClass: "c-btn c-btn--primary", on: { click: _vm.addTarget } },
-        [_vm._v("追加")]
-      ),
-      _vm._v(" "),
-      _c("span", { staticClass: "c-invalid-feedback" }, [
-        _vm._v(_vm._s(_vm.errorMsg))
-      ])
+        [_vm._v("+")]
+      )
     ]),
     _vm._v(" "),
-    _c(
-      "select",
-      {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.selectedStr,
-            expression: "selectedStr"
+    _c("div", { staticClass: "c-align-item-end" }, [
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.selectedStr,
+              expression: "selectedStr"
+            }
+          ],
+          staticClass: "p-strlist__select-box",
+          attrs: { size: "5", multiple: "" },
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.selectedStr = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            }
           }
-        ],
-        staticClass: "c-form-group__select-multi u-mb-1",
-        attrs: { size: "5", multiple: "" },
-        on: {
-          change: function($event) {
-            var $$selectedVal = Array.prototype.filter
-              .call($event.target.options, function(o) {
-                return o.selected
-              })
-              .map(function(o) {
-                var val = "_value" in o ? o._value : o.value
-                return val
-              })
-            _vm.selectedStr = $event.target.multiple
-              ? $$selectedVal
-              : $$selectedVal[0]
-          }
-        }
-      },
-      _vm._l(_vm.ary, function(target) {
-        return _c("option", { key: target, domProps: { value: target } }, [
-          _vm._v(_vm._s(target))
-        ])
-      }),
-      0
-    ),
-    _vm._v(" "),
-    _c("div", { staticClass: "c-justify-content-end" }, [
+        },
+        _vm._l(_vm.ary, function(target) {
+          return _c("option", { key: target, domProps: { value: target } }, [
+            _vm._v(_vm._s(target))
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
       _c(
         "button",
         { staticClass: "c-btn c-btn--danger", on: { click: _vm.deleteTarget } },
-        [_vm._v("削除")]
+        [_vm._v("-")]
       )
     ])
   ])

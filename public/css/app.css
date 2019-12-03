@@ -274,11 +274,18 @@ select {
 }
 
 .c-align-item-center {
+  display: flex;
   align-items: center !important;
 }
 
 .c-align-item-start {
-  align-items: start !important;
+  display: flex;
+  align-items: flex-start !important;
+}
+
+.c-align-item-end {
+  display: flex;
+  align-items: flex-end !important;
 }
 
 .c-btn {
@@ -410,7 +417,7 @@ select {
 
 @media screen and (min-width: 768px) {
   .c-form-group__select-multi {
-    width: 100%;
+    width: 30%;
   }
 }
 
@@ -630,6 +637,35 @@ select {
 
 .p-copy {
   color: #ffffff;
+}
+
+.p-strlist {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .p-strlist {
+    width: 30%;
+  }
+}
+
+.p-strlist__text-box {
+  box-sizing: border-box;
+  height: 30px;
+  width: 100%;
+}
+
+.p-strlist__select-box {
+  box-sizing: border-box;
+  width: 95%;
+}
+
+@media screen and (min-width: 768px) {
+  .p-strlist__select-box {
+    width: 80%;
+  }
 }
 
 .p-help {

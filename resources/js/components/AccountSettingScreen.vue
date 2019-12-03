@@ -51,6 +51,20 @@
                 :maxLength="50"
                 :maxCount="20"
               ></string-list-manager>
+
+              <string-list-manager
+                v-model="followKeywordArray"
+                :placeholder="'例）HTML (※50文字まで)'"
+                :maxLength="50"
+                :maxCount="20"
+              ></string-list-manager>
+
+              <string-list-manager
+                v-model="followKeywordArray"
+                :placeholder="'例）HTML (※50文字まで)'"
+                :maxLength="50"
+                :maxCount="20"
+              ></string-list-manager>
             </div>
           </fieldset>
           <fieldset class="c-form-fieldset">
@@ -104,6 +118,20 @@
                   <a href="/help/keyword" class="u-fs-4" target="_blank">キーワードの指定について</a>
                 </span>
               </label>
+              <string-list-manager
+                v-model="favoriteKeywordArray"
+                :placeholder="'例）東京(※50文字まで)'"
+                :maxLength="50"
+                :maxCount="20"
+              ></string-list-manager>
+
+              <string-list-manager
+                v-model="favoriteKeywordArray"
+                :placeholder="'例）東京(※50文字まで)'"
+                :maxLength="50"
+                :maxCount="20"
+              ></string-list-manager>
+
               <string-list-manager
                 v-model="favoriteKeywordArray"
                 :placeholder="'例）東京(※50文字まで)'"
