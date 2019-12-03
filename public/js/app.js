@@ -2511,6 +2511,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -60341,10 +60352,12 @@ var render = function() {
             _vm._v(" "),
             _c(
               "div",
-              { staticClass: "c-justify-content-start" },
+              { staticClass: "c-justify-content-start u-mb-6" },
               [_c("account-add-button")],
               1
-            )
+            ),
+            _vm._v(" "),
+            _vm._m(0)
           ]
         )
       ]),
@@ -60354,7 +60367,30 @@ var render = function() {
     1
   )
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "u-border u-p-1" }, [
+      _c("div", { staticClass: "u-mb-1" }, [
+        _c("span", [_vm._v("※自動機能について")])
+      ]),
+      _vm._v(" "),
+      _c("p", { staticClass: "u-fs-4" }, [
+        _vm._v(
+          "\n          「稼働中」へ変更した場合に、10~20分程度の間隔で実行します。\n          "
+        ),
+        _c("br"),
+        _vm._v(
+          "一度に処理できる量に限りがあるため、複数回にわけて実行されます。\n          "
+        ),
+        _c("br"),
+        _vm._v("完了時にご登録のメールアドレスへご連絡いたします。\n        ")
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

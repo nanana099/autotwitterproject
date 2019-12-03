@@ -17,8 +17,19 @@
         <span class="p-message-1" v-else>
           <i class="fas fa-info-circle u-mr-2"></i>自動化したいTwitterアカウントを追加してください
         </span>
-        <div class="c-justify-content-start">
+        <div class="c-justify-content-start u-mb-6">
           <account-add-button></account-add-button>
+        </div>
+
+        <div class="u-border u-p-1">
+          <div class="u-mb-1">
+            <span>※自動機能について</span>
+          </div>
+          <p class="u-fs-4">
+            「稼働中」へ変更した場合に、10~20分程度の間隔で実行します。
+            <br />一度に処理できる量に限りがあるため、複数回にわけて実行されます。
+            <br />完了時にご登録のメールアドレスへご連絡いたします。
+          </p>
         </div>
       </div>
     </section>
@@ -50,14 +61,14 @@ export default {
         this.isLoading = false;
       })
       .catch(error => {
-          this.flash(
-            "情報の取得に失敗しました。しばらく経ってから再度お試しください",
-            "error",
-            {
-              timeout: 0,
-              important: false
-            }
-          );
+        this.flash(
+          "情報の取得に失敗しました。しばらく経ってから再度お試しください",
+          "error",
+          {
+            timeout: 0,
+            important: false
+          }
+        );
       });
   },
   computed: {
