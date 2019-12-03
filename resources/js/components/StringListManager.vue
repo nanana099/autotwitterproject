@@ -1,6 +1,6 @@
 <template>
   <!-- 文字列を複数選択可能セレクトボックスに表示・登録・削除するための部品 -->
-  <div class="p-strlist u-border u-mb-2">
+  <div class="p-strlist u-mb-2">
     <div class="c-align-item-start u-mb-2">
       <input type="text" class="p-strlist__text-box" v-model="addStr" :placeholder="placeholder" />
       <button class="c-btn c-btn--primary" @click="addTarget">&#043;</button>
