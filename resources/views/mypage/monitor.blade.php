@@ -1,3 +1,6 @@
+@php
+    $description = "Twitter自動化ツール「神ったー」に登録したアカウントの一覧と自動化機能の稼働状況を確認します。"
+@endphp
 @extends('layouts.app')
 
 @section('content')

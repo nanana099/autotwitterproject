@@ -1,3 +1,6 @@
+@php
+    $description = "Twitter自動化ツール「神ったー」に登録したアカウントを削除します。"
+@endphp
 @extends('layouts.app')
 
 @section('content')

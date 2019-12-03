@@ -8,14 +8,15 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <meta name="description" content="お使いのTwitterアカウントを自動化するサービスです。フォロー、アンフォロー、いいねの自動化や、ツイート投稿の予約をご利用いただけます。">
+    <meta name="description" content="{{ @$description }}">
     <meta name="keywords" content="Twitter,Twitter 自動化,ツイート 予約">
 
     <title>{{ config('app.name', '神ったー') }}</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+        integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 </head>
@@ -30,14 +31,14 @@
             {{ session('flash_message_success') }}
         </div>
         @endif
-         <!-- フラッシュメッセージ -->
-         @if (session('flash_message_error'))
-         <div class="p-flash_message p-flash_message--error">
-             {{ session('flash_message_error') }}
-         </div>
-         @endif
-         
-        
+        <!-- フラッシュメッセージ -->
+        @if (session('flash_message_error'))
+        <div class="p-flash_message p-flash_message--error">
+            {{ session('flash_message_error') }}
+        </div>
+        @endif
+
+
         <div class="c-container c-justify-content-center">
             <div id="main">
                 @yield('content')

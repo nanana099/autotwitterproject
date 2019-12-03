@@ -1,3 +1,6 @@
+@php
+    $description = "Twitter自動化ツール「神ったー」から退会します。"
+@endphp
 @extends('layouts.app')
 
 @section('content')

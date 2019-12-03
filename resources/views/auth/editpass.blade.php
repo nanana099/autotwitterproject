@@ -1,3 +1,6 @@
+@php
+    $description = "Twitter自動化ツール「神ったー」にてユーザーのパスワードを変更します。"
+@endphp
 @extends('layouts.app')
 
 @section('content')
