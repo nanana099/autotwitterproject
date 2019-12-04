@@ -27,7 +27,7 @@
               <i class="fas fa-info-circle"></i>「ターゲットアカウント」のフォロワーのうち、「フォローキーワード」をプロフィールに含むアカウントを自動でフォローします。
             </span>
             <div class="c-form-group">
-              <label for="email" class="c-form-group__label">
+              <label for="email" class="c-form-group__label u-mb-2">
                 ・ターゲットアカウント
                 <span class="u-fs-4">@マークを除いたユーザー名を指定してください。</span>
               </label>
@@ -39,32 +39,38 @@
               ></string-list-manager>
             </div>
             <div class="c-form-group">
-              <label for="keyword-follow" class="c-form-group__label">
-                ・フォローキーワード
-                <span>
-                  <a href="/help/keyword" class="u-fs-4" target="_blank">キーワードの指定について</a>
-                </span>
-              </label>
-              <string-list-manager
-                v-model="followKeywordArray"
-                :placeholder="'例）HTML (※50文字まで)'"
-                :maxLength="50"
-                :maxCount="20"
-              ></string-list-manager>
+              <label for="keyword-follow" class="c-form-group__label u-mb-2">・フォローキーワード</label>
+              <div class="c-justify-content-between-md">
+                <div class="c-column u-mr-2 u-mb-3">
+                  <span class="u-text-center u-d-inline-block u-mb-2">AND（必ず含む）</span>
+                  <string-list-manager
+                    v-model="followKeywordArray"
+                    :placeholder="'例）HTML'"
+                    :maxLength="50"
+                    :maxCount="20"
+                  ></string-list-manager>
+                </div>
 
-              <string-list-manager
-                v-model="followKeywordArray"
-                :placeholder="'例）HTML (※50文字まで)'"
-                :maxLength="50"
-                :maxCount="20"
-              ></string-list-manager>
+                <div class="c-column u-mr-2 u-mb-3">
+                  <span class="u-text-center u-d-inline-block u-mb-2">OR（いずれか含む）</span>
+                  <string-list-manager
+                    v-model="followKeywordArray"
+                    :placeholder="'例）プログラミング'"
+                    :maxLength="50"
+                    :maxCount="20"
+                  ></string-list-manager>
+                </div>
 
-              <string-list-manager
-                v-model="followKeywordArray"
-                :placeholder="'例）HTML (※50文字まで)'"
-                :maxLength="50"
-                :maxCount="20"
-              ></string-list-manager>
+                <div class="c-column u-mr-2 u-mb-3">
+                  <span class="u-text-center u-d-inline-block u-mb-2">NOT（含まない）</span>
+                  <string-list-manager
+                    v-model="followKeywordArray"
+                    :placeholder="'例）公式'"
+                    :maxLength="50"
+                    :maxCount="20"
+                  ></string-list-manager>
+                </div>
+              </div>
             </div>
           </fieldset>
           <fieldset class="c-form-fieldset">
@@ -111,33 +117,39 @@
             <span class="u-fs-4">
               <i class="fas fa-info-circle"></i>「いいねキーワード」を含むツイートを自動でいいねします。
             </span>
+
             <div class="c-form-group">
-              <label for="email" class="c-form-group__label">
-                ・いいねキーワード
-                <span>
-                  <a href="/help/keyword" class="u-fs-4" target="_blank">キーワードの指定について</a>
-                </span>
-              </label>
-              <string-list-manager
-                v-model="favoriteKeywordArray"
-                :placeholder="'例）東京(※50文字まで)'"
-                :maxLength="50"
-                :maxCount="20"
-              ></string-list-manager>
+              <label for="keyword-follow" class="c-form-group__label u-mb-2">・いいねキーワード</label>
+              <div class="c-justify-content-between-md">
+                <div class="c-column u-mr-2 u-mb-3">
+                  <span class="u-text-center u-d-inline-block u-mb-2">AND（必ず含む）</span>
 
-              <string-list-manager
-                v-model="favoriteKeywordArray"
-                :placeholder="'例）東京(※50文字まで)'"
-                :maxLength="50"
-                :maxCount="20"
-              ></string-list-manager>
-
-              <string-list-manager
-                v-model="favoriteKeywordArray"
-                :placeholder="'例）東京(※50文字まで)'"
-                :maxLength="50"
-                :maxCount="20"
-              ></string-list-manager>
+                  <string-list-manager
+                    v-model="favoriteKeywordArray"
+                    :placeholder="'例）東京(※50文字まで)'"
+                    :maxLength="50"
+                    :maxCount="20"
+                  ></string-list-manager>
+                </div>
+                <div class="c-column u-mr-2 u-mb-3">
+                  <span class="u-text-center u-d-inline-block u-mb-2">OR（いずれか含む）</span>
+                  <string-list-manager
+                    v-model="favoriteKeywordArray"
+                    :placeholder="'例）東京(※50文字まで)'"
+                    :maxLength="50"
+                    :maxCount="20"
+                  ></string-list-manager>
+                </div>
+                <div class="c-column u-mr-2 u-mb-3">
+                  <span class="u-text-center u-d-inline-block u-mb-2">NOT（含まない）</span>
+                  <string-list-manager
+                    v-model="favoriteKeywordArray"
+                    :placeholder="'例）東京(※50文字まで)'"
+                    :maxLength="50"
+                    :maxCount="20"
+                  ></string-list-manager>
+                </div>
+              </div>
             </div>
           </fieldset>
 
@@ -237,10 +249,14 @@ export default {
           target_accounts: this.targetAccountArray.join(",")
         })
         .then(res => {
-          this.flash("設定を保存しました。「アカウント一覧・稼働状況」から稼働状況を変更できます。", "success", {
-            timeout: 5000,
-            important: true
-          });
+          this.flash(
+            "設定を保存しました。「アカウント一覧・稼働状況」から稼働状況を変更できます。",
+            "success",
+            {
+              timeout: 5000,
+              important: true
+            }
+          );
         })
         .catch(error => {
           this.flash(

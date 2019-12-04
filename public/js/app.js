@@ -2241,6 +2241,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3097,6 +3109,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! core-js/modules/es6.regexp.match */ "./node_modules/core-js/modules/es6.regexp.match.js");
 /* harmony import */ var core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_es6_regexp_match__WEBPACK_IMPORTED_MODULE_0__);
 
+//
+//
 //
 //
 //
@@ -59896,65 +59910,117 @@ var render = function() {
                     1
                   ),
                   _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "c-form-group" },
-                    [
-                      _vm._m(3),
+                  _c("div", { staticClass: "c-form-group" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "c-form-group__label u-mb-2",
+                        attrs: { for: "keyword-follow" }
+                      },
+                      [_vm._v("・フォローキーワード")]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "c-justify-content-between-md" }, [
+                      _c(
+                        "div",
+                        { staticClass: "c-column u-mr-2 u-mb-3" },
+                        [
+                          _c(
+                            "span",
+                            {
+                              staticClass:
+                                "u-text-center u-d-inline-block u-mb-2"
+                            },
+                            [_vm._v("AND（必ず含む）")]
+                          ),
+                          _vm._v(" "),
+                          _c("string-list-manager", {
+                            attrs: {
+                              placeholder: "例）HTML",
+                              maxLength: 50,
+                              maxCount: 20
+                            },
+                            model: {
+                              value: _vm.followKeywordArray,
+                              callback: function($$v) {
+                                _vm.followKeywordArray = $$v
+                              },
+                              expression: "followKeywordArray"
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("string-list-manager", {
-                        attrs: {
-                          placeholder: "例）HTML (※50文字まで)",
-                          maxLength: 50,
-                          maxCount: 20
-                        },
-                        model: {
-                          value: _vm.followKeywordArray,
-                          callback: function($$v) {
-                            _vm.followKeywordArray = $$v
-                          },
-                          expression: "followKeywordArray"
-                        }
-                      }),
+                      _c(
+                        "div",
+                        { staticClass: "c-column u-mr-2 u-mb-3" },
+                        [
+                          _c(
+                            "span",
+                            {
+                              staticClass:
+                                "u-text-center u-d-inline-block u-mb-2"
+                            },
+                            [_vm._v("OR（いずれか含む）")]
+                          ),
+                          _vm._v(" "),
+                          _c("string-list-manager", {
+                            attrs: {
+                              placeholder: "例）プログラミング",
+                              maxLength: 50,
+                              maxCount: 20
+                            },
+                            model: {
+                              value: _vm.followKeywordArray,
+                              callback: function($$v) {
+                                _vm.followKeywordArray = $$v
+                              },
+                              expression: "followKeywordArray"
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("string-list-manager", {
-                        attrs: {
-                          placeholder: "例）HTML (※50文字まで)",
-                          maxLength: 50,
-                          maxCount: 20
-                        },
-                        model: {
-                          value: _vm.followKeywordArray,
-                          callback: function($$v) {
-                            _vm.followKeywordArray = $$v
-                          },
-                          expression: "followKeywordArray"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("string-list-manager", {
-                        attrs: {
-                          placeholder: "例）HTML (※50文字まで)",
-                          maxLength: 50,
-                          maxCount: 20
-                        },
-                        model: {
-                          value: _vm.followKeywordArray,
-                          callback: function($$v) {
-                            _vm.followKeywordArray = $$v
-                          },
-                          expression: "followKeywordArray"
-                        }
-                      })
-                    ],
-                    1
-                  )
+                      _c(
+                        "div",
+                        { staticClass: "c-column u-mr-2 u-mb-3" },
+                        [
+                          _c(
+                            "span",
+                            {
+                              staticClass:
+                                "u-text-center u-d-inline-block u-mb-2"
+                            },
+                            [_vm._v("NOT（含まない）")]
+                          ),
+                          _vm._v(" "),
+                          _c("string-list-manager", {
+                            attrs: {
+                              placeholder: "例）公式",
+                              maxLength: 50,
+                              maxCount: 20
+                            },
+                            model: {
+                              value: _vm.followKeywordArray,
+                              callback: function($$v) {
+                                _vm.followKeywordArray = $$v
+                              },
+                              expression: "followKeywordArray"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ])
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("fieldset", { staticClass: "c-form-fieldset" }, [
                   _c("legend", [_vm._v("自動アンフォロー関連")]),
                   _vm._v(" "),
-                  _vm._m(4),
+                  _vm._m(3),
                   _vm._v(" "),
                   _c("div", { staticClass: "c-form-group" }, [
                     _c("div", [
@@ -60084,61 +60150,113 @@ var render = function() {
                 _c("fieldset", { staticClass: "c-form-fieldset" }, [
                   _c("legend", [_vm._v("自動いいね関連")]),
                   _vm._v(" "),
-                  _vm._m(5),
+                  _vm._m(4),
                   _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "c-form-group" },
-                    [
-                      _vm._m(6),
+                  _c("div", { staticClass: "c-form-group" }, [
+                    _c(
+                      "label",
+                      {
+                        staticClass: "c-form-group__label u-mb-2",
+                        attrs: { for: "keyword-follow" }
+                      },
+                      [_vm._v("・いいねキーワード")]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "c-justify-content-between-md" }, [
+                      _c(
+                        "div",
+                        { staticClass: "c-column u-mr-2 u-mb-3" },
+                        [
+                          _c(
+                            "span",
+                            {
+                              staticClass:
+                                "u-text-center u-d-inline-block u-mb-2"
+                            },
+                            [_vm._v("AND（必ず含む）")]
+                          ),
+                          _vm._v(" "),
+                          _c("string-list-manager", {
+                            attrs: {
+                              placeholder: "例）東京(※50文字まで)",
+                              maxLength: 50,
+                              maxCount: 20
+                            },
+                            model: {
+                              value: _vm.favoriteKeywordArray,
+                              callback: function($$v) {
+                                _vm.favoriteKeywordArray = $$v
+                              },
+                              expression: "favoriteKeywordArray"
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("string-list-manager", {
-                        attrs: {
-                          placeholder: "例）東京(※50文字まで)",
-                          maxLength: 50,
-                          maxCount: 20
-                        },
-                        model: {
-                          value: _vm.favoriteKeywordArray,
-                          callback: function($$v) {
-                            _vm.favoriteKeywordArray = $$v
-                          },
-                          expression: "favoriteKeywordArray"
-                        }
-                      }),
+                      _c(
+                        "div",
+                        { staticClass: "c-column u-mr-2 u-mb-3" },
+                        [
+                          _c(
+                            "span",
+                            {
+                              staticClass:
+                                "u-text-center u-d-inline-block u-mb-2"
+                            },
+                            [_vm._v("OR（いずれか含む）")]
+                          ),
+                          _vm._v(" "),
+                          _c("string-list-manager", {
+                            attrs: {
+                              placeholder: "例）東京(※50文字まで)",
+                              maxLength: 50,
+                              maxCount: 20
+                            },
+                            model: {
+                              value: _vm.favoriteKeywordArray,
+                              callback: function($$v) {
+                                _vm.favoriteKeywordArray = $$v
+                              },
+                              expression: "favoriteKeywordArray"
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("string-list-manager", {
-                        attrs: {
-                          placeholder: "例）東京(※50文字まで)",
-                          maxLength: 50,
-                          maxCount: 20
-                        },
-                        model: {
-                          value: _vm.favoriteKeywordArray,
-                          callback: function($$v) {
-                            _vm.favoriteKeywordArray = $$v
-                          },
-                          expression: "favoriteKeywordArray"
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("string-list-manager", {
-                        attrs: {
-                          placeholder: "例）東京(※50文字まで)",
-                          maxLength: 50,
-                          maxCount: 20
-                        },
-                        model: {
-                          value: _vm.favoriteKeywordArray,
-                          callback: function($$v) {
-                            _vm.favoriteKeywordArray = $$v
-                          },
-                          expression: "favoriteKeywordArray"
-                        }
-                      })
-                    ],
-                    1
-                  )
+                      _c(
+                        "div",
+                        { staticClass: "c-column u-mr-2 u-mb-3" },
+                        [
+                          _c(
+                            "span",
+                            {
+                              staticClass:
+                                "u-text-center u-d-inline-block u-mb-2"
+                            },
+                            [_vm._v("NOT（含まない）")]
+                          ),
+                          _vm._v(" "),
+                          _c("string-list-manager", {
+                            attrs: {
+                              placeholder: "例）東京(※50文字まで)",
+                              maxLength: 50,
+                              maxCount: 20
+                            },
+                            model: {
+                              value: _vm.favoriteKeywordArray,
+                              callback: function($$v) {
+                                _vm.favoriteKeywordArray = $$v
+                              },
+                              expression: "favoriteKeywordArray"
+                            }
+                          })
+                        ],
+                        1
+                      )
+                    ])
+                  ])
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "c-justify-content-end" }, [
@@ -60193,33 +60311,11 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c(
       "label",
-      { staticClass: "c-form-group__label", attrs: { for: "email" } },
+      { staticClass: "c-form-group__label u-mb-2", attrs: { for: "email" } },
       [
         _vm._v("\n              ・ターゲットアカウント\n              "),
         _c("span", { staticClass: "u-fs-4" }, [
           _vm._v("@マークを除いたユーザー名を指定してください。")
-        ])
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      { staticClass: "c-form-group__label", attrs: { for: "keyword-follow" } },
-      [
-        _vm._v("\n              ・フォローキーワード\n              "),
-        _c("span", [
-          _c(
-            "a",
-            {
-              staticClass: "u-fs-4",
-              attrs: { href: "/help/keyword", target: "_blank" }
-            },
-            [_vm._v("キーワードの指定について")]
-          )
         ])
       ]
     )
@@ -60243,28 +60339,6 @@ var staticRenderFns = [
         "「いいねキーワード」を含むツイートを自動でいいねします。\n          "
       )
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      { staticClass: "c-form-group__label", attrs: { for: "email" } },
-      [
-        _vm._v("\n              ・いいねキーワード\n              "),
-        _c("span", [
-          _c(
-            "a",
-            {
-              staticClass: "u-fs-4",
-              attrs: { href: "/help/keyword", target: "_blank" }
-            },
-            [_vm._v("キーワードの指定について")]
-          )
-        ])
-      ]
-    )
   }
 ]
 render._withStripped = true
@@ -60977,7 +61051,13 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "p-strlist u-mb-2" }, [
-    _c("div", { staticClass: "c-align-item-start u-mb-2" }, [
+    _vm.errorMsg
+      ? _c("span", { staticClass: "c-invalid-feedback" }, [
+          _vm._v(_vm._s(_vm.errorMsg))
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _c("div", { staticClass: "c-align-item-start u-mb-1" }, [
       _c("input", {
         directives: [
           {

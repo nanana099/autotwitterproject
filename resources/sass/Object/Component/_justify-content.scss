@@ -4,6 +4,13 @@
     align-items: flex-start;
     justify-content: space-between;
     flex-wrap: wrap;
+
+    &-md {
+      @include mq("md") {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
   }
   &-center {
     display: flex;
