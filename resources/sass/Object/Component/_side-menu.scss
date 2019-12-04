@@ -24,6 +24,7 @@
       @include mq("md") {
         display: none;
       }
+      border-radius: 5px;
     }
     &-close {
       width: 60px;
@@ -40,6 +41,7 @@
       @include mq("md") {
         display: none;
       }
+      border-radius: 5px;
     }
   }
 }

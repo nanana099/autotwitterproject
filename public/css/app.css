@@ -245,7 +245,7 @@ select {
   position: fixed;
   top: 0;
   left: 0;
-  opacity: 0.9;
+  opacity: 0.95;
   display: none;
 }
 
@@ -490,6 +490,7 @@ select {
   line-height: 60px;
   text-align: center;
   cursor: pointer;
+  border-radius: 5px;
 }
 
 @media screen and (min-width: 768px) {
@@ -510,6 +511,7 @@ select {
   text-align: center;
   cursor: pointer;
   display: none;
+  border-radius: 5px;
 }
 
 @media screen and (min-width: 768px) {
