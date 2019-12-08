@@ -12,6 +12,7 @@ class TwitterAPIErrorChecker
     private const RATE_LIMIT_EXCEEDED = 88;     // TwitterAPIのリクエスト制限が上限に達した
     private const CANT_FOLLOW_TEMPORARY = 161;      // 一時的にフォロー不可
     private const OVER_CAPACITY = 130;          // Twitterが高負荷状態
+    private const FLOZEN = 326;          // 凍結中アカウント
 
     public static function check($result)
     {
@@ -36,7 +37,10 @@ class TwitterAPIErrorChecker
                 case self::ACCOUNT_SUSPENDED:
                     throw new TwitterFlozenException($errorCode);
                     break;
-                defalt :
+                case self::FLOZEN:
+                    throw new TwitterFlozenException($errorCode);
+                    break;
+                default :
                     throw new TwitterException($errorCode);// その他例外
                     break;
             }
