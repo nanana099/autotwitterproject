@@ -2265,8 +2265,12 @@ __webpack_require__.r(__webpack_exports__);
       accounts: [],
       setting: {},
       targetAccountArray: [],
-      followKeywordArray: [],
-      favoriteKeywordArray: [],
+      followKeywordArrayAND: [],
+      followKeywordArrayOR: [],
+      followKeywordArrayNOT: [],
+      favoriteKeywordArrayAND: [],
+      favoriteKeywordArrayOR: [],
+      favoriteKeywordArrayNOT: [],
       msgDaysUnfollowUser: "",
       isLoading: true
     };
@@ -2282,10 +2286,17 @@ __webpack_require__.r(__webpack_exports__);
           account_id: id
         }
       }).then(function (res) {
-        _this.setting = res.data[0];
-        res.data[0].target_accounts !== "" ? _this.targetAccountArray = res.data[0].target_accounts.split(",") : _this.targetAccountArray = [];
-        res.data[0].keyword_follow !== "" ? _this.followKeywordArray = res.data[0].keyword_follow.split(",") : _this.followKeywordArray = [];
-        res.data[0].keyword_favorite !== "" ? _this.favoriteKeywordArray = res.data[0].keyword_favorite.split(",") : _this.favoriteKeywordArray = [];
+        _this.setting = res.data[0]; // ターゲットアカウント
+
+        res.data[0].target_accounts !== "" ? _this.targetAccountArray = res.data[0].target_accounts.split(",") : _this.targetAccountArray = []; // フォローキーワード
+
+        res.data[0].keyword_follow_and !== "" ? _this.followKeywordArrayAND = res.data[0].keyword_follow_and.split(",") : _this.followKeywordArrayAND = [];
+        res.data[0].keyword_follow_or !== "" ? _this.followKeywordArrayOR = res.data[0].keyword_follow_or.split(",") : _this.followKeywordArrayOR = [];
+        res.data[0].keyword_follow_not !== "" ? _this.followKeywordArrayNOT = res.data[0].keyword_follow_not.split(",") : _this.followKeywordArrayNOT = []; // いいねキーワード
+
+        res.data[0].keyword_favorite_and !== "" ? _this.favoriteKeywordArrayAND = res.data[0].keyword_favorite_and.split(",") : _this.favoriteKeywordArrayAND = [];
+        res.data[0].keyword_favorite_or !== "" ? _this.favoriteKeywordArrayOR = res.data[0].keyword_favorite_or.split(",") : _this.favoriteKeywordArrayOR = [];
+        res.data[0].keyword_favorite_not !== "" ? _this.favoriteKeywordArrayNOT = res.data[0].keyword_favorite_not.split(",") : _this.favoriteKeywordArrayNOT = [];
         _this.isLoading = false;
       }).catch(function (error) {
         _this.isError = true;
@@ -2315,8 +2326,12 @@ __webpack_require__.r(__webpack_exports__);
         num_user_start_unfollow: this.setting.num_user_start_unfollow,
         bool_unfollow_inactive: this.setting.bool_unfollow_inactive,
         account_id: this.setting.account_id,
-        keyword_follow: this.followKeywordArray.join(","),
-        keyword_favorite: this.favoriteKeywordArray.join(","),
+        keyword_follow_and: this.followKeywordArrayAND.join(","),
+        keyword_follow_or: this.followKeywordArrayOR.join(","),
+        keyword_follow_not: this.followKeywordArrayNOT.join(","),
+        keyword_favorite_and: this.favoriteKeywordArrayAND.join(","),
+        keyword_favorite_or: this.favoriteKeywordArrayOR.join(","),
+        keyword_favorite_not: this.favoriteKeywordArrayNOT.join(","),
         target_accounts: this.targetAccountArray.join(",")
       }).then(function (res) {
         _this2.flash("設定を保存しました。「アカウント一覧・稼働状況」から稼働状況を変更できます。", "success", {
@@ -2364,9 +2379,15 @@ __webpack_require__.r(__webpack_exports__);
       }) // 選択中のアカウントの設定情報を取得
       .then(function (res) {
         _this3.setting = res.data[0];
-        res.data[0].target_accounts !== "" ? _this3.targetAccountArray = res.data[0].target_accounts.split(",") : _this3.targetAccountArray = [];
-        res.data[0].keyword_follow !== "" ? _this3.followKeywordArray = res.data[0].keyword_follow.split(",") : _this3.followKeywordArray = [];
-        res.data[0].keyword_favorite !== "" ? _this3.favoriteKeywordArray = res.data[0].keyword_favorite.split(",") : _this3.favoriteKeywordArray = [];
+        res.data[0].target_accounts !== "" ? _this3.targetAccountArray = res.data[0].target_accounts.split(",") : _this3.targetAccountArray = []; // フォローキーワード
+
+        res.data[0].keyword_follow_and !== "" ? _this3.followKeywordArrayAND = res.data[0].keyword_follow_and.split(",") : _this3.followKeywordArrayAND = [];
+        res.data[0].keyword_follow_or !== "" ? _this3.followKeywordArrayOR = res.data[0].keyword_follow_or.split(",") : _this3.followKeywordArrayOR = [];
+        res.data[0].keyword_follow_not !== "" ? _this3.followKeywordArrayNOT = res.data[0].keyword_follow_not.split(",") : _this3.followKeywordArrayNOT = []; // いいねキーワード
+
+        res.data[0].keyword_favorite_and !== "" ? _this3.favoriteKeywordArrayAND = res.data[0].keyword_favorite_and.split(",") : _this3.favoriteKeywordArrayAND = [];
+        res.data[0].keyword_favorite_or !== "" ? _this3.favoriteKeywordArrayOR = res.data[0].keyword_favorite_or.split(",") : _this3.favoriteKeywordArrayOR = [];
+        res.data[0].keyword_favorite_not !== "" ? _this3.favoriteKeywordArrayNOT = res.data[0].keyword_favorite_not.split(",") : _this3.favoriteKeywordArrayNOT = [];
         _this3.isLoading = false;
       }).catch(function (error) {
         _this3.flash("情報の取得に失敗しました。しばらく経ってから再度お試しください", "error", {
@@ -3169,7 +3190,22 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       if (this.addStr.match(",")) {
-        this.errorMsg = "','を含むことはできません";
+        this.errorMsg = "','は含めません";
+        return;
+      }
+
+      if (this.addStr.match(" ")) {
+        this.errorMsg = "' 'は含めません";
+        return;
+      }
+
+      if (this.addStr.match('\\(')) {
+        this.errorMsg = "'('は含めません";
+        return;
+      }
+
+      if (this.addStr.match('\\)')) {
+        this.errorMsg = "')'は含めません";
         return;
       }
 
@@ -59941,11 +59977,11 @@ var render = function() {
                               maxCount: 20
                             },
                             model: {
-                              value: _vm.followKeywordArray,
+                              value: _vm.followKeywordArrayAND,
                               callback: function($$v) {
-                                _vm.followKeywordArray = $$v
+                                _vm.followKeywordArrayAND = $$v
                               },
-                              expression: "followKeywordArray"
+                              expression: "followKeywordArrayAND"
                             }
                           })
                         ],
@@ -59972,11 +60008,11 @@ var render = function() {
                               maxCount: 20
                             },
                             model: {
-                              value: _vm.followKeywordArray,
+                              value: _vm.followKeywordArrayOR,
                               callback: function($$v) {
-                                _vm.followKeywordArray = $$v
+                                _vm.followKeywordArrayOR = $$v
                               },
-                              expression: "followKeywordArray"
+                              expression: "followKeywordArrayOR"
                             }
                           })
                         ],
@@ -60003,11 +60039,11 @@ var render = function() {
                               maxCount: 20
                             },
                             model: {
-                              value: _vm.followKeywordArray,
+                              value: _vm.followKeywordArrayNOT,
                               callback: function($$v) {
-                                _vm.followKeywordArray = $$v
+                                _vm.followKeywordArrayNOT = $$v
                               },
-                              expression: "followKeywordArray"
+                              expression: "followKeywordArrayNOT"
                             }
                           })
                         ],
@@ -60178,16 +60214,16 @@ var render = function() {
                           _vm._v(" "),
                           _c("string-list-manager", {
                             attrs: {
-                              placeholder: "例）東京(※50文字まで)",
+                              placeholder: "例）東京",
                               maxLength: 50,
                               maxCount: 20
                             },
                             model: {
-                              value: _vm.favoriteKeywordArray,
+                              value: _vm.favoriteKeywordArrayAND,
                               callback: function($$v) {
-                                _vm.favoriteKeywordArray = $$v
+                                _vm.favoriteKeywordArrayAND = $$v
                               },
-                              expression: "favoriteKeywordArray"
+                              expression: "favoriteKeywordArrayAND"
                             }
                           })
                         ],
@@ -60209,16 +60245,16 @@ var render = function() {
                           _vm._v(" "),
                           _c("string-list-manager", {
                             attrs: {
-                              placeholder: "例）東京(※50文字まで)",
+                              placeholder: "例）大阪",
                               maxLength: 50,
                               maxCount: 20
                             },
                             model: {
-                              value: _vm.favoriteKeywordArray,
+                              value: _vm.favoriteKeywordArrayOR,
                               callback: function($$v) {
-                                _vm.favoriteKeywordArray = $$v
+                                _vm.favoriteKeywordArrayOR = $$v
                               },
-                              expression: "favoriteKeywordArray"
+                              expression: "favoriteKeywordArrayOR"
                             }
                           })
                         ],
@@ -60240,16 +60276,16 @@ var render = function() {
                           _vm._v(" "),
                           _c("string-list-manager", {
                             attrs: {
-                              placeholder: "例）東京(※50文字まで)",
+                              placeholder: "例）東京事変",
                               maxLength: 50,
                               maxCount: 20
                             },
                             model: {
-                              value: _vm.favoriteKeywordArray,
+                              value: _vm.favoriteKeywordArrayNOT,
                               callback: function($$v) {
-                                _vm.favoriteKeywordArray = $$v
+                                _vm.favoriteKeywordArrayNOT = $$v
                               },
-                              expression: "favoriteKeywordArray"
+                              expression: "favoriteKeywordArrayNOT"
                             }
                           })
                         ],

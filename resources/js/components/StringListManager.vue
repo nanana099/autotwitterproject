@@ -52,7 +52,19 @@ export default {
         return;
       }
       if (this.addStr.match(",")) {
-        this.errorMsg = "','を含むことはできません";
+        this.errorMsg = "','は含めません";
+        return;
+      }
+      if (this.addStr.match(" ")) {
+        this.errorMsg = "' 'は含めません";
+        return; 
+      }
+      if (this.addStr.match('\\(')) {
+        this.errorMsg = "'('は含めません";
+        return;
+      }
+      if (this.addStr.match('\\)')) {
+        this.errorMsg = "')'は含めません";
         return;
       }
       if (this.addStr.length > this.maxLength) {

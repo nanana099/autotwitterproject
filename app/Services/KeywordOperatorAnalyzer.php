@@ -24,7 +24,7 @@ class KeywordOperatorAnalyzer
 
         if ($before_needle) {
             // 「 -」より前を取得
-            if (mb_strstr($org, ' -', true)) {
+            if (mb_strstr($org, ' -', true) !== false) {
                 return mb_strstr($org, ' -', true);
             } else {
                 return $org;
@@ -51,5 +51,61 @@ class KeywordOperatorAnalyzer
         } else {
             return explode(' ', $org);
         }
+    }
+
+    // 「A B (C OR D OR E) -F -G」を「A,B」「C,D,E」「F,G」に分ける
+    public static function operatorStrToCSV($str,&$andStr,&$orStr,&$notStr)
+    {
+        // not文字列作成
+        $notStr = self::SeparateByNotOperator($str, false);
+        $notStr = str_ireplace(' ', ',', $notStr);
+
+        // notを除いた文字列
+        $str = self::SeparateByNotOperator($str, true);
+
+        // or文字列作成
+        if (mb_strpos($str, '(') === false) {
+            $orStr = '';
+        } else {
+            $orStr = mb_substr($str, ($iti=(mb_strpos($str, '(')+1)), (mb_strpos($str, ')'))-$iti);
+            $orStr = str_ireplace(' OR ', ',', $orStr);
+            $orStr = ($orStr === ' ') ? '':$orStr;
+        }
+        // and文字列作成
+        $andStr = mb_substr($str, ($iti=(mb_strpos($str, '(')+1)), (mb_strpos($str, ')'))-$iti);
+        if (mb_strpos($str, '(') === false) {
+            $andStr = $str;
+        } else {
+            if (mb_strpos($str, '(') === 0) {
+                $andStr = '';
+            } else {
+                $andStr = mb_substr($str, 0, mb_strpos($str, '(') -1);
+            }
+        }
+        $andStr = str_ireplace(' ', ',', $andStr);
+    }
+
+    // 「A,B」「C,D,E」「F,G」を「A B OR C OR D OR E -F G」にする
+    public static function csvToOperatorStr($and, $or, $not)
+    {
+        $andStr = str_replace(',', ' ', $and);
+        $orStr = '('.str_replace(',', ' OR ', $or).')';
+        $notStr = ' -'.str_replace(',', ' -', $not);
+
+        $str = '';
+
+        $str .= $andStr;
+
+        if ($orStr !== '()') {
+            if (!empty($str)) {
+                $str .= ' ';
+            }
+            $str .= $orStr;
+        }
+
+        if ($notStr !== ' -') {
+            $str .= $notStr;
+        }
+        return $str;
     }
 }

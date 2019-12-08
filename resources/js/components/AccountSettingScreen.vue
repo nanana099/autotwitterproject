@@ -44,7 +44,7 @@
                 <div class="c-column u-mr-2 u-mb-3">
                   <span class="u-text-center u-d-inline-block u-mb-2">AND（必ず含む）</span>
                   <string-list-manager
-                    v-model="followKeywordArray"
+                    v-model="followKeywordArrayAND"
                     :placeholder="'例）HTML'"
                     :maxLength="50"
                     :maxCount="20"
@@ -54,7 +54,7 @@
                 <div class="c-column u-mr-2 u-mb-3">
                   <span class="u-text-center u-d-inline-block u-mb-2">OR（いずれか含む）</span>
                   <string-list-manager
-                    v-model="followKeywordArray"
+                    v-model="followKeywordArrayOR"
                     :placeholder="'例）プログラミング'"
                     :maxLength="50"
                     :maxCount="20"
@@ -64,7 +64,7 @@
                 <div class="c-column u-mr-2 u-mb-3">
                   <span class="u-text-center u-d-inline-block u-mb-2">NOT（含まない）</span>
                   <string-list-manager
-                    v-model="followKeywordArray"
+                    v-model="followKeywordArrayNOT"
                     :placeholder="'例）公式'"
                     :maxLength="50"
                     :maxCount="20"
@@ -125,8 +125,8 @@
                   <span class="u-text-center u-d-inline-block u-mb-2">AND（必ず含む）</span>
 
                   <string-list-manager
-                    v-model="favoriteKeywordArray"
-                    :placeholder="'例）東京(※50文字まで)'"
+                    v-model="favoriteKeywordArrayAND"
+                    :placeholder="'例）東京'"
                     :maxLength="50"
                     :maxCount="20"
                   ></string-list-manager>
@@ -134,8 +134,8 @@
                 <div class="c-column u-mr-2 u-mb-3">
                   <span class="u-text-center u-d-inline-block u-mb-2">OR（いずれか含む）</span>
                   <string-list-manager
-                    v-model="favoriteKeywordArray"
-                    :placeholder="'例）東京(※50文字まで)'"
+                    v-model="favoriteKeywordArrayOR"
+                    :placeholder="'例）大阪'"
                     :maxLength="50"
                     :maxCount="20"
                   ></string-list-manager>
@@ -143,8 +143,8 @@
                 <div class="c-column u-mr-2 u-mb-3">
                   <span class="u-text-center u-d-inline-block u-mb-2">NOT（含まない）</span>
                   <string-list-manager
-                    v-model="favoriteKeywordArray"
-                    :placeholder="'例）東京(※50文字まで)'"
+                    v-model="favoriteKeywordArrayNOT"
+                    :placeholder="'例）東京事変'"
                     :maxLength="50"
                     :maxCount="20"
                   ></string-list-manager>
@@ -178,8 +178,12 @@ export default {
       accounts: [],
       setting: {},
       targetAccountArray: [],
-      followKeywordArray: [],
-      favoriteKeywordArray: [],
+      followKeywordArrayAND: [],
+      followKeywordArrayOR: [],
+      followKeywordArrayNOT: [],
+      favoriteKeywordArrayAND: [],
+      favoriteKeywordArrayOR: [],
+      favoriteKeywordArrayNOT: [],
       msgDaysUnfollowUser: "",
       isLoading: true
     };
@@ -196,17 +200,42 @@ export default {
         })
         .then(res => {
           this.setting = res.data[0];
+          // ターゲットアカウント
           res.data[0].target_accounts !== ""
             ? (this.targetAccountArray = res.data[0].target_accounts.split(","))
             : (this.targetAccountArray = []);
-          res.data[0].keyword_follow !== ""
-            ? (this.followKeywordArray = res.data[0].keyword_follow.split(","))
-            : (this.followKeywordArray = []);
-          res.data[0].keyword_favorite !== ""
-            ? (this.favoriteKeywordArray = res.data[0].keyword_favorite.split(
+          // フォローキーワード
+          res.data[0].keyword_follow_and !== ""
+            ? (this.followKeywordArrayAND = res.data[0].keyword_follow_and.split(
                 ","
               ))
-            : (this.favoriteKeywordArray = []);
+            : (this.followKeywordArrayAND = []);
+          res.data[0].keyword_follow_or !== ""
+            ? (this.followKeywordArrayOR = res.data[0].keyword_follow_or.split(
+                ","
+              ))
+            : (this.followKeywordArrayOR = []);
+          res.data[0].keyword_follow_not !== ""
+            ? (this.followKeywordArrayNOT = res.data[0].keyword_follow_not.split(
+                ","
+              ))
+            : (this.followKeywordArrayNOT = []);
+          // いいねキーワード
+          res.data[0].keyword_favorite_and !== ""
+            ? (this.favoriteKeywordArrayAND = res.data[0].keyword_favorite_and.split(
+                ","
+              ))
+            : (this.favoriteKeywordArrayAND = []);
+          res.data[0].keyword_favorite_or !== ""
+            ? (this.favoriteKeywordArrayOR = res.data[0].keyword_favorite_or.split(
+                ","
+              ))
+            : (this.favoriteKeywordArrayOR = []);
+          res.data[0].keyword_favorite_not !== ""
+            ? (this.favoriteKeywordArrayNOT = res.data[0].keyword_favorite_not.split(
+                ","
+              ))
+            : (this.favoriteKeywordArrayNOT = []);
           this.isLoading = false;
         })
         .catch(error => {
@@ -244,8 +273,12 @@ export default {
           num_user_start_unfollow: this.setting.num_user_start_unfollow,
           bool_unfollow_inactive: this.setting.bool_unfollow_inactive,
           account_id: this.setting.account_id,
-          keyword_follow: this.followKeywordArray.join(","),
-          keyword_favorite: this.favoriteKeywordArray.join(","),
+          keyword_follow_and: this.followKeywordArrayAND.join(","),
+          keyword_follow_or: this.followKeywordArrayOR.join(","),
+          keyword_follow_not: this.followKeywordArrayNOT.join(","),
+          keyword_favorite_and: this.favoriteKeywordArrayAND.join(","),
+          keyword_favorite_or: this.favoriteKeywordArrayOR.join(","),
+          keyword_favorite_not: this.favoriteKeywordArrayNOT.join(","),
           target_accounts: this.targetAccountArray.join(",")
         })
         .then(res => {
@@ -304,16 +337,38 @@ export default {
                   ","
                 ))
               : (this.targetAccountArray = []);
-            res.data[0].keyword_follow !== ""
-              ? (this.followKeywordArray = res.data[0].keyword_follow.split(
+            // フォローキーワード
+            res.data[0].keyword_follow_and !== ""
+              ? (this.followKeywordArrayAND = res.data[0].keyword_follow_and.split(
                   ","
                 ))
-              : (this.followKeywordArray = []);
-            res.data[0].keyword_favorite !== ""
-              ? (this.favoriteKeywordArray = res.data[0].keyword_favorite.split(
+              : (this.followKeywordArrayAND = []);
+            res.data[0].keyword_follow_or !== ""
+              ? (this.followKeywordArrayOR = res.data[0].keyword_follow_or.split(
                   ","
                 ))
-              : (this.favoriteKeywordArray = []);
+              : (this.followKeywordArrayOR = []);
+            res.data[0].keyword_follow_not !== ""
+              ? (this.followKeywordArrayNOT = res.data[0].keyword_follow_not.split(
+                  ","
+                ))
+              : (this.followKeywordArrayNOT = []);
+            // いいねキーワード
+            res.data[0].keyword_favorite_and !== ""
+              ? (this.favoriteKeywordArrayAND = res.data[0].keyword_favorite_and.split(
+                  ","
+                ))
+              : (this.favoriteKeywordArrayAND = []);
+            res.data[0].keyword_favorite_or !== ""
+              ? (this.favoriteKeywordArrayOR = res.data[0].keyword_favorite_or.split(
+                  ","
+                ))
+              : (this.favoriteKeywordArrayOR = []);
+            res.data[0].keyword_favorite_not !== ""
+              ? (this.favoriteKeywordArrayNOT = res.data[0].keyword_favorite_not.split(
+                  ","
+                ))
+              : (this.favoriteKeywordArrayNOT = []);
             this.isLoading = false;
           })
           .catch(error => {

@@ -11,6 +11,7 @@ use App\OperationStatus;
 use App\Services\TwitterAuth;
 use App\Services\TwitterAccount;
 use \Exception;
+use App\Services\KeywordOperatorAnalyzer;
 
 // アカウント情報に関連する操作を行う
 class AccountController extends Controller
@@ -68,8 +69,8 @@ class AccountController extends Controller
                 $msg = '';
                 if (count($account) > 0) {
                     $msg = 'すでに登録されたアカウントです。';
-                }else{
-                    $msg = 'Twitterアカウントの登録に成功しました。自動化するためには「設定」を行いましょう！';                    
+                } else {
+                    $msg = 'Twitterアカウントの登録に成功しました。自動化するためには「設定」を行いましょう！';
                 }
 
                 // accounts：アカウント情報管理用。行がなければINSERT。行があればUPDATE（アクセストークン切れ等の場合更新が必要だから）
@@ -127,7 +128,23 @@ class AccountController extends Controller
         try {
             $account_id = $request['account_id'];
             $setting = Auth::user()->accounts()->find($account_id)->accountSetting()->get();
-    
+            $setting = $setting->toArray();
+
+            $follow_str_and = '';
+            $follow_str_or = '';
+            $follow_str_not = '';
+            $favorite_str_and = '';
+            $favorite_str_or = '';
+            $favorite_str_not = '';
+            KeywordOperatorAnalyzer::operatorStrToCSV($setting[0]['keyword_follow'], $follow_str_and, $follow_str_or, $follow_str_not);
+            KeywordOperatorAnalyzer::operatorStrToCSV($setting[0]['keyword_favorite'], $favorite_str_and, $favorite_str_or, $favorite_str_not);
+            // DBに保存してある文字列を、AND/OR/NOTに分割
+            $setting[0]['keyword_follow_and'] = $follow_str_and;
+            $setting[0]['keyword_follow_or'] = $follow_str_or;
+            $setting[0]['keyword_follow_not'] =$follow_str_not;
+            $setting[0]['keyword_favorite_and'] = $favorite_str_and;
+            $setting[0]['keyword_favorite_or'] = $favorite_str_or;
+            $setting[0]['keyword_favorite_not'] = $favorite_str_not;
             return response()->json($setting);
         } catch (Exception $e) {
             logger()->error($e);
@@ -143,13 +160,37 @@ class AccountController extends Controller
             if (empty($request['target_accounts'])) {
                 $request['target_accounts'] = '';
             }
-            if (empty($request['keyword_follow'])) {
-                $request['keyword_follow'] = '';
+            // フォローキーワード
+            // if (empty($request['keyword_follow'])) {
+            //     $request['keyword_follow'] = '';
+            // }
+            if (empty($request['keyword_follow_and'])) {
+                $request['keyword_follow_and'] = '';
             }
-            if (empty($request['keyword_favorite'])) {
-                $request['keyword_favorite'] = '';
+            if (empty($request['keyword_follow_or'])) {
+                $request['keyword_follow_or'] = '';
             }
-    
+            if (empty($request['keyword_follow_not'])) {
+                $request['keyword_follow_not'] = '';
+            }
+            // いいねキーワード
+            // if (empty($request['keyword_favorite'])) {
+            //     $request['keyword_favorite'] = '';
+            // }
+            if (empty($request['keyword_favorite_and'])) {
+                $request['keyword_favorite_and'] = '';
+            }
+            if (empty($request['keyword_favorite_or'])) {
+                $request['keyword_favorite_or'] = '';
+            }
+            if (empty($request['keyword_favorite_not'])) {
+                $request['keyword_favorite_not'] = '';
+            }
+
+            // TwitterAPIが解釈可能な演算子形式に変換
+            $request['keyword_follow'] = KeywordOperatorAnalyzer::csvToOperatorStr($request['keyword_follow_and'], $request['keyword_follow_or'], $request['keyword_follow_not']);
+            $request['keyword_favorite'] = KeywordOperatorAnalyzer::csvToOperatorStr($request['keyword_favorite_and'], $request['keyword_favorite_or'], $request['keyword_favorite_not']);
+                
             $setting = Auth::user()->accountAccountSetting()->find($request['account_setting_id']);
             return response()->json($setting->fill($request->all())->save());
         } catch (Exception $e) {
