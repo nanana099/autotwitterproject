@@ -54,7 +54,7 @@ class KeywordOperatorAnalyzer
     }
 
     // 「A B (C OR D OR E) -F -G」を「A,B」「C,D,E」「F,G」に分ける
-    public static function operatorStrToCSV($str,&$andStr,&$orStr,&$notStr)
+    public static function operatorStrToCSV($str, &$andStr, &$orStr, &$notStr)
     {
         // not文字列作成
         $notStr = self::SeparateByNotOperator($str, false);

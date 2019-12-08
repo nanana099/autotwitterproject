@@ -87,7 +87,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
                                 // ターゲットアカウントのフォロワー取得（最大200件ごと）
                                 $response = $twitterAccount->getFollowerList($targetAccount, $prevTargetAccountCursor);
                                 $targetAccountFollowers = array_merge($targetAccountFollowers, empty($response['users']) ? [] : $response['users']);
-
+                                
                                 // フォローするアカウントを抽出
                                 $followUsers = $this->getFollowUsers($targetAccountFollowers, $followedUsers, $unfollowedUsers, $keywords);
 
@@ -187,35 +187,44 @@ class FollowExecutor implements ITwitterFunctionExecutor
         }
         return $resultList;
     }
-
+  
     // $target:検査対象の文字列
     // $keyword:ユーザーが指定したキーワード
     public static function match($target, $keyword)
     {
-        $a = KeywordOperatorAnalyzer::ReplaceStrORToPipe($keyword);
-        $b = KeywordOperatorAnalyzer::SeparateByNotOperator($a, true);
-        $c = KeywordOperatorAnalyzer::SeparateByNotOperator($a, false);
-        $match = KeywordOperatorAnalyzer::StrToArrayBySpace($b);
-        $notMatch = KeywordOperatorAnalyzer::StrToArrayBySpace($c);
+        $notStr = '';
+        $orStr = '';
+        $andStr = '';
+        KeywordOperatorAnalyzer::operatorStrToCSV($keyword, $andStr, $orStr, $notStr);
+        $andAry = empty($andStr)? [] :explode(',', $andStr);
+        $orAry = empty($orStr)? [] :explode(',', $orStr);
+        $notAry = empty($notStr)? [] :explode(',', $notStr);
 
-        foreach ($notMatch as $str) {
+        foreach ($notAry as $str) {
             if (preg_match("/".$str."/u", $target)) {
+                // １件でも引っかかったらfalse
                 return false;
             }
         }
 
-        $x = true;
-        foreach ($match as $str) {
+        foreach ($andAry as $str) {
             if (preg_match("/".$str."/u", $target)) {
-            }else{
-                $x = false;
+            } else {
+                // １件でも引っかからない場合はfalse
+                return false;
             }
         }
 
-        if($x){
+        if(count($orAry) === 0){
             return true;
-        }else{
-            return false;
         }
+
+        foreach ($orAry as $str) {
+            if (preg_match("/".$str."/u", $target)) {
+                // １件でも引っかかればtrue
+                return true;
+            }
+        }
+        return false;
     }
 }
