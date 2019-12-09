@@ -130,7 +130,19 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                     // すべてのターゲットアカウントに対する処理が終了した場合
                     $operationStatus->fill(array( 'is_unfollow' => 0,
                     'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
-                    MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_UNFOLLOW_COMPLATED);
+
+                    $count = self::getUnfollowedCount($account->id);
+
+                    $mailMsg = <<< EOM
+%s
+
+なお、現在の累計アンフォロー件数は%d件です。
+
+※設定内容やアンフォロー機能のタイミング次第では、アンフォローを行わない場合もございますのでご了承ください。
+例：「設定」画面にて、「フォローしてから「7」日間フォローが返ってこない場合にアンフォローする 」とご指定の場合で、フォローから7日経過していない場合など                 
+EOM;
+                    $mailMsg = sprintf($mailMsg, $twitterAccount->getScreenName(), $count);
+                    MailSender::send($user->name, $mailMsg, $user->email, MailSender::EMAIL_UNFOLLOW_COMPLATED);
                 } catch (TwitterRestrictionException $e) {
                     // APIの回数制限
                     // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
@@ -146,7 +158,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                     'is_flozen'=>1,
                     'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
                     MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
-                } 
+                }
             } catch (Exception $e) {
                 // どんな例外があっても次のアカウントの処理をするために、ここでExceptionをキャッチする
                 logger()->error($e);
@@ -154,6 +166,16 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
         }
 
         logger()->info('UnfollowExecutor：execute-end');
+    }
+
+    private function getUnfollowedCount($account_id)
+    {
+        $count = 0;
+        $count = DB::table('unfollowed_users')
+                    ->select(DB::raw('count(*) count'))
+                    ->where('account_id', '=', $account_id)
+                    ->get()[0]->count;
+        return $count;
     }
 
     // アンフォローするアカウントを取得する
