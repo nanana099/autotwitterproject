@@ -4,12 +4,14 @@ namespace App\Services;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
 use App\Exceptions\TwitterException;
+use App\Exceptions\TwitterAuthExipiredException;
 
 // TwitterAPIレスポンスのエラーを見つけて、例外を発生するためのクラス
 class TwitterAPIErrorChecker
 {
     private const ACCOUNT_SUSPENDED = 64;       // アカウントが凍結された
     private const RATE_LIMIT_EXCEEDED = 88;     // TwitterAPIのリクエスト制限が上限に達した
+    private const AUTH_EXIPIRED = 89;     // TwitterAPIのリクエスト制限が上限に達した
     private const CANT_FOLLOW_TEMPORARY = 161;      // 一時的にフォロー不可
     private const OVER_CAPACITY = 130;          // Twitterが高負荷状態
     private const FLOZEN = 326;          // 凍結中アカウント
@@ -40,7 +42,10 @@ class TwitterAPIErrorChecker
                 case self::FLOZEN:
                     throw new TwitterFlozenException($errorCode);
                     break;
-                default :
+                case self::AUTH_EXIPIRED:
+                    throw new TwitterAuthExipiredException($errorCode);
+                    break;            
+                default:
                     throw new TwitterException($errorCode);// その他例外
                     break;
             }

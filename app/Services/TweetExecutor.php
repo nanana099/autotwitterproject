@@ -8,6 +8,7 @@ use App\ReservedTweet;
 use App\OperationStatus;
 use App\Exceptions\TwitterFlozenException;
 use App\Exceptions\TwitterRestrictionException;
+use App\Exceptions\TwitterAuthExipiredException;
 
 // 自動ツイート実行クラス
 class TweetExecutor implements ITwitterFunctionExecutor
@@ -100,6 +101,19 @@ class TweetExecutor implements ITwitterFunctionExecutor
                     // アカウントを所持するユーザー
                     $user = $accountFromDB->user()->get()[0];
                     MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
+                }catch (TwitterAuthExipiredException $e) {
+                    $skipAccountId = $tweet->account_id;
+                    OperationStatus::where('account_id', $tweet->account_id)->first()->fill(array(
+                'is_follow' => 0,
+                'is_unfollow' => 0,
+                'is_favorite' => 0,
+                'is_flozen'=>1,
+                'tweet_stopped_at' => date('Y/m/d H:i:s')))->save();
+
+                    $accountFromDB = Account::find($tweet->account_id);
+                    // アカウントを所持するユーザー
+                    $user = $accountFromDB->user()->get()[0];
+                    MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::AUTH_EXIPIRED);
                 }
             } catch (Exception $e) {
                 logger()->error($e);

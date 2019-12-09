@@ -7,6 +7,7 @@ use App\Account;
 use App\OperationStatus;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
+use App\Exceptions\TwitterAuthExipiredException;
 
 // 自動いいね実行クラス
 class FavoriteExecutor implements ITwitterFunctionExecutor
@@ -88,6 +89,18 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                     // アカウントを所持するユーザー
                     $user = $accountFromDB->user()->get()[0];
                     MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
+                }catch (TwitterAuthExipiredException $e) {
+                    OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                    'is_follow' => 0,
+                    'is_unfollow' => 0,
+                    'is_favorite' => 0,
+                    'is_flozen'=>1,
+                    'favorite_stopped_at' => date('Y/m/d H:i:s')))->save();
+                    // メール送信
+                    $accountFromDB = Account::find($account->id);
+                    // アカウントを所持するユーザー
+                    $user = $accountFromDB->user()->get()[0];
+                    MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::AUTH_EXIPIRED);
                 }
             } catch (Exception $e) {
                 logger()->error($e);

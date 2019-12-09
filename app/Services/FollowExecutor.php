@@ -9,6 +9,7 @@ use App\Account;
 use App\FollowedUser;
 use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
+use App\Exceptions\TwitterAuthExipiredException;
 
 // 自動フォロー実行クラス
 class FollowExecutor implements ITwitterFunctionExecutor
@@ -134,6 +135,14 @@ class FollowExecutor implements ITwitterFunctionExecutor
                                             'follow_stopped_at' => date('Y/m/d H:i:s')
                                                 ))->save();
                     MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
+                }catch (TwitterAuthExipiredException $e) {
+                    $operationStatus->fill(array('is_follow' => 0,
+                                            'is_unfollow' => 0,
+                                            'is_favorite' => 0,
+                                            'is_flozen'=>1,
+                                            'follow_stopped_at' => date('Y/m/d H:i:s')
+                                                ))->save();
+                    MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::AUTH_EXIPIRED);
                 }
             } catch (Exception $e) {
                 // どんな例外があっても、次のアカウントの処理をするため、ここでExceptinをキャッチする

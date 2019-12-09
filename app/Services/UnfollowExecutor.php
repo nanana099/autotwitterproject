@@ -10,6 +10,7 @@ use App\OperationStatus;
 use App\UnfollowedUser;
 use App\Exceptions\TwitterFlozenException;
 use App\Exceptions\TwitterRestrictionException;
+use App\Exceptions\TwitterAuthExipiredException;
 
 // 自動アンフォロー実行クラス
 class UnfollowExecutor implements ITwitterFunctionExecutor
@@ -71,6 +72,19 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 // アカウントを所持するユーザー
                 $user = $accountFromDB->user()->get()[0];
                 MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
+                unset($this->accounts[$key]); //処理対象から外す
+            }  catch (TwitterAuthExipiredException $e) {
+                OperationStatus::where('account_id', $account->id)->first()->fill(array(
+                'is_follow' => 0,
+                'is_unfollow' => 0,
+                'is_favorite' => 0,
+                'is_flozen'=>1,
+                'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
+
+                $accountFromDB = Account::find($account->id);
+                // アカウントを所持するユーザー
+                $user = $accountFromDB->user()->get()[0];
+                MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::AUTH_EXIPIRED);
                 unset($this->accounts[$key]); //処理対象から外す
             } catch (Exception $e) {
                 // その他例外
@@ -158,6 +172,16 @@ EOM;
                     'is_flozen'=>1,
                     'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
                     MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
+                }catch (TwitterAuthExipiredException $e) {
+                    // 凍結
+                    // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
+                    // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
+                    $operationStatus->fill(array('is_follow' => 0,
+                    'is_unfollow' => 0,
+                    'is_favorite' => 0,
+                    'is_flozen'=>1,
+                    'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
+                    MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::AUTH_EXIPIRED);
                 }
             } catch (Exception $e) {
                 // どんな例外があっても次のアカウントの処理をするために、ここでExceptionをキャッチする
