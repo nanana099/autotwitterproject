@@ -73,6 +73,11 @@ class TweetExecutor implements ITwitterFunctionExecutor
                 try {
                     $this->postTweet($twitterAccount, $tweet);
                     $this->deleteTweetOnDB($tweet->id);
+
+                    $accountFromDB = Account::find($tweet->account_id);
+                    // アカウントを所持するユーザー
+                    $user = $accountFromDB->user()->get()[0];
+                    MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_TWEET_COMPLATED);
                 } catch (TwitterRestrictionException $e) {
                     // API制限のエラー
                     $skipAccountId = $tweet->account_id;
