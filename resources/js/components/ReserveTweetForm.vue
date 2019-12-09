@@ -48,8 +48,6 @@ export default {
         .date(date.date())
         .hour(date.hour())
         .minute(date.minute());
-      console.log("atoe");
-      console.log(this.requestDate);
 
       // this.requestDate = moment(this.tweet.submit_date).format(
       //   "YYYY-MM-DD HH:mm:ss"

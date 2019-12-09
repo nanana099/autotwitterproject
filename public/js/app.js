@@ -2711,13 +2711,9 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
   },
   mounted: function mounted() {
-    console.log(this.value.format("YYYY-MM-DD HH:mm:ss"));
     this.year = this.value.year();
     this.month = this.value.month() + 1;
     this.date = this.value.date();
-    console.log("hoge");
-    console.log(this.value.hour());
-    console.log(this.value.minute());
     this.hour = this.value.hour();
     this.minute = this.value.minute();
   },
@@ -2825,9 +2821,7 @@ __webpack_require__.r(__webpack_exports__);
       // 予約済みツイート
       this.content = this.tweet.content;
       var date = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.tweet.submit_date);
-      this.requestDate.year(date.year()).month(date.month()).date(date.date()).hour(date.hour()).minute(date.minute());
-      console.log("atoe");
-      console.log(this.requestDate); // this.requestDate = moment(this.tweet.submit_date).format(
+      this.requestDate.year(date.year()).month(date.month()).date(date.date()).hour(date.hour()).minute(date.minute()); // this.requestDate = moment(this.tweet.submit_date).format(
       //   "YYYY-MM-DD HH:mm:ss"
       // );
 

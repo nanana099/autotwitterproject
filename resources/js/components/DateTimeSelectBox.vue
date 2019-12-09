@@ -133,13 +133,9 @@ export default {
     };
   },
   mounted: function() {
-    console.log(this.value.format("YYYY-MM-DD HH:mm:ss"));
     this.year = this.value.year();
     this.month = this.value.month() + 1;
     this.date = this.value.date() ;
-    console.log("hoge");
-    console.log(this.value.hour());
-    console.log(this.value.minute());
     this.hour = this.value.hour();
     this.minute = this.value.minute();
   },
