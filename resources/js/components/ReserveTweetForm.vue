@@ -5,7 +5,8 @@
     <div class="c-justify-content-between mb-2 c-align-item-start">
       <div class="c-justify-content-start">
         <label>投稿予定日時：</label>
-        <input type="datetime-local" v-model="requestDate" :min="start" :max="end" />
+        <datetime-select-box v-model="requestDate"></datetime-select-box>
+        <!-- <input type="datetime-local" v-model="requestDate" :min="start" :max="end" /> -->
         <span class="c-invalid-feedback">{{errorMsgDatetime}}</span>
       </div>
       <span class="p-tweet-form__count">
@@ -22,28 +23,44 @@
 <script>
 import moment from "moment";
 
+import DateTimeSelectBox from "./DateTimeSelectBox";
 export default {
+  props: ["tweet"],
+  components: {
+    "datetime-select-box": DateTimeSelectBox
+  },
   data: function() {
     return {
       content: "",
-      requestDate: "",
+      requestDate: moment(),
       id: "",
       errorMsgDatetime: ""
     };
   },
-  mounted: function() {
+  beforeMount: function() {
     if (this.tweet) {
       // 予約済みツイート
       this.content = this.tweet.content;
-      this.requestDate = moment(this.tweet.submit_date).format(
-        "YYYY-MM-DDTHH:mm"
-      );
+      let date = moment(this.tweet.submit_date);
+      this.requestDate
+        .year(date.year())
+        .month(date.month())
+        .date(date.date())
+        .hour(date.hour())
+        .minute(date.minute());
+      console.log("atoe");
+      console.log(this.requestDate);
+
+      // this.requestDate = moment(this.tweet.submit_date).format(
+      //   "YYYY-MM-DD HH:mm:ss"
+      // );
       this.id = this.tweet.id;
     } else {
       // 新規
-      this.requestDate = moment()
-        .add(1, "days")
-        .format("YYYY-MM-DDTHH:mm");
+      this.requestDate.add(1, "days");
+      // this.requestDate = moment()
+      //   .add(1, "days")
+      //   .format("YYYY-MM-DD HH:mm:ss");
     }
   },
   methods: {
@@ -55,14 +72,14 @@ export default {
       axios
         .post("/account/tweet", {
           content: this.content,
-          submit_date: this.requestDate,
+          submit_date: this.requestDate.format("YYYY-MM-DD HH:mm"),
           account_id: localStorage.selectedId,
           reserved_tweet_id: this.id
         })
         .then(res => {
           // 成功
           let content = this.content;
-          let submit_date = moment(this.requestDate).format("YYYY-MM-DD HH:mm");
+          let submit_date = this.requestDate.format("YYYY-MM-DD HH:mm");
 
           // フォームの表示をクリア
           this.formInit();
@@ -95,8 +112,7 @@ export default {
       // フォームの表示をクリア
       this.content = "";
       this.requestDate = moment()
-        .add(1, "days")
-        .format("YYYY-MM-DDTHH:mm");
+        .add(1, "days");
     },
     validTweet: function() {
       // 日付日時
@@ -104,7 +120,7 @@ export default {
         this.errorMsgDatetime = "日時の入力は必須です";
         return false;
       }
-      if (moment(this.requestDate).isBefore(moment())) {
+      if ((this.requestDate).isBefore(moment())) {
         this.errorMsgDatetime = "現在日時よりも後の日時を入力してください";
         return false;
       }
@@ -138,7 +154,6 @@ export default {
       // 文字数用
       return this.content.length > 140;
     }
-  },
-  props: ["tweet"]
+  }
 };
 </script>
