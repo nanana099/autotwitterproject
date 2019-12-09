@@ -293,6 +293,8 @@ select {
   padding: 5px 15px;
   background: #ffffff;
   color: #000000;
+  border: 1px solid #acacac;
+  box-sizing: border-box;
   font-size: 1.2rem;
   cursor: pointer;
 }
