@@ -53,12 +53,20 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                     foreach ($keywords as $keyword) {
                         // つぶやきを検索
                         $tweets = $twitterAccount->searchTweets($keyword)['statuses'];
-
                         foreach ($tweets as $tweet) {
                             // いいね実行
                             $result = $twitterAccount->favorite($tweet->id_str);
                         }
                     }
+                    
+                    $accountFromDB = Account::find($account->id);
+                    // アカウントを所持するユーザー
+                    $user = $accountFromDB->user()->get()[0];
+                    // すべてのターゲットアカウントに対する処理が終了した場合
+                    OperationStatus::where('account_id', $account->id)->first()->fill(array('is_favorite' => 0,
+                                                                                'favorite_stopped_at' => date('Y/m/d H:i:s')
+                                                                                ))->save();
+                    MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FAVORITE_COMPLATED);
                 } catch (TwitterRestrictionException $e) {
                     // API制限
                     // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録

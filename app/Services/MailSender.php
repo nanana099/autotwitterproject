@@ -13,11 +13,13 @@ class MailSender
     public const EMAIL_FLOZEN = 0;
     public const EMAIL_FOLLOW_COMPLATED = 1;
     public const EMAIL_UNFOLLOW_COMPLATED = 2;
+    public const EMAIL_FAVORITE_COMPLATED = 3;
     public const EMAIL_TWEET_COMPLATED = 4;
 
     private const EMAIL_FLOZEN_SUBJECT = 'アカウントが凍結されました';
     private const EMAIL_FOLLOW_COMPLATED_SUBJECT = '自動フォローが完了しました';
     private const EMAIL_UNFOLLOW_COMPLATED_SUBJECT = '自動アンフォローが完了しました';
+    private const EMAIL_FAVORITE_COMPLATED_SUBJECT = '自動いいねが完了しました';
     private const EMAIL_TWEET_COMPLATED_SUBJECT = 'ツイートを投稿しました。';
 
     private const EMAIL_USERNAME = '%s 様';
@@ -50,15 +52,26 @@ EOM;
 
 EOM;
 
-    private const EMAIL_UNFOLLOW_COMPLATED_COTENT = <<< EOM
+private const EMAIL_UNFOLLOW_COMPLATED_COTENT = <<< EOM
 
-    
+
 いつもご利用いただきありがとうございます。
 
 以下のTwitterアカウントの自動アンフォローが完了しました。
 ・@%s
 
 EOM;
+
+private const EMAIL_FAVORITE_COMPLATED_COTENT = <<< EOM
+
+    
+いつもご利用いただきありがとうございます。
+
+以下のTwitterアカウントの自動いいねが完了しました。
+・@%s
+
+EOM;
+
     private const EMAIL_TWEET_COMPLATED_COTENT = <<< EOM
 
 
@@ -81,7 +94,11 @@ EOM;
                 $subject = self::EMAIL_UNFOLLOW_COMPLATED_SUBJECT;
                 $content .= sprintf(self::EMAIL_UNFOLLOW_COMPLATED_COTENT, $accountName);
             break;
-            case  self::EMAIL_TWEET_COMPLATED:// アンフォロー完了
+            case  self::EMAIL_FAVORITE_COMPLATED:// いいね完了
+                $subject = self::EMAIL_FAVORITE_COMPLATED_SUBJECT;
+                $content .= sprintf(self::EMAIL_FAVORITE_COMPLATED_COTENT, $accountName);
+            break;
+            case  self::EMAIL_TWEET_COMPLATED:// ツイート完了
                 $subject = self::EMAIL_TWEET_COMPLATED_SUBJECT;
                 $content .= sprintf(self::EMAIL_TWEET_COMPLATED_COTENT, $accountName);
             break;

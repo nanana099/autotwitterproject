@@ -202,7 +202,7 @@ class TwitterAccount
     }
 
     // 指定のキーワードでツイートを検索する
-    public function searchTweets(string $word, int $count = 15)
+    public function searchTweets(string $word, int $count = 25)
     {
         $resourceName = "search/tweets";
         $this->log($resourceName, $word);
