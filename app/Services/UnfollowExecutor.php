@@ -45,7 +45,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
             // Twitterアカウントのインスタンス作成
             $twitterAccount = new TwitterAccount($account->access_token);
             try {
-                if ($twitterAccount->getMyFollowersCount() <= 5000) {
+                if ($twitterAccount->getMyFollowCount() <= 5000) {
                     if (!$account->is_unfollow) {
                         // 対象から外す
                         unset($this->accounts[$key]);

@@ -52,6 +52,17 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
 
                 try {
                     foreach ($keywords as $keyword) {
+                        $notStr = '';
+                        $orStr = '';
+                        $andStr = '';
+                        KeywordOperatorAnalyzer::operatorStrToCSV($keyword, $andStr, $orStr, $notStr);
+                        $andAry = empty($andStr)? [] :explode(',', $andStr);
+                        $orAry = empty($orStr)? [] :explode(',', $orStr);
+                        $notAry = empty($notStr)? [] :explode(',', $notStr);
+                        if(count($andAry) === 0 && count($orAry) === 0){
+                            break;
+                        }
+
                         // つぶやきを検索
                         $tweets = $twitterAccount->searchTweets($keyword)['statuses'];
                         foreach ($tweets as $tweet) {
@@ -89,7 +100,7 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                     // アカウントを所持するユーザー
                     $user = $accountFromDB->user()->get()[0];
                     MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
-                }catch (TwitterAuthExipiredException $e) {
+                } catch (TwitterAuthExipiredException $e) {
                     OperationStatus::where('account_id', $account->id)->first()->fill(array(
                     'is_follow' => 0,
                     'is_unfollow' => 0,

@@ -144,8 +144,8 @@ class TwitterAccount
         return $result;
     }
 
-    // 自アカウントのフォロワー数を取得する
-    public function getMyFollowersCount()
+    // 自アカウントのフォロー数を取得する
+    public function getMyFollowCount()
     {
         $resourceName =   "users/show";
         $this->log($resourceName);
@@ -159,7 +159,7 @@ class TwitterAccount
         ));
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
-        return $result['followers_count'];
+        return $result['friends_count'];
     }
 
     // 指定のツイートを「いいね」をする
