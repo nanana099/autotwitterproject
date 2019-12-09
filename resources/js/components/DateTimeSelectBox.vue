@@ -133,13 +133,16 @@ export default {
     };
   },
   mounted: function() {
-    this.year = this.value.year();
-    this.month = this.value.month() + 1;
-    this.date = this.value.date() ;
-    this.hour = this.value.hour();
-    this.minute = this.value.minute();
+    this.init();
   },
   methods: {
+    init: function() {
+      this.year = this.value.year();
+      this.month = this.value.month() + 1;
+      this.date = this.value.date();
+      this.hour = this.value.hour();
+      this.minute = this.value.minute();
+    },
     getYears: function() {
       const currentYear = moment().year();
       const nextYear = currentYear + 1;
@@ -168,6 +171,6 @@ export default {
         .endOf("month")
         .date();
     }
-  },
+  }
 };
 </script>

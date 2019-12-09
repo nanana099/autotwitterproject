@@ -2711,13 +2711,16 @@ function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
     };
   },
   mounted: function mounted() {
-    this.year = this.value.year();
-    this.month = this.value.month() + 1;
-    this.date = this.value.date();
-    this.hour = this.value.hour();
-    this.minute = this.value.minute();
+    this.init();
   },
   methods: {
+    init: function init() {
+      this.year = this.value.year();
+      this.month = this.value.month() + 1;
+      this.date = this.value.date();
+      this.hour = this.value.hour();
+      this.minute = this.value.minute();
+    },
     getYears: function getYears() {
       var currentYear = moment__WEBPACK_IMPORTED_MODULE_8___default()().year();
       var nextYear = currentYear + 1;
@@ -2878,6 +2881,7 @@ __webpack_require__.r(__webpack_exports__);
       this.content = "";
       var date = moment__WEBPACK_IMPORTED_MODULE_0___default()();
       this.requestDate.year(date.year()).month(date.month()).date(date.date() + 1).hour(date.hour()).minute(date.minute());
+      this.$refs.datetimeSelectBox.init();
     },
     validTweet: function validTweet() {
       // 日付日時
@@ -62117,6 +62121,7 @@ var render = function() {
               _c("label", [_vm._v("投稿予定日時：")]),
               _vm._v(" "),
               _c("datetime-select-box", {
+                ref: "datetimeSelectBox",
                 model: {
                   value: _vm.requestDate,
                   callback: function($$v) {

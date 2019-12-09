@@ -5,7 +5,7 @@
     <div class="c-justify-content-between mb-2 c-align-item-start">
       <div class="c-justify-content-start">
         <label>投稿予定日時：</label>
-        <datetime-select-box v-model="requestDate"></datetime-select-box>
+        <datetime-select-box v-model="requestDate" ref="datetimeSelectBox"></datetime-select-box>
         <!-- <input type="datetime-local" v-model="requestDate" :min="start" :max="end" /> -->
         <span class="c-invalid-feedback">{{errorMsgDatetime}}</span>
       </div>
@@ -116,6 +116,7 @@ export default {
         .date(date.date() + 1)
         .hour(date.hour())
         .minute(date.minute());
+      this.$refs.datetimeSelectBox.init();
     },
     validTweet: function() {
       // 日付日時
