@@ -2876,7 +2876,8 @@ __webpack_require__.r(__webpack_exports__);
     formInit: function formInit() {
       // フォームの表示をクリア
       this.content = "";
-      this.requestDate = moment__WEBPACK_IMPORTED_MODULE_0___default()().add(1, "days");
+      var date = moment__WEBPACK_IMPORTED_MODULE_0___default()();
+      this.requestDate.year(date.year()).month(date.month()).date(date.date() + 1).hour(date.hour()).minute(date.minute());
     },
     validTweet: function validTweet() {
       // 日付日時

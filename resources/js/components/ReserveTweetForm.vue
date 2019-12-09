@@ -109,8 +109,13 @@ export default {
     formInit: function() {
       // フォームの表示をクリア
       this.content = "";
-      this.requestDate = moment()
-        .add(1, "days");
+      let date = moment();
+      this.requestDate
+        .year(date.year())
+        .month(date.month())
+        .date(date.date() + 1)
+        .hour(date.hour())
+        .minute(date.minute());
     },
     validTweet: function() {
       // 日付日時
@@ -118,7 +123,7 @@ export default {
         this.errorMsgDatetime = "日時の入力は必須です";
         return false;
       }
-      if ((this.requestDate).isBefore(moment())) {
+      if (this.requestDate.isBefore(moment())) {
         this.errorMsgDatetime = "現在日時よりも後の日時を入力してください";
         return false;
       }
