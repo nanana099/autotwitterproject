@@ -61972,7 +61972,7 @@ var render = function() {
       _c("label", { staticClass: "u-d-inline-blodk u-mr-1" }, [_vm._v(" ")])
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "u-d-inline-block" }, [
+    _c("div", { staticClass: "u-d-inline-block u-mb-1" }, [
       _c(
         "select",
         {

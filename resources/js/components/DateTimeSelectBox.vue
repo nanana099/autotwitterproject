@@ -22,7 +22,7 @@
       <label class="u-d-inline-blodk u-mr-1">&nbsp;</label>
     </div>
 
-    <div class="u-d-inline-block">
+    <div class="u-d-inline-block u-mb-1">
       <select name="hour" v-model="hour" v-on:change="modify" class="c-datetime-select-box__box2">
         <option v-for="hour in hours" name="hour" :value="hour" :key="hour">{{ hour }}</option>
       </select>

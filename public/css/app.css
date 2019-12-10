@@ -280,7 +280,7 @@ p {
 }
 
 .c-datetime-select-box {
-  padding: 5px;
+  padding: 5px 2px 0px 2px;
   background: #ffffff;
   border: 1px solid #eee;
   box-sizing: border-box;
