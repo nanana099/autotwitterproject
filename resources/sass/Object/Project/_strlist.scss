@@ -13,6 +13,7 @@
     &__select-box {
       box-sizing: border-box;
       width: 95%;
+      min-height: 90px;
   
       @include mq("md") {
         // width: 80%;
