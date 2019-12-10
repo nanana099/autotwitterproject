@@ -16,6 +16,7 @@ class MailSender
     public const EMAIL_FAVORITE_COMPLATED = 3;
     public const EMAIL_TWEET_COMPLATED = 4;
     public const AUTH_EXIPIRED = 5;
+    public const NOTICE_ERROR = 999;
 
     private const EMAIL_FLOZEN_SUBJECT = 'アカウントが凍結されました';
     private const EMAIL_FOLLOW_COMPLATED_SUBJECT = '自動フォローが完了しました';
@@ -23,6 +24,7 @@ class MailSender
     private const EMAIL_FAVORITE_COMPLATED_SUBJECT = '自動いいねが完了しました';
     private const EMAIL_TWEET_COMPLATED_SUBJECT = 'ツイートを投稿しました。';
     private const AUTH_EXIPIRED_SUBJECT = 'アカウントの連携が切断されました。';
+    private const NOTICE_ERROR_SUBJECT = 'TwitterAPIで例外';
 
     private const EMAIL_USERNAME = '%s 様';
 
@@ -100,6 +102,14 @@ EOM;
 
 EOM;
 
+
+    private const NOTICE_ERROR_COTENT = <<< EOM
+
+予期せぬ例外が発生しました。
+%s
+
+EOM;
+
     public static function send($userName, $accountName, $email, $pattern)
     {
         $content = sprintf(self::EMAIL_USERNAME, $userName);
@@ -128,6 +138,11 @@ EOM;
             case self::AUTH_EXIPIRED:// 凍結された
                 $subject = self::AUTH_EXIPIRED_SUBJECT;
                 $content .= sprintf(self::AUTH_EXIPIRED_COTENT, $accountName);
+                break;
+
+            case self::NOTICE_ERROR:// 予期せぬ例外
+                $subject = self::NOTICE_ERROR_SUBJECT;
+                $content .= sprintf(self::NOTICE_ERROR_COTENT, $accountName);
                 break;
         }
 

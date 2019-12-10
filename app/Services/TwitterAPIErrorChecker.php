@@ -5,6 +5,7 @@ use App\Exceptions\TwitterRestrictionException;
 use App\Exceptions\TwitterFlozenException;
 use App\Exceptions\TwitterException;
 use App\Exceptions\TwitterAuthExipiredException;
+use \Exception;
 
 // TwitterAPIレスポンスのエラーを見つけて、例外を発生するためのクラス
 class TwitterAPIErrorChecker
@@ -44,8 +45,12 @@ class TwitterAPIErrorChecker
                     break;
                 case self::AUTH_EXIPIRED:
                     throw new TwitterAuthExipiredException($errorCode);
-                    break;            
+                    break;
                 default:
+                    try {
+                        MailSender::send('ご担当者', 'error:'.$errorCode, env('OPERATOR_EMAIL'), MailSender::NOTICE_ERROR);
+                    } catch (Exception $e) {
+                    }
                     throw new TwitterException($errorCode);// その他例外
                     break;
             }
