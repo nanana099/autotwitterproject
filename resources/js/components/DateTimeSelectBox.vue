@@ -1,6 +1,6 @@
 <template>
-  <div class="c-datetime-select-box c-justify-content-start c-justify-content__wrap">
-    <div class="d-inline-block u-mb-1">
+  <div class="c-datetime-select-box">
+    <div class="u-d-inline-block u-mb-1">
       <select name="year" v-model="year" v-on:change="modify" class="c-datetime-select-box__box1">
         <option v-for="year in getYears()" name="year" :value="year" :key="year">{{ year }}</option>
       </select>
@@ -22,7 +22,7 @@
       <label class="u-d-inline-blodk u-mr-1">&nbsp;</label>
     </div>
 
-    <div class="d-inline-block">
+    <div class="u-d-inline-block">
       <select name="hour" v-model="hour" v-on:change="modify" class="c-datetime-select-box__box2">
         <option v-for="hour in hours" name="hour" :value="hour" :key="hour">{{ hour }}</option>
       </select>
