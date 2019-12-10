@@ -3,7 +3,7 @@
   <div>
     <textarea v-model="content" id class="p-tweet-form__textarea" placeholder="つぶやき内容" />
 
-    <div class="c-justify-content-between">
+    <div class="c-justify-content-between c-align-item-end u-mb-1">
       <label>投稿時刻：</label>
       <div class="p-tweet-form__count">
         <span :class="{'c-invalid-feedback':isOverContent}">{{count}}/140字</span>

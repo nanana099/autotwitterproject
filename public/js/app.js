@@ -62142,15 +62142,19 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _c("div", { staticClass: "c-justify-content-between" }, [
-        _c("label", [_vm._v("投稿時刻：")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "p-tweet-form__count" }, [
-          _c("span", { class: { "c-invalid-feedback": _vm.isOverContent } }, [
-            _vm._v(_vm._s(_vm.count) + "/140字")
+      _c(
+        "div",
+        { staticClass: "c-justify-content-between c-align-item-end u-mb-1" },
+        [
+          _c("label", [_vm._v("投稿時刻：")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "p-tweet-form__count" }, [
+            _c("span", { class: { "c-invalid-feedback": _vm.isOverContent } }, [
+              _vm._v(_vm._s(_vm.count) + "/140字")
+            ])
           ])
-        ])
-      ]),
+        ]
+      ),
       _vm._v(" "),
       _c("div", { staticClass: "c-justify-content-between u-mb-2" }, [
         _c(
