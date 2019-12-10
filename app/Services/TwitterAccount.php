@@ -118,6 +118,16 @@ class TwitterAccount
                 'user_id' => $user_id,
             )
         ));
+
+
+        if (!empty($result['errors'])) {
+            $errorCode = $result['errors'][0]->code;
+            // 鍵アカへ再度リクエストすると発生。無視
+            if ($errorCode === 160) {
+                return array();
+            }
+        }
+
         // エラーチェック
         TwitterAPIErrorChecker::check($result);
         return $result;
