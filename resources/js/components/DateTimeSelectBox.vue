@@ -1,4 +1,5 @@
 <template>
+  <!-- 年月日日時のセレクトボックス -->
   <div class="c-datetime-select-box">
     <div class="u-d-inline-block u-mb-1">
       <select name="year" v-model="year" v-on:change="modify" class="c-datetime-select-box__box1">
