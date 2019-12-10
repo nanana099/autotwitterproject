@@ -450,6 +450,10 @@ p {
   color: #dc4834;
 }
 
+.c-justify-content__wrap {
+  flex-wrap: wrap !important;
+}
+
 .c-justify-content-between {
   display: flex;
   align-items: flex-start;

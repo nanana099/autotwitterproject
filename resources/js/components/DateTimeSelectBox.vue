@@ -1,5 +1,5 @@
 <template>
-  <div class="c-datetime-select-box c-justify-content-start">
+  <div class="c-datetime-select-box c-justify-content-start c-justify-content__wrap">
     <div class="d-inline-block u-mb-1">
       <select name="year" v-model="year" v-on:change="modify" class="c-datetime-select-box__box1">
         <option v-for="year in getYears()" name="year" :value="year" :key="year">{{ year }}</option>

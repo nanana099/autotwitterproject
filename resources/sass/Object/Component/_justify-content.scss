@@ -1,4 +1,7 @@
 .c-justify-content {
+  &__wrap{
+    flex-wrap: wrap !important;
+  }
   &-between {
     display: flex;
     align-items: flex-start;
