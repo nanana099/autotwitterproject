@@ -1,29 +1,42 @@
 <template>
-  <div class="c-datetime-select-box">
-    <select name="year" v-model="year" v-on:change="modify" class="c-datetime-select-box__box1">
-      <option v-for="year in getYears()" name="year" :value="year" :key="year">{{ year }}</option>
-    </select>
-    <label>&#047;</label>
+  <div class="c-datetime-select-box c-justify-content-start">
+    <div class="d-inline-block u-mb-1">
+      <select name="year" v-model="year" v-on:change="modify" class="c-datetime-select-box__box1">
+        <option v-for="year in getYears()" name="year" :value="year" :key="year">{{ year }}</option>
+      </select>
+      <label>&#047;</label>
 
-    <select name="month" v-model="month" v-on:change="modify" class="c-datetime-select-box__box2">
-      <option v-for="month in months" name="month" :value="month" :key="month">{{ month }}</option>
-    </select>
-    <label>&#047;</label>
+      <select name="month" v-model="month" v-on:change="modify" class="c-datetime-select-box__box2">
+        <option v-for="month in months" name="month" :value="month" :key="month">{{ month }}</option>
+      </select>
+      <label>&#047;</label>
 
-    <select name="date" v-model="date" v-on:change="modify" class="c-datetime-select-box__box2">
-      <option v-for="date in getDates(year, month)" name="date" :value="date" :key="date">{{ date }}</option>
-    </select>
-    <label class="u-d-inline-blodk u-mr-1">&nbsp;</label>
+      <select name="date" v-model="date" v-on:change="modify" class="c-datetime-select-box__box2">
+        <option
+          v-for="date in getDates(year, month)"
+          name="date"
+          :value="date"
+          :key="date"
+        >{{ date }}</option>
+      </select>
+      <label class="u-d-inline-blodk u-mr-1">&nbsp;</label>
+    </div>
 
-    <select name="hour" v-model="hour" v-on:change="modify" class="c-datetime-select-box__box2">
-      <option v-for="hour in hours" name="hour" :value="hour" :key="hour">{{ hour }}</option>
-    </select>
-    <label>&#058;</label>
+    <div class="d-inline-block">
+      <select name="hour" v-model="hour" v-on:change="modify" class="c-datetime-select-box__box2">
+        <option v-for="hour in hours" name="hour" :value="hour" :key="hour">{{ hour }}</option>
+      </select>
+      <label>&#058;</label>
 
-    <select name="minute" v-model="minute" v-on:change="modify" class="c-datetime-select-box__box2">
-      <option v-for="minute in minutes" name="minute" :value="minute" :key="minute">{{ minute }}</option>
-    </select>
-    <label></label>
+      <select
+        name="minute"
+        v-model="minute"
+        v-on:change="modify"
+        class="c-datetime-select-box__box2"
+      >
+        <option v-for="minute in minutes" name="minute" :value="minute" :key="minute">{{ minute }}</option>
+      </select>
+    </div>
   </div>
 </template>
 
