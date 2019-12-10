@@ -23,9 +23,10 @@
         <div v-show="existsAccount">
           <fieldset class="c-form-fieldset">
             <legend>自動フォロー関連</legend>
-            <span class="u-fs-4">
-              <i class="fas fa-info-circle"></i>「ターゲットアカウント」のフォロワーのうち、「フォローキーワード」をプロフィールに含むアカウントを自動でフォローします。
-            </span>
+            <div class="c-justify-content-start u-fs-4">
+              <i class="fas fa-info-circle u-mr-1"></i>
+              <span>「ターゲットアカウント」のフォロワーのうち、「フォローキーワード」をプロフィールに含むアカウントを自動でフォローします。</span>
+            </div>
             <div class="c-form-group">
               <label for="email" class="c-form-group__label u-mb-2">
                 ・ターゲットアカウント
@@ -75,9 +76,10 @@
           </fieldset>
           <fieldset class="c-form-fieldset">
             <legend>自動アンフォロー関連</legend>
-            <span class="u-fs-4">
-              <i class="fas fa-info-circle"></i>ご指定の設定で自動でアンフォローを行います。
-            </span>
+            <div class="c-justify-content-start u-fs-4">
+              <i class="fas fa-info-circle u-mr-1"></i>
+              <span>ご指定の設定で自動でアンフォローを行います。</span>
+            </div>
             <div class="c-form-group">
               <div>
                 <label for class>
@@ -114,9 +116,10 @@
           <fieldset class="c-form-fieldset">
             <legend>自動いいね関連</legend>
 
-            <span class="u-fs-4">
-              <i class="fas fa-info-circle"></i>「いいねキーワード」を含むツイートを自動でいいねします。
-            </span>
+            <div class="c-justify-content-start u-fs-4">
+              <i class="fas fa-info-circle u-mr-1"></i>
+              <span>「いいねキーワード」を含むツイートを自動でいいねします。</span>
+            </div>
 
             <div class="c-form-group">
               <label for="keyword-follow" class="c-form-group__label u-mb-2">・いいねキーワード</label>

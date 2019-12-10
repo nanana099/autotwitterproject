@@ -1,29 +1,29 @@
 <template>
-  <div id="dates">
-    <select name="year" v-model="year" v-on:change="modify">
+  <div class="c-datetime-select-box">
+    <select name="year" v-model="year" v-on:change="modify" class="c-datetime-select-box__box1">
       <option v-for="year in getYears()" name="year" :value="year" :key="year">{{ year }}</option>
     </select>
-    <label>年</label>
+    <label>&#047;</label>
 
-    <select name="month" v-model="month" v-on:change="modify">
+    <select name="month" v-model="month" v-on:change="modify" class="c-datetime-select-box__box2">
       <option v-for="month in months" name="month" :value="month" :key="month">{{ month }}</option>
     </select>
-    <label>月</label>
+    <label>&#047;</label>
 
-    <select name="date" v-model="date" v-on:change="modify">
+    <select name="date" v-model="date" v-on:change="modify" class="c-datetime-select-box__box2">
       <option v-for="date in getDates(year, month)" name="date" :value="date" :key="date">{{ date }}</option>
     </select>
-    <label>日</label>
+    <label class="u-d-inline-blodk u-mr-1">&nbsp;</label>
 
-    <select name="hour" v-model="hour" v-on:change="modify">
+    <select name="hour" v-model="hour" v-on:change="modify" class="c-datetime-select-box__box2">
       <option v-for="hour in hours" name="hour" :value="hour" :key="hour">{{ hour }}</option>
     </select>
-    <label>時</label>
+    <label>&#058;</label>
 
-    <select name="minute" v-model="minute" v-on:change="modify">
+    <select name="minute" v-model="minute" v-on:change="modify" class="c-datetime-select-box__box2">
       <option v-for="minute in minutes" name="minute" :value="minute" :key="minute">{{ minute }}</option>
     </select>
-    <label>分</label>
+    <label></label>
   </div>
 </template>
 

@@ -274,6 +274,13 @@ select {
   }
 }
 
+.c-datetime-select-box {
+  padding: 5px;
+  background: #ffffff;
+  border: 1px solid #eee;
+  box-sizing: border-box;
+}
+
 .c-align-item-center {
   display: flex;
   align-items: center !important;
@@ -442,13 +449,14 @@ select {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 @media screen and (min-width: 768px) {
   .c-justify-content-between-md {
     display: flex;
     justify-content: space-between;
+    flex-wrap: nowrap;
   }
 }
 
@@ -456,21 +464,21 @@ select {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .c-justify-content-start {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .c-justify-content-end {
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .c-row {
@@ -846,7 +854,6 @@ select {
 }
 
 .p-tweet-form__count {
-  display: inline-block;
   text-align: right;
   margin-bottom: 15px;
 }
@@ -897,6 +904,10 @@ select {
 
 .u-ml-2 {
   margin-left: 10px;
+}
+
+.u-mr-1 {
+  margin-right: 5px;
 }
 
 .u-mr-2 {

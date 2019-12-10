@@ -3,12 +3,13 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 
     &-md {
       @include mq("md") {
         display: flex;
         justify-content: space-between;
+        flex-wrap: nowrap;
       }
     }
   }
@@ -16,18 +17,18 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
   &-start {
     display: flex;
     align-items: flex-start;
     justify-content: flex-start;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
   &-end {
     display: flex;
     align-items: flex-start;
     justify-content: flex-end;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 }

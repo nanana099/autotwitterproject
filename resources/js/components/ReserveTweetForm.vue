@@ -2,17 +2,20 @@
   <!-- 予約ツイート編集用フォーム -->
   <div>
     <textarea v-model="content" id class="p-tweet-form__textarea" placeholder="つぶやき内容" />
-    <div class="c-justify-content-between mb-2 c-align-item-start">
+
+    <div class="c-justify-content-between">
+      <label>投稿時刻：</label>
+      <div class="p-tweet-form__count">
+        <span :class="{'c-invalid-feedback':isOverContent}">{{count}}/140字</span>
+      </div>
+    </div>
+    <div class="c-justify-content-between u-mb-2">
       <div class="c-justify-content-start">
-        <label>投稿予定日時：</label>
         <datetime-select-box v-model="requestDate" ref="datetimeSelectBox"></datetime-select-box>
-        <!-- <input type="datetime-local" v-model="requestDate" :min="start" :max="end" /> -->
         <span class="c-invalid-feedback">{{errorMsgDatetime}}</span>
       </div>
-      <span class="p-tweet-form__count">
-        <span :class="{'c-invalid-feedback':isOverContent}">{{count}}/140字</span>
-      </span>
     </div>
+
     <div class="c-justify-content-end">
       <button class="c-btn c-btn--primary c-btn--large" @click="reserveTweet">予約</button>
     </div>

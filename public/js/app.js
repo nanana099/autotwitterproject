@@ -2253,6 +2253,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2782,6 +2785,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 /* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _DateTimeSelectBox__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DateTimeSelectBox */ "./resources/js/components/DateTimeSelectBox.vue");
+//
+//
+//
 //
 //
 //
@@ -61520,11 +61526,14 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "u-fs-4" }, [
-      _c("i", { staticClass: "fas fa-info-circle" }),
-      _vm._v(
-        "「ターゲットアカウント」のフォロワーのうち、「フォローキーワード」をプロフィールに含むアカウントを自動でフォローします。\n          "
-      )
+    return _c("div", { staticClass: "c-justify-content-start u-fs-4" }, [
+      _c("i", { staticClass: "fas fa-info-circle u-mr-1" }),
+      _vm._v(" "),
+      _c("span", [
+        _vm._v(
+          "「ターゲットアカウント」のフォロワーのうち、「フォローキーワード」をプロフィールに含むアカウントを自動でフォローします。"
+        )
+      ])
     ])
   },
   function() {
@@ -61546,20 +61555,22 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "u-fs-4" }, [
-      _c("i", { staticClass: "fas fa-info-circle" }),
-      _vm._v("ご指定の設定で自動でアンフォローを行います。\n          ")
+    return _c("div", { staticClass: "c-justify-content-start u-fs-4" }, [
+      _c("i", { staticClass: "fas fa-info-circle u-mr-1" }),
+      _vm._v(" "),
+      _c("span", [_vm._v("ご指定の設定で自動でアンフォローを行います。")])
     ])
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("span", { staticClass: "u-fs-4" }, [
-      _c("i", { staticClass: "fas fa-info-circle" }),
-      _vm._v(
-        "「いいねキーワード」を含むツイートを自動でいいねします。\n          "
-      )
+    return _c("div", { staticClass: "c-justify-content-start u-fs-4" }, [
+      _c("i", { staticClass: "fas fa-info-circle u-mr-1" }),
+      _vm._v(" "),
+      _c("span", [
+        _vm._v("「いいねキーワード」を含むツイートを自動でいいねします。")
+      ])
     ])
   }
 ]
@@ -61774,14 +61785,16 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("p", { staticClass: "u-fs-4" }, [
         _vm._v(
-          "\n          「稼働中」へ変更した場合に、10~20分程度の間隔で実行します。\n          "
+          "\n          「稼働中」の機能を、10~20分程度の間隔で実行します。\n          "
         ),
         _c("br"),
         _vm._v(
           "一度に処理できる量に限りがあるため、複数回にわけて実行されます。\n          "
         ),
         _c("br"),
-        _vm._v("完了時にご登録のメールアドレスへご連絡いたします。\n        ")
+        _vm._v(
+          "各々の機能の完了時に登録済みのメールアドレスへご連絡いたします。\n        "
+        )
       ])
     ])
   }
@@ -61807,7 +61820,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "dates" } }, [
+  return _c("div", { staticClass: "c-datetime-select-box" }, [
     _c(
       "select",
       {
@@ -61819,6 +61832,7 @@ var render = function() {
             expression: "year"
           }
         ],
+        staticClass: "c-datetime-select-box__box1",
         attrs: { name: "year" },
         on: {
           change: [
@@ -61849,7 +61863,7 @@ var render = function() {
       0
     ),
     _vm._v(" "),
-    _c("label", [_vm._v("年")]),
+    _c("label", [_vm._v("/")]),
     _vm._v(" "),
     _c(
       "select",
@@ -61862,6 +61876,7 @@ var render = function() {
             expression: "month"
           }
         ],
+        staticClass: "c-datetime-select-box__box2",
         attrs: { name: "month" },
         on: {
           change: [
@@ -61892,7 +61907,7 @@ var render = function() {
       0
     ),
     _vm._v(" "),
-    _c("label", [_vm._v("月")]),
+    _c("label", [_vm._v("/")]),
     _vm._v(" "),
     _c(
       "select",
@@ -61905,6 +61920,7 @@ var render = function() {
             expression: "date"
           }
         ],
+        staticClass: "c-datetime-select-box__box2",
         attrs: { name: "date" },
         on: {
           change: [
@@ -61935,7 +61951,7 @@ var render = function() {
       0
     ),
     _vm._v(" "),
-    _c("label", [_vm._v("日")]),
+    _c("label", { staticClass: "u-d-inline-blodk u-mr-1" }, [_vm._v(" ")]),
     _vm._v(" "),
     _c(
       "select",
@@ -61948,6 +61964,7 @@ var render = function() {
             expression: "hour"
           }
         ],
+        staticClass: "c-datetime-select-box__box2",
         attrs: { name: "hour" },
         on: {
           change: [
@@ -61978,7 +61995,7 @@ var render = function() {
       0
     ),
     _vm._v(" "),
-    _c("label", [_vm._v("時")]),
+    _c("label", [_vm._v(":")]),
     _vm._v(" "),
     _c(
       "select",
@@ -61991,6 +62008,7 @@ var render = function() {
             expression: "minute"
           }
         ],
+        staticClass: "c-datetime-select-box__box2",
         attrs: { name: "minute" },
         on: {
           change: [
@@ -62025,7 +62043,7 @@ var render = function() {
       0
     ),
     _vm._v(" "),
-    _c("label", [_vm._v("分")])
+    _c("label")
   ])
 }
 var staticRenderFns = []
@@ -62110,41 +62128,39 @@ var render = function() {
         }
       }),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "c-justify-content-between mb-2 c-align-item-start" },
-        [
-          _c(
-            "div",
-            { staticClass: "c-justify-content-start" },
-            [
-              _c("label", [_vm._v("投稿予定日時：")]),
-              _vm._v(" "),
-              _c("datetime-select-box", {
-                ref: "datetimeSelectBox",
-                model: {
-                  value: _vm.requestDate,
-                  callback: function($$v) {
-                    _vm.requestDate = $$v
-                  },
-                  expression: "requestDate"
-                }
-              }),
-              _vm._v(" "),
-              _c("span", { staticClass: "c-invalid-feedback" }, [
-                _vm._v(_vm._s(_vm.errorMsgDatetime))
-              ])
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("span", { staticClass: "p-tweet-form__count" }, [
-            _c("span", { class: { "c-invalid-feedback": _vm.isOverContent } }, [
-              _vm._v(_vm._s(_vm.count) + "/140字")
-            ])
+      _c("div", { staticClass: "c-justify-content-between" }, [
+        _c("label", [_vm._v("投稿時刻：")]),
+        _vm._v(" "),
+        _c("div", { staticClass: "p-tweet-form__count" }, [
+          _c("span", { class: { "c-invalid-feedback": _vm.isOverContent } }, [
+            _vm._v(_vm._s(_vm.count) + "/140字")
           ])
-        ]
-      ),
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "c-justify-content-between u-mb-2" }, [
+        _c(
+          "div",
+          { staticClass: "c-justify-content-start" },
+          [
+            _c("datetime-select-box", {
+              ref: "datetimeSelectBox",
+              model: {
+                value: _vm.requestDate,
+                callback: function($$v) {
+                  _vm.requestDate = $$v
+                },
+                expression: "requestDate"
+              }
+            }),
+            _vm._v(" "),
+            _c("span", { staticClass: "c-invalid-feedback" }, [
+              _vm._v(_vm._s(_vm.errorMsgDatetime))
+            ])
+          ],
+          1
+        )
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "c-justify-content-end" }, [
         _c(
