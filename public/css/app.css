@@ -348,6 +348,8 @@ p {
 
 .c-card {
   background: #ffffff;
+  border: 1px solid #a1a1a1;
+  box-sizing: border-box;
 }
 
 .c-card__header {

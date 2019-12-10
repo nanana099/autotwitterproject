@@ -1,5 +1,7 @@
 .c-card {
   background: #ffffff;
+  border: 1px solid #a1a1a1;
+  box-sizing: border-box;
   &__header {
     padding: $space-m;
     background: #eeeeee;
