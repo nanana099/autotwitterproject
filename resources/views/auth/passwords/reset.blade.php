@@ -1,3 +1,7 @@
+@php
+    $description = "Twitter自動化ツール「神ったー」のパスワードリセット。";
+    $title = "パスワードリセット";
+@endphp
 @extends('layouts.app')
 
 @section('content')

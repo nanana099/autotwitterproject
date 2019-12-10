@@ -1,5 +1,6 @@
 @php
-    $description = "Twitter自動化ツール「神ったー」にてユーザー情報を変更します。"
+    $description = "Twitter自動化ツール「神ったー」にてユーザー情報を変更します。";
+    $title = "会員情報編集";
 @endphp
 @extends('layouts.app')
 

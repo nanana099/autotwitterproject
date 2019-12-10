@@ -11,7 +11,7 @@
     <meta name="description" content="{{ @$description }}">
     <meta name="keywords" content="Twitter,Twitter 自動化,ツイート 予約">
 
-    <title>{{ config('app.name', '神ったー') }}</title>
+<title>{{ config('app.name', '神ったー') }}|{{@$title}}</title>
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans&display=swap" rel="stylesheet">

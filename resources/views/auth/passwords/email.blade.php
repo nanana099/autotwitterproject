@@ -1,5 +1,8 @@
+@php
+    $description = "Twitter自動化ツール「神ったー」のパスワードリセット。";
+    $title = "パスワードリセット";
+@endphp
 @extends('layouts.app')
-
 @section('content')
 <form method="POST" action="{{ route('password.email') }}">
     @csrf

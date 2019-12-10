@@ -1,5 +1,6 @@
 @php
-    $description = "Twitter自動化ツール「神ったー」にログインします。"
+    $description = "Twitter自動化ツール「神ったー」にログインします。";
+    $title = "ログイン";
 @endphp
 @extends('layouts.app')
 

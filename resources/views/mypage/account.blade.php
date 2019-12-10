@@ -1,5 +1,6 @@
 @php
-    $description = "Twitter自動化ツール「神ったー」に登録したアカウントを削除します。"
+    $description = "Twitter自動化ツール「神ったー」に登録したアカウントを削除します。";
+    $title = "アカウント削除";
 @endphp
 @extends('layouts.app')
 

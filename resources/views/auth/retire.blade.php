@@ -1,5 +1,6 @@
 @php
-    $description = "Twitter自動化ツール「神ったー」から退会します。"
+    $description = "Twitter自動化ツール「神ったー」から退会します。";
+    $title = "退会処理";
 @endphp
 @extends('layouts.app')
 
