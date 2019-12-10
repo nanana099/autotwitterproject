@@ -28,10 +28,8 @@
               <span>「ターゲットアカウント」のフォロワーのうち、「フォローキーワード」をプロフィールに含むアカウントを自動でフォローします。</span>
             </div>
             <div class="c-form-group">
-              <label for="email" class="c-form-group__label u-mb-2">
-                ・ターゲットアカウント
-                <span class="u-fs-4">@マークを除いたユーザー名を指定してください。</span>
-              </label>
+              <label for="email" class="c-form-group__label u-mb-2">・ターゲットアカウント</label>
+              <span class="u-fs-4">@マークを除いたユーザー名を指定してください。</span>
               <string-list-manager
                 v-model="targetAccountArray"
                 :placeholder="'例）tanakaTaro'"

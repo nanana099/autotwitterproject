@@ -2254,8 +2254,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -61132,7 +61130,18 @@ var render = function() {
                     "div",
                     { staticClass: "c-form-group" },
                     [
-                      _vm._m(2),
+                      _c(
+                        "label",
+                        {
+                          staticClass: "c-form-group__label u-mb-2",
+                          attrs: { for: "email" }
+                        },
+                        [_vm._v("・ターゲットアカウント")]
+                      ),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "u-fs-4" }, [
+                        _vm._v("@マークを除いたユーザー名を指定してください。")
+                      ]),
                       _vm._v(" "),
                       _c("string-list-manager", {
                         attrs: {
@@ -61262,7 +61271,7 @@ var render = function() {
                 _c("fieldset", { staticClass: "c-form-fieldset" }, [
                   _c("legend", [_vm._v("自動アンフォロー関連")]),
                   _vm._v(" "),
-                  _vm._m(3),
+                  _vm._m(2),
                   _vm._v(" "),
                   _c("div", { staticClass: "c-form-group" }, [
                     _c("div", [
@@ -61392,7 +61401,7 @@ var render = function() {
                 _c("fieldset", { staticClass: "c-form-fieldset" }, [
                   _c("legend", [_vm._v("自動いいね関連")]),
                   _vm._v(" "),
-                  _vm._m(4),
+                  _vm._m(3),
                   _vm._v(" "),
                   _c("div", { staticClass: "c-form-group" }, [
                     _c(
@@ -61549,21 +61558,6 @@ var staticRenderFns = [
         )
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "label",
-      { staticClass: "c-form-group__label u-mb-2", attrs: { for: "email" } },
-      [
-        _vm._v("\n              ・ターゲットアカウント\n              "),
-        _c("span", { staticClass: "u-fs-4" }, [
-          _vm._v("@マークを除いたユーザー名を指定してください。")
-        ])
-      ]
-    )
   },
   function() {
     var _vm = this
