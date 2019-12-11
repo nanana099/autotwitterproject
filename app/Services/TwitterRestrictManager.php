@@ -21,7 +21,7 @@ class TwitterRestrictManager
     // 自前で呼び出し回数を制限したいリソース名
     private const MANAGE_LIMIT_RESOURCE =[self::FRIENDSHIPS_CREATE,self::FRIENDSHIPS_DESTROY,self::STATUSES_UPDATE,self::FAVORITES_CREATE];
     // friendships/createの上限
-    private const FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE_ACCOUNT = 10;    // friendships/createの15分上限（１アカウント）
+    private const FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE_ACCOUNT = 3;    // friendships/createの15分上限（１アカウント）
     private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_ACCOUNT = 100;     // friendships/createの２４時間上限（１アカウント）
     private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_APP = 550;        // friendships/createの２４時間上限（アプリ全体）仕様上1000だが、実際は600あたりで制限がかかる
     // friendships/destroyの上限
