@@ -72,42 +72,46 @@ class FollowExecutor implements ITwitterFunctionExecutor
                 $targetAccounts = array_slice($targetAccounts, array_search($prevTargetAccount, $targetAccounts));
 
                 try {
-                    foreach ($targetAccounts as $targetAccount) {
-                        try {
-                            // 処理中のターゲットアカウントをDBに保存（次回の実行時に使う）
-                            $operationStatus->fill(array('following_target_account' => $targetAccount))->save();
-                            do {
-                                // 0:カーソルの終点 -1：カーソルの始点（前回のターゲットアカウントのフォロワー参照完了時 「0」になるので、始点に移動）
-                                if ($prevTargetAccountCursor === "0") {
-                                    $prevTargetAccountCursor = "-1";
-                                }
+                    if (true) {
+                        $this->followFollower($twitterAccount) ;
+                    } else {
+                        foreach ($targetAccounts as $targetAccount) {
+                            try {
+                                // 処理中のターゲットアカウントをDBに保存（次回の実行時に使う）
+                                $operationStatus->fill(array('following_target_account' => $targetAccount))->save();
+                                do {
+                                    // 0:カーソルの終点 -1：カーソルの始点（前回のターゲットアカウントのフォロワー参照完了時 「0」になるので、始点に移動）
+                                    if ($prevTargetAccountCursor === "0") {
+                                        $prevTargetAccountCursor = "-1";
+                                    }
 
-                                // ターゲットアカウントのフォロワー
-                                $targetAccountFollowers = [];
+                                    // ターゲットアカウントのフォロワー
+                                    $targetAccountFollowers = [];
 
-                                // ターゲットアカウントのフォロワー取得（最大200件ごと）
-                                $response = $twitterAccount->getFollowerList($targetAccount, $prevTargetAccountCursor);
-                                $targetAccountFollowers = array_merge($targetAccountFollowers, empty($response['users']) ? [] : $response['users']);
+                                    // ターゲットアカウントのフォロワー取得（最大200件ごと）
+                                    $response = $twitterAccount->getFollowerList($targetAccount, $prevTargetAccountCursor);
+                                    $targetAccountFollowers = array_merge($targetAccountFollowers, empty($response['users']) ? [] : $response['users']);
                                 
-                                // フォローするアカウントを抽出
-                                $followUsers = $this->getFollowUsers($targetAccountFollowers, $followedUsers, $unfollowedUsers, $keywords);
+                                    // フォローするアカウントを抽出
+                                    $followUsers = $this->getFollowUsers($targetAccountFollowers, $followedUsers, $unfollowedUsers, $keywords);
 
-                                foreach ($followUsers as $followUser) {
-                                    // フォロー実行
-                                    $twitterAccount->follow($followUser);
+                                    foreach ($followUsers as $followUser) {
+                                        // フォロー実行
+                                        $twitterAccount->follow($followUser);
 
-                                    // フォローできたアカウントをDBに登録
-                                    FollowedUser::updateOrCreate(array('user_id' => $followUser, 'account_id' => $account->id), array('followed_at' => Carbon::now()));
-                                }
-                            } while ($prevTargetAccountCursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
+                                        // フォローできたアカウントをDBに登録
+                                        FollowedUser::updateOrCreate(array('user_id' => $followUser, 'account_id' => $account->id), array('followed_at' => Carbon::now()));
+                                    }
+                                } while ($prevTargetAccountCursor = (empty($response['next_cursor_str']) ? "0" : $response['next_cursor_str']));
 
-                            // ターゲットアカウントのフォロワーをすべて参照し終えたら、カーソルを先頭に戻す
-                            $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
-                        } catch (Exception $e) {
-                            // ターゲットアカウントのフォロワーリスト取得 or フォロー実行で失敗
-                            // 進捗情報をDBに記録
-                            $operationStatus->fill(array('following_target_account_cursor' => $prevTargetAccountCursor, 'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
-                            throw $e;
+                                // ターゲットアカウントのフォロワーをすべて参照し終えたら、カーソルを先頭に戻す
+                                $operationStatus->fill(array('following_target_account' => "",'following_target_account_cursor' => "-1"))->save();
+                            } catch (Exception $e) {
+                                // ターゲットアカウントのフォロワーリスト取得 or フォロー実行で失敗
+                                // 進捗情報をDBに記録
+                                $operationStatus->fill(array('following_target_account_cursor' => $prevTargetAccountCursor, 'follow_stopped_at' => date('Y/m/d H:i:s')))->save();
+                                throw $e;
+                            }
                         }
                     }
 
@@ -135,7 +139,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
                                             'follow_stopped_at' => date('Y/m/d H:i:s')
                                                 ))->save();
                     MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
-                }catch (TwitterAuthExipiredException $e) {
+                } catch (TwitterAuthExipiredException $e) {
                     $operationStatus->fill(array('is_follow' => 0,
                                             'is_unfollow' => 0,
                                             'is_favorite' => 0,
@@ -150,6 +154,23 @@ class FollowExecutor implements ITwitterFunctionExecutor
             }
         }
         logger()->info('FollowExecutor：execute-end');
+    }
+
+    // フォロー返しする
+    private function followFollower($twitterAccount)
+    {
+        // フォロワー
+        $followers = $twitterAccount->getFollowerIds($twitterAccount->getScreenName(), -1, 5000)['ids'] ;
+        logger($followers) ;
+        // フォロー済みユーザー
+        $followed = $twitterAccount->getFollowedUsers(-1, 5000)['ids'];// max5000の件取得
+        logger($followed) ;
+        foreach ($followers as $follower) {
+            if (!in_array($follower, $followed) ) {
+                // フォロー実行
+                $twitterAccount->follow($follower);
+            }
+        }
     }
 
     // フォロー対象のアカウントを、アカウントリストから抽出する。
@@ -224,7 +245,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
             }
         }
 
-        if(count($orAry) === 0){
+        if (count($orAry) === 0) {
             return true;
         }
 

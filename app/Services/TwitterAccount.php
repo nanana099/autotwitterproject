@@ -119,7 +119,6 @@ class TwitterAccount
             )
         ));
 
-
         if (!empty($result['errors'])) {
             $errorCode = $result['errors'][0]->code;
             // 鍵アカへ再度リクエストすると発生。無視
@@ -305,7 +304,7 @@ class TwitterAccount
     }
 
     // 指定のアカウントのフォロワーの情報を取得する
-    public function getFollowerList(string $screen_name, $cursor,$num = 200)
+    public function getFollowerList(string $screen_name, $cursor, $num = 200)
     {
         $resourceName = "followers/list";
         $this->log($resourceName, $screen_name, $cursor);
@@ -336,8 +335,40 @@ class TwitterAccount
         return $result;
     }
 
+    // フォロワーのIDを取得
+    public function getFollowerIds(string $screen_name, $cursor, $num = 200)
+    {
+        $resourceName = "followers/ids";
+        $this->log($resourceName, $screen_name, $cursor);
+
+        $this->checkLimit($resourceName);
+        $result = get_object_vars($this->twitter->get(
+            $resourceName,
+            array(
+                'screen_name' => $screen_name,
+                'count' => $num, // 取得件数 5000が最大
+                'cursor' => $cursor,
+                'stringify_ids'  => true
+            )
+        ));
+
+        // 存在しないアカウントを$screen_nameに指定するとTwitterAPIはエラーになる。しかしシステム上は正常扱いにするため、ここでチェック
+        if (!empty($result['errors'])) {
+            $errorCode = $result['errors'][0]->code;
+            if ($errorCode === 34) {
+                return array();
+            }
+        }
+
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+
+        return $result;
+    }
+
+
     // フォロー中のリストを取得
-    public function getFollowedUsers($cursor = -1)
+    public function getFollowedUsers($cursor = -1, $num = 200)
     {
         $resourceName = "friends/ids";
         $this->log($resourceName, $this->user_id);
@@ -349,7 +380,8 @@ class TwitterAccount
                 array(
                     'user_id' => $this->user_id,
                     'cursor' => $cursor,
-                    'count' => 200
+                    'count' => $num,
+                    'stringify_ids'  => true
                 )
             )
         );

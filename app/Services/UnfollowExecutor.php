@@ -41,56 +41,56 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 '
         );
         // 条件：フォロワー数が5000以上 または アンフォローが「稼働中」
-        foreach ($this->accounts as $key => $account) {
-            // Twitterアカウントのインスタンス作成
-            $twitterAccount = new TwitterAccount($account->access_token);
-            try {
-                if ($twitterAccount->getMyFollowCount() <= 5000) {
-                    if (!$account->is_unfollow) {
-                        // 対象から外す
-                        unset($this->accounts[$key]);
-                    }
-                }
-            } catch (TwitterRestrictionException $e) {
-                // APIの回数制限
-                // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
-                OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                    'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
-                unset($this->accounts[$key]); //処理対象から外す
-            } catch (TwitterFlozenException $e) {
-                // 凍結
-                // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
-                // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
-                OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                'is_follow' => 0,
-                'is_unfollow' => 0,
-                'is_favorite' => 0,
-                'is_flozen'=>1,
-                'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
+        // foreach ($this->accounts as $key => $account) {
+        //     // Twitterアカウントのインスタンス作成
+        //     $twitterAccount = new TwitterAccount($account->access_token);
+        //     try {
+        //         if ($twitterAccount->getMyFollowCount() <= 5000) {
+        //             if (!$account->is_unfollow) {
+        //                 // 対象から外す
+        //                 unset($this->accounts[$key]);
+        //             }
+        //         }
+        //     } catch (TwitterRestrictionException $e) {
+        //         // APIの回数制限
+        //         // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
+        //         OperationStatus::where('account_id', $account->id)->first()->fill(array(
+        //             'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
+        //         unset($this->accounts[$key]); //処理対象から外す
+        //     } catch (TwitterFlozenException $e) {
+        //         // 凍結
+        //         // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
+        //         // 凍結時は、自動機能を停止する。ユーザーに凍結解除と再稼働をメールで依頼。
+        //         OperationStatus::where('account_id', $account->id)->first()->fill(array(
+        //         'is_follow' => 0,
+        //         'is_unfollow' => 0,
+        //         'is_favorite' => 0,
+        //         'is_flozen'=>1,
+        //         'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
 
-                $accountFromDB = Account::find($account->id);
-                // アカウントを所持するユーザー
-                $user = $accountFromDB->user()->get()[0];
-                MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
-                unset($this->accounts[$key]); //処理対象から外す
-            }  catch (TwitterAuthExipiredException $e) {
-                OperationStatus::where('account_id', $account->id)->first()->fill(array(
-                'is_follow' => 0,
-                'is_unfollow' => 0,
-                'is_favorite' => 0,
-                'is_flozen'=>1,
-                'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
+        //         $accountFromDB = Account::find($account->id);
+        //         // アカウントを所持するユーザー
+        //         $user = $accountFromDB->user()->get()[0];
+        //         MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FLOZEN);
+        //         unset($this->accounts[$key]); //処理対象から外す
+        //     }  catch (TwitterAuthExipiredException $e) {
+        //         OperationStatus::where('account_id', $account->id)->first()->fill(array(
+        //         'is_follow' => 0,
+        //         'is_unfollow' => 0,
+        //         'is_favorite' => 0,
+        //         'is_flozen'=>1,
+        //         'unfollow_stopped_at' => date('Y/m/d H:i:s')))->save();
 
-                $accountFromDB = Account::find($account->id);
-                // アカウントを所持するユーザー
-                $user = $accountFromDB->user()->get()[0];
-                MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::AUTH_EXIPIRED);
-                unset($this->accounts[$key]); //処理対象から外す
-            } catch (Exception $e) {
-                // その他例外
-                logger()->error($e);
-            }
-        }
+        //         $accountFromDB = Account::find($account->id);
+        //         // アカウントを所持するユーザー
+        //         $user = $accountFromDB->user()->get()[0];
+        //         MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::AUTH_EXIPIRED);
+        //         unset($this->accounts[$key]); //処理対象から外す
+        //     } catch (Exception $e) {
+        //         // その他例外
+        //         logger()->error($e);
+        //     }
+        // }
         logger()->info('UnfollowExecutor：prepare-end'.' 対象件数（アカウント）：'.count($this->accounts));
     }
 
