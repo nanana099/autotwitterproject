@@ -305,7 +305,7 @@ class TwitterAccount
     }
 
     // 指定のアカウントのフォロワーの情報を取得する
-    public function getFollowerList(string $screen_name, $cursor)
+    public function getFollowerList(string $screen_name, $cursor,$num = 200)
     {
         $resourceName = "followers/list";
         $this->log($resourceName, $screen_name, $cursor);
@@ -315,7 +315,7 @@ class TwitterAccount
             $resourceName,
             array(
                 'screen_name' => $screen_name,
-                'count' => 200, // 取得件数 200が最大
+                'count' => $num, // 取得件数 200が最大
                 'status' => false,
                 'include_user_entities' => false,
                 'cursor' => $cursor
@@ -335,6 +335,57 @@ class TwitterAccount
 
         return $result;
     }
+
+    // フォロー中のリストを取得
+    public function getFollowedUsers($cursor = -1)
+    {
+        $resourceName = "friends/ids";
+        $this->log($resourceName, $this->user_id);
+
+        $this->checkLimit($resourceName);
+        $result =  get_object_vars(
+            $this->twitter->get(
+                $resourceName,
+                array(
+                    'user_id' => $this->user_id,
+                    'cursor' => $cursor,
+                    'count' => 200
+                )
+            )
+        );
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+        return $result;
+    }
+
+    // ユーザーをフォローする
+    public function mute(string $user_id)
+    {
+        $resourceName =  "mutes/users/create";
+        $this->log($resourceName, $user_id);
+
+        $this->checkLimit($resourceName);
+        $result = get_object_vars($this->twitter->post(
+            $resourceName,
+            array(
+                'user_id' => $user_id,
+            )
+        ));
+
+
+        if (!empty($result['errors'])) {
+            $errorCode = $result['errors'][0]->code;
+            // 鍵アカへ再度リクエストすると発生。無視
+            if ($errorCode === 160) {
+                return array();
+            }
+        }
+
+        // エラーチェック
+        TwitterAPIErrorChecker::check($result);
+        return $result;
+    }
+
 
     // 自アカウントのTwitterAPI制限を調べる
     private function getRateLimit()
