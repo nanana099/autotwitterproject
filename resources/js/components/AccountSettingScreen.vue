@@ -8,7 +8,7 @@
       </label>
     </div>
     <section class="p-section">
-      <h2 class="c-title">設定</h2>
+      <h2 class="c-title">自動機能設定</h2>
 
       <div v-show="isLoading">
         <span class="p-message-1">Loading...</span>

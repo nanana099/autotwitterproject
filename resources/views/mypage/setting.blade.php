@@ -1,6 +1,6 @@
 @php
     $description = "Twitter自動化ツール「神ったー」にてアカウントの設定を確認、変更できます。";
-    $title = "設定";
+    $title = "自動機能設定";
 @endphp
 @extends('layouts.app')
 
