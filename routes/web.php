@@ -14,11 +14,7 @@ use Illuminate\Support\Facades\Auth;
 
 // TOP画面
 Route::get('/', function () {
-    if (Auth::check()) {
-        return redirect()->route('mypage.monitor');
-    } else {
-        return view('top');
-    }
+    return redirect()->route('mypage.monitor');
 })->name('top');
 
 Auth::routes();
