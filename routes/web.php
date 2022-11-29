@@ -17,14 +17,15 @@ Route::get('/', function () {
     return redirect()->route('mypage.monitor');
 })->name('top');
 
-Auth::routes();
+
+Auth::routes(['verify' => true]);
 
 // キーワード設定のためのヘルプ画面取得
 Route::get('/help/keyword', function () {
     return view('help.keyword');
 })->name('help.keyword');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
     // アカウント一覧・稼働状況画面を返す
     Route::get('/mypage/monitor', function () {
         return view('mypage.monitor');
