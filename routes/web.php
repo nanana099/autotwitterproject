@@ -15,7 +15,8 @@ use Illuminate\Support\Facades\Auth;
 // TOP画面
 Route::get('/', function () {
     return redirect()->route('mypage.monitor');
-})->name('top')->middleware('verified');;
+})->name('top');
+
 
 Auth::routes(['verify' => true]);
 
@@ -24,7 +25,7 @@ Route::get('/help/keyword', function () {
     return view('help.keyword');
 })->name('help.keyword');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth','verified'])->group(function () {
     // アカウント一覧・稼働状況画面を返す
     Route::get('/mypage/monitor', function () {
         return view('mypage.monitor');
