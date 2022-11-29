@@ -22,8 +22,8 @@ class TwitterRestrictManager
     private const MANAGE_LIMIT_RESOURCE =[self::FRIENDSHIPS_CREATE,self::FRIENDSHIPS_DESTROY,self::STATUSES_UPDATE,self::FAVORITES_CREATE];
     // friendships/createの上限
     private const FRIENDSHIPS_CREATE_LIMIT_PER_15MINUTE_ACCOUNT = 15;    // friendships/createの15分上限（１アカウント）
-    private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_ACCOUNT = 1000;     // friendships/createの２４時間上限（１アカウント）
-    private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_APP = 1000;         // friendships/createの２４時間上限（アプリ全体）
+    private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_ACCOUNT = 500;     // friendships/createの２４時間上限（１アカウント）
+    private const FRIENDSHIPS_CREATE_LIMIT_PER_24HOUR_APP = 500;         // friendships/createの２４時間上限（アプリ全体）
     // friendships/destroyの上限
     private const FRIENDHSIPS_DESTROY_LIMIT_PER_24HOUR_ACCOUNT = 1000;  // friendships/destroyの２４時間上限（１アカウント）
     // statuses/updateの上限

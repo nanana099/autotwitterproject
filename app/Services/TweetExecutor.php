@@ -19,6 +19,8 @@ class TweetExecutor implements ITwitterFunctionExecutor
     // 準備
     public function prepare()
     {
+        MailSender::send('$user->name', '$twitterAccount->getScreenName()', 'nananabaito@yahoo.co.jp', MailSender::EMAIL_TWEET_COMPLATED);
+
         logger()->info('TweetExecutor：prepare-start');
 
         // 対象リストの作成
