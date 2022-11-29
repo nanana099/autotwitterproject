@@ -15,9 +15,9 @@ use Illuminate\Support\Facades\Auth;
 // TOP画面
 Route::get('/', function () {
     return redirect()->route('mypage.monitor');
-})->name('top');
+})->name('top')->middleware('verified');;
 
-Auth::routes();
+Auth::routes(['verify' => true]);
 
 // キーワード設定のためのヘルプ画面取得
 Route::get('/help/keyword', function () {
