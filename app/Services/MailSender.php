@@ -149,6 +149,7 @@ EOM;
         $to = $email;
         if (env('APP_ENV') === 'local') {
             logger('メール送信内容：'.' ユーザー名：'.$userName.' アカウント名：'.$accountName.' メールアドレス：'.$email.' 送信内容：'.$content);
+            Mail::to($to)->send(new PlainText($subject, $content));
         } else {
             Mail::to($to)->send(new PlainText($subject, $content));
         }
