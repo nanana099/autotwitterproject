@@ -40,7 +40,7 @@ class FollowExecutor implements ITwitterFunctionExecutor
         logger()->info('FollowExecutor：prepare-end'.' 対象件数（アカウント）：'.count($this->accounts));
     }
 
-    
+
 
     // 自動フォローを実行
     public function execute()
@@ -115,10 +115,10 @@ class FollowExecutor implements ITwitterFunctionExecutor
 
                     // すべてのターゲットアカウントに対する処理が終了した場合
                     $operationStatus->fill(array('following_target_account' => "",
-                            'following_target_account_cursor' => "-1",
-                            'is_follow' => 0,
-                            'follow_stopped_at' => date('Y/m/d H:i:s')
-                            ))->save();
+                                                'following_target_account_cursor' => "-1",
+                                                'is_follow' => 0,
+                                                'follow_stopped_at' => date('Y/m/d H:i:s')
+                                                ))->save();
 
                     MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FOLLOW_COMPLATED);
                 } catch (TwitterRestrictionException $e) {
@@ -152,26 +152,6 @@ class FollowExecutor implements ITwitterFunctionExecutor
             }
         }
         logger()->info('FollowExecutor：execute-end');
-    }
-
-    // フォロー返しする
-    private function followFollower($twitterAccount)
-    {
-        // フォロワー
-        $followers = $twitterAccount->getFollowerIds($twitterAccount->getScreenName(), -1, 5000)['ids'] ;
-        // フォロー済みユーザー
-        $followed = $twitterAccount->getFollowedUsers(-1, 5000)['ids'];// max5000の件取得
-        // フォロー申請しないユーザー（鍵垢とかは毎回申請してしまうので、この配列に入れる。（本当は自動化したい）
-        $exclude = ['1060376302908100608','1144550229540331520','2896062624','922632418464374785','935175772964139008'];
-        foreach ($followers as $follower) {
-            if (in_array($follower, $exclude)) {
-                continue;
-            }
-            if (!in_array($follower, $followed)) {
-                // フォロー実行
-                $twitterAccount->follow($follower);
-            }
-        }
     }
 
     // フォロー対象のアカウントを、アカウントリストから抽出する。
