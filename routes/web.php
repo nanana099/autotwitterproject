@@ -75,6 +75,8 @@ Route::middleware(['auth','verified'])->group(function () {
     Route::get('/user/editinfo', 'UserController@getinfo')->name('user.getinfo');
     // ユーザー情報の変更
     Route::post('/user/editinfo', 'UserController@editinfo')->name('user.editinfo');
+    // ユーザー情報のうちメールアドレスの変更    
+    Route::get('/user/changeEmail/{token}', 'UserController@changeEmail')->name('user.changeEmail');
     // パスワード編集画面の取得
     Route::get('/user/editpass', 'UserController@getpass')->name('user.getpass');
     // パスワードの変更
