@@ -48,12 +48,6 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
             // Twitterアカウントのインスタンス作成
                 $twitterAccount = new TwitterAccount($account->access_token);
 
-                // フォロー中のアカウントをミュートする場合
-                $isMuteMode = false;
-                if ($isMuteMode) {
-                    $this->mute($twitterAccount);
-                    return;
-                }
 
                 // ユーザーが設定したいいね対象のキーワード
                 $keywords = empty($account->keyword_favorite) ? [] : explode(',', $account->keyword_favorite);
@@ -128,15 +122,5 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
         }
 
         logger()->info('FavoriteExecutor：execute-end');
-    }
-
-    private function mute($twitterAccount)
-    {
-        $cursor = "1646205540916191241";// 前回のカーソルは、ログを確認してください。
-        $followedUsers = $twitterAccount->getFollowedUsers($cursor);
-        logger($followedUsers);
-        foreach ($followedUsers['ids'] as $followedUser) {
-            $twitterAccount->mute($followedUser);
-        }
     }
 }
