@@ -22,9 +22,14 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
     public function prepare()
     {
         logger()->info('UnfollowExecutorr：prepare-start');
+
+        // API制限を受けた後に再度リクエストを送るのに開ける時間
+        // 15分の理由：TwitterAPIのコール回数が15分枠で区切られているため
+        $whenRestrictedInterval = '00:15:00';
+
         // 対象リストの作成
         $this->accounts = DB::select(
-            'SELECT
+            "SELECT
                 accounts.id,
                 accounts.access_token,
                 account_settings.days_inactive_user,
@@ -38,8 +43,8 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 ON accounts.id = operation_statuses.account_id
                 AND operation_statuses.is_flozen = 0
                 AND operation_statuses.is_unfollow = 1
-                AND operation_statuses.unfollow_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
-                '
+                AND operation_statuses.unfollow_stopped_at <  SUBTIME(NOW(),'{$whenRestrictedInterval}')
+                "
         );
         logger()->info('UnfollowExecutor：prepare-end'.' 対象件数（アカウント）：'.count($this->accounts));
     }
@@ -57,7 +62,7 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 $operationStatus = $accountFromDB->operationStatus;
                 // アカウントを所持するユーザー
                 $user = $accountFromDB->user()->get()[0];
-                // 前回までの進捗
+                // 前回までの進捗のためのカーソル
                 $cursor = $operationStatus->unfollowing_target_cursor;
                 // フォロー済みアカウント格納用
                 $followedAccounts = [];
@@ -65,8 +70,10 @@ class UnfollowExecutor implements ITwitterFunctionExecutor
                 try {
                     try {
                         do {
-                            // 0:カーソルの終点 -1：カーソルの始点（前回のフォローリスト参照が完了した場合、 「0」になることがあるので、始点に移動）
+                            // 0:カーソルの終点 
+                            // -1：カーソルの始点
                             if ($cursor ==="0") {
+                                // （前回のフォローリスト参照が完了した場合、 「0」になることがあるので、始点に移動）
                                 $cursor = "-1";
                             }
                         
@@ -156,7 +163,7 @@ EOM;
     private function getUnFollowTargetAccounts($followedAccounts, $account)
     {
         // 条件：フォローしてからn日経過している
-        // memo:フォローチャーン対策として、n日経過を待つ。
+        // memo:フォローチャーン対策、つまりフォローとアンフォローを大量に繰り返さないように、n日経過を待つ。
         //      TwitterAPIからフォローした日時を取得する手段がないため、システム上フォロー日時がわかるアカウントだけを対象とする。
         $unfollowTargetAccounts = [];
         $unfollowTargetAccounts = json_decode(Account::find($account->id)->followedUsers()->where('followed_at', '<=', Carbon::today()->subDay($account->days_unfollow_user))->get(['user_id'])->pluck('user_id'));

@@ -18,9 +18,14 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
     public function prepare()
     {
         logger()->info('FavoriteExecutor：prepare-start');
+
+        // API制限を受けた後に再度リクエストを送るのに開ける時間
+        // 15分の理由：TwitterAPIのコール回数が15分枠で区切られているため
+        $whenRestrictedInterval = '00:15:00';
+
         // 対象リストの作成
         $this->accounts = DB::select(
-            'SELECT 
+            "SELECT 
                 accounts.id,
                 accounts.access_token,
                 account_settings.keyword_favorite
@@ -31,8 +36,8 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                 ON accounts.id = operation_statuses.account_id  
                 AND operation_statuses.is_favorite = 1
                 AND operation_statuses.is_flozen = 0
-                AND operation_statuses.favorite_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
-                '
+                AND operation_statuses.favorite_stopped_at <  SUBTIME(NOW(),'{$whenRestrictedInterval}')
+                "
         );
         logger()->info('FavoriteExecutor：prepare-end'.' 対象件数（アカウント）：'.count($this->accounts));
     }
@@ -45,7 +50,7 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
         foreach ($this->accounts as  $account) {
             try {
 
-            // Twitterアカウントのインスタンス作成
+                // Twitterアカウントのインスタンス作成
                 $twitterAccount = new TwitterAccount($account->access_token);
 
 
@@ -65,23 +70,15 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                             break;
                         }
 
+                        // 1Twitterアカウントが行ういいねの数
+                        $favoriteMaxCount = 4;
                         // つぶやきを検索
-                        $count = 4;
-                        $tweets = $twitterAccount->searchTweets($keyword, $count)['statuses'];
+                        $tweets = $twitterAccount->searchTweets($keyword, $favoriteMaxCount)['statuses'];
                         foreach ($tweets as $tweet) {
                             // いいね実行
                             $result = $twitterAccount->favorite($tweet->id_str);
                         }
                     }
-                    
-                    // $accountFromDB = Account::find($account->id);
-                    // アカウントを所持するユーザー
-                    // $user = $accountFromDB->user()->get()[0];
-                    // すべてのターゲットアカウントに対する処理が終了した場合
-                    // OperationStatus::where('account_id', $account->id)->first()->fill(array('is_favorite' => 0,
-                    //                                                             'favorite_stopped_at' => date('Y/m/d H:i:s')
-                    //                                                             ))->save();
-                    // MailSender::send($user->name, $twitterAccount->getScreenName(), $user->email, MailSender::EMAIL_FAVORITE_COMPLATED);
                 } catch (TwitterRestrictionException $e) {
                     // API制限
                     // 次回起動に時間をあけるため、制限がかかった時刻をDBに記録
@@ -120,7 +117,6 @@ class FavoriteExecutor implements ITwitterFunctionExecutor
                 logger()->error($e);
             }
         }
-
         logger()->info('FavoriteExecutor：execute-end');
     }
 }

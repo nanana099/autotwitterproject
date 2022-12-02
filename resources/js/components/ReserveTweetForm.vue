@@ -52,16 +52,10 @@ export default {
         .hour(date.hour())
         .minute(date.minute());
 
-      // this.requestDate = moment(this.tweet.submit_date).format(
-      //   "YYYY-MM-DD HH:mm:ss"
-      // );
       this.id = this.tweet.id;
     } else {
       // 新規
       this.requestDate.add(1, "days");
-      // this.requestDate = moment()
-      //   .add(1, "days")
-      //   .format("YYYY-MM-DD HH:mm:ss");
     }
   },
   methods: {
