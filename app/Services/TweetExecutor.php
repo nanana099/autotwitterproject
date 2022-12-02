@@ -23,9 +23,15 @@ class TweetExecutor implements ITwitterFunctionExecutor
 
         logger()->info('TweetExecutor：prepare-start');
 
+
+        // API制限を受けた後に再度リクエストを送るのに開ける時間
+        // 15分の理由：TwitterAPIのコール回数が15分枠で区切られているため
+        $whenRestrictedInterval = '00:15:00';
+
+
         // 対象リストの作成
         $this->tweets = DB::select(
-            'SELECT 
+            "SELECT 
                 r.id ,
                 r.content,
                 r.submit_date,
@@ -39,9 +45,9 @@ class TweetExecutor implements ITwitterFunctionExecutor
                 ON r.account_id = a.id
             WHERE r.submit_date <= NOW()
                 AND o.is_flozen = 0
-                AND o.tweet_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
+                AND o.tweet_stopped_at <  SUBTIME(NOW(),'{$whenRestrictedInterval}')
             ORDER BY r.account_id
-            '
+            "
         );
 
         logger()->info('TweetExecutor：prepare-end'.' 対象件数：'.count($this->tweets));
@@ -64,7 +70,7 @@ class TweetExecutor implements ITwitterFunctionExecutor
         foreach ($this->tweets as $tweet) {
             try {
 
-            // API制限または凍結を受けたアカウントは処理を行わない
+                // API制限または凍結を受けたアカウントは処理を行わない
                 if ($skipAccountId === $tweet->account_id) {
                     continue;
                 }

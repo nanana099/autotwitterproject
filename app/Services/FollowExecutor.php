@@ -21,9 +21,15 @@ class FollowExecutor implements ITwitterFunctionExecutor
     public function prepare()
     {
         logger()->info('FollowExecutor：prepare-start');
+
+
+        // API制限を受けた後に再度リクエストを送るのに開ける時間
+        // 15分の理由：TwitterAPIのコール回数が15分枠で区切られているため
+        $whenRestrictedInterval = '00:15:00';
+
         // 自動フォロー実行アカウント取得
         $this->accounts = DB::select(
-            'SELECT accounts.id,
+            "SELECT accounts.id,
                     accounts.access_token,
                     account_settings.keyword_follow,
                     account_settings.target_accounts
@@ -34,8 +40,8 @@ class FollowExecutor implements ITwitterFunctionExecutor
               ON accounts.id = operation_statuses.account_id
                 AND operation_statuses.is_follow = 1
                 AND operation_statuses.is_flozen = 0
-                AND operation_statuses.follow_stopped_at <  SUBTIME(NOW(),\'00:15:00\')
-                '
+                AND operation_statuses.follow_stopped_at <  SUBTIME(NOW(),'{$whenRestrictedInterval}')
+                "
         );
         logger()->info('FollowExecutor：prepare-end'.' 対象件数（アカウント）：'.count($this->accounts));
     }

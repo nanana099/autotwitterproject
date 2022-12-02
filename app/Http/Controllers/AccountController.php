@@ -161,9 +161,6 @@ class AccountController extends Controller
                 $request['target_accounts'] = '';
             }
             // フォローキーワード
-            // if (empty($request['keyword_follow'])) {
-            //     $request['keyword_follow'] = '';
-            // }
             if (empty($request['keyword_follow_and'])) {
                 $request['keyword_follow_and'] = '';
             }
@@ -174,9 +171,6 @@ class AccountController extends Controller
                 $request['keyword_follow_not'] = '';
             }
             // いいねキーワード
-            // if (empty($request['keyword_favorite'])) {
-            //     $request['keyword_favorite'] = '';
-            // }
             if (empty($request['keyword_favorite_and'])) {
                 $request['keyword_favorite_and'] = '';
             }

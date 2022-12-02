@@ -14,18 +14,6 @@
       <button class="c-btn c-btn--danger" @click="deleteTarget">&#045;</button>
     </div>
   </div>
-  <!-- 
-    <div class="u-m-2">
-      <input type="text" class="c-textbox--small" v-model="addStr" :placeholder="placeholder" />
-      <button class="c-btn c-btn--primary" @click="addTarget">追加</button>
-      <span class="c-invalid-feedback">{{errorMsg}}</span>
-    </div>
-    <div class="c-justify-content-start">
-      <select size="5" class="c-form-group__select-multi u-mb-1" v-model="selectedStr" multiple>
-        <option v-for="target in ary" :value="target" :key="target">{{target}}</option>
-      </select>
-      <button class="c-btn c-btn--danger" @click="deleteTarget">削除</button>
-  </div>-->
 </template>
 
 <script>
