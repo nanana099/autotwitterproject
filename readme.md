@@ -1,72 +1,147 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+# 「神ったー」機能概要書
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## Ⅰ 背景
+  SNSの一つであるTwitterアカウントのフォロワーの数は  
+  ビジネスの売り上げに繋がる要素の一つである。  
+  しかし、アカウントのフォロワーの数を増やすには時間と手間がかかってしまう。  
 
-## About Laravel
+  そこで、フォロワーを増やす施策の一部を自動で行えるようにすることで、  
+  アカウント運用者の時間と手間を削減する。  
+  
+  システムで自動化の対象とする施策は以下の4点。  
+  1.自分のビジネスに関係あるキーワードを含むツイートにいいねをする  
+  2.自分のビジネスと同業のアカウントのフォロワーをフォローする  
+  3.あらかじめ用意した投稿内容を、反響が起きやすい時間に投稿する  
+  4.フォロー数がTwitterが定める上限にならないように、フォローアカウントをフォロー解除する  
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+  加えて、上記機能をユーザーが使えるように以下の機能を付ける  
+  1.Twitterアカウントの登録、削除機能  
+  2.一般的なユーザー情報の操作機能（会員登録、修正、削除、ログイン、ログアウトなど）  
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Ⅱ 機能概要
+### 1.システムを利用するための機能
+#### (1) ログイン/ログアウト機能
+  システムのユーザーがログイン、ログアウトするための機能
+#### (2) ユーザー情報の登録、修正、削除
+  システムのユーザーが、システムに登録、ユーザー情報の修正、ユーザー情報削除をするための機能
+#### (3) パスワードリマインダー
+  システムのユーザーがパスワードを失念した場合にリセットするための機能
+#### (4) Twitterアカウントの連携、連係解除機能
+  システムのユーザーが自身のTwitterアカウントをシステムに登録したり、登録を解消するための機能
+### 2.Twitterアカウントを自動化するための機能
+#### (1) 自動いいね機能
+  システムに登録されたTwitterアカウントを操作し、自動でいいねをする機能  
+  ・ユーザーはキーワードを設定する。  
+  ・システムは、自動で定期的にキーワードを含むツイートを検索し、いいねを行う。  
+#### (2) 自動フォロー機能
+  システムに登録されたTwitterアカウントを操作し、自動でフォローをする機能  
+  ・ユーザーは、ターゲットとなるアカウントとキーワードを設定する  
+  ・システムは、自動で定期的に以下の条件に合致するアカウントを検索し、フォローする  
+  (条件）  
+    ターゲットとなるアカウントのフォロワーであるアカウント、かつ  
+    アカウントのプロフィールにキーワードを設定しているアカウント  
+#### (3) ツイート予約投稿機能
+  システムに登録されたTwitterアカウントを操作し、自動でツイートを投稿する機能  
+  ・ユーザーは、投稿内容と投稿時間を設定する。  
+  ・システムは、投稿時間になったら自動で投稿内容を投稿する。  
+#### (4) 自動アンフォロー機能
+  システムに登録されたTwitterアカウントを操作し、自動でフォロー解除する機能  
+  ・ユーザーは、フォローしてからフォローが帰ってこない場合にアンフォローする日数を設定する  
+  ・ユーザーは、一定期間投稿のないユーザーをアンフォローするかどうかを設定する  
+  ・システムは、設定内容に基づいて、フォローしているユーザーのフォローを外す。  
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Ⅲ 機能詳細_画面一覧
+### 1.会員登録画面
+  会員登録を行う画面
+  メールアドレス、ユーザーID、パスワード、パスワード再入力の入力欄と送信ボタンがある。  
+  ユーザーは必要事項を入力し、送信ボタンを押すことで会員登録を行う
+### 2.メールアドレス認証催促画面
+  会員登録後にメールアドレス認証を行っていない場合に表示する画面  
+  認証を求める旨のメッセージと、メール再送信ボタンが表示される
+### 3.ログイン画面
+  未ログインユーザーに表示する画面  
+  メールアドレスとパスワードの入力欄、次回ログイン省略チェックボックス、ログインボタン、パスワードリマインダーへのリンクがある  
+  ユーザーは必要事項を入力してログインするか、パスワードリマインダ画面に進む
+### 4.パスワードリマインダ画面
+  パスワードを忘れたユーザーが訪れる画面  
+  メールアドレスの入力欄と送信ボタンがある  
+  ユーザーが送信ボタンを押すと、パスワード再設定用の画面へのリンクがメール宛に送信される
+### 5.パスワード変更画面
+  パスワードを忘れたユーザーが訪れる画面  
+  メールアドレス、パスワード、パスワード再入力の入力欄と送信ボタンがある  
+  ユーザーはパスワードを変更できる
+### 6.アカウント一覧・稼働状況画面
+  登録済みのTwitterアカウントの確認と追加と、自動機能の稼働と停止とを切り替える画面  
+  アカウント追加ボタンと追加済みアカウントとその自動機能の稼働スイッチの一覧がある  
+  ユーザーはアカウントを追加したり、そのアカウントの自動機能を稼働または停止出来る
+### 7.自動機能設定画面
+  自動機能の詳細設定を行う画面  
+  自動フォローのターゲットアカウントとフォローキーワード、  
+  自動アンフォローのフォロー返しの無いユーザーの条件、非アクティブユーザーのアンフォロー有無、  
+  自動いいねのキーワード条件の入力欄がある。  
+  ユーザーはTwitterアカウント事に設定内容を追加変更削除出来る
+### 8.ツイート予約画面
+  ツイートの投稿の予約をする画面  
+  投稿内容と投稿予定時刻の入力欄がある  
+  ユーザーは投稿内容と予定時刻のペアを追加できる  
+  また予約済みツイートの投稿内容と予定時刻を修正、削除出来る
+### 9．Twitterアカウント登録削除画面  
+  システムに追加したTwitterアカウントを削除する画面  
+  連携済みのアカウントの一覧とその横に削除ボタンがある  
+  ユーザーはシステムからTwitterアカウントの一切の情報を削除出来る  
+### 10.ユーザー情報編集画面
+  会員情報を編繻する画面  
+  メールアドレス、ユーザーIDの入力欄と更新ボタンがある  
+  ユーザーはシステムに登録済みのメールアドレスとユーザーIDを変更できる  
+  メールアドレスを変更した場合は、認証メールが送信される。  
+  認証されるまでユーザー情報のメールアドレスは更新されない
+### 11.パスワード変更画面
+  パスワードの変更を行う画面  
+  パスワード、新パスワード、新パスワード再入力欄と更新ボタンがある  
+  ユーザーがパスワードを変更できる
+### 12.退会画面
+  システムから退会する画面  
+  退会ボタンがある  
+  ユーザーは退会ボタンを押下、確認ダイアログを確認することで  
+  システムからTwitterアカウントの情報とユーザー情報を削除出来る
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-source software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Ⅳ 機能詳細_自動機能
+### 1.自動機能全般
+  一定間隔で自動機能が稼働する。なお、稼働間隔は以下の通り  
+  ・ツイート投稿機能：毎分実行  
+  ・自動いいね、フォロー、アンフォロー機能：10分に一度の間隔  
+  自動で操作するTwitterアカウントの対象は、機能が稼働した時点で、自動機能が有効になっているか、ツイート投稿の予約がある全てのTwitterアカウント。  
+  一度の処理でいいね、フォロー、アンフォロー、投稿する数は、TwitterAPIのリクエスト回数制限以下に収める  
+  万が一Twitterアカウントが凍結した場合などは、当該アカウントの全ての自動機能をOFFにして、その旨をユーザーにメールで通知する
+### 2.自動いいね
+  いいねする対象のツイートは以下のツイートに限る  
+  ・処理中のTwitterアカウントが閲覧出来る全てのツイート  
+  ・ユーザーが指定したNOTキーワードを指定している場合、NOTキーワードを一つもツイート文に含まない  
+  ・ユーザーが指定したANDキーワードを指定している場合、ANDキーワード全てをツイート文に含む  
+  ・ユーザーが指定したORキーワードを指定している場合、ORキーワードを一つ以上をツイート文に含む  
+  自動いいね機能はユーザーがシステム上停止させるか、Twitterによりアカウントが凍結され無い限り稼働し続ける  
+### 3.自動フォロー
+  フォローする対象は以下を全て満たすアカウントに限る  
+  ・ユーザーが指定したターゲットアカウントのフォロワーである  
+  ・プロフィールにひらがな、カタカナの50音いずれかが入っている（日本人に絞るため）  
+  ・処理中のTwitterアカウントが、自動フォロー実行時点でフォローしていない  
+  ・処理中のTwitterアカウントが、当システムを通して一度もフォローをしたことがない  
+  ・処理中のTwitterアカウントが、当システムを通して一度もフォローを解除したことがない  
+  ・ユーザーが指定したNOTキーワードを指定している場合、NOTキーワードを一つもプロフィール文に含まない  
+  ・ユーザーが指定したANDキーワードを指定している場合、ANDキーワード全てをプロフィール文に含む  
+  ・ユーザーが指定したORキーワードを指定している場合、ORキーワードを一つ以上をプロフィール文に含む  
+  条件に合致するアカウントのフォローが完了したら、自動フォロー機能を停止し、その旨をメールでユーザーに通知する  
+### 4.自動アンフォロー
+  アンフォローする対象は以下を全て満たすアカウントに限る  
+  ・処理中のTwitterアカウントが、当システムを通してフォローをしたアカウント  
+  ・ユーザーが指定したフォロー返し期限を過ぎている  
+  ・ユーザーが一定期間投稿のないアカウントをフォロー解除する設定をしていて、その一定期間投稿していない  
+  アンフォロー対象のアカウントを全てアンフォロ-が完了したら、自動アンフォロー機能を停止し、メールでユーザーに通知する
+### 5.ツイート予約投稿
+  ユーザーが設定した投稿内容を、設定した投稿予定時間に投稿する  
+  投稿が成功したら、その旨をメールでユーザーに通知する
+### 6.その他
+  1ユーザー連携できるTwitterアカウントは10つまで。  
+  一つのTwitterアカウントごとに、異なる設定が出来る  
+  他のユーザーが連携済みのTwitterアカウントは連携できない  
+  ユーザーが退会するとTwitterアカウントの情報をシステムから削除する
