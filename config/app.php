@@ -227,4 +227,10 @@ return [
 
     ],
 
+    'app_env'=>env('APP_ENV', 'local'),
+    'twitter_api_key' => env('TWITTER_API_KEY', ''),
+    'twitter_api_secret_key' => env('TWITTER_API_SECRET_KEY', ''),
+    'twitter_oauth_callback_url' => env('TWITTER_OAUTH_CALLBACK_URL', ''),
+    'operator_email' => env('OPERATOR_EMAIL', ''),
+
 ];

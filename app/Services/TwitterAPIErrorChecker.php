@@ -48,7 +48,7 @@ class TwitterAPIErrorChecker
                     break;
                 default:
                     try {
-                        MailSender::send('ご担当者', 'error:'.$errorCode, env('OPERATOR_EMAIL'), MailSender::NOTICE_ERROR);
+                        MailSender::send('ご担当者', 'error:'.$errorCode, config('app.operator_email'), MailSender::NOTICE_ERROR);
                     } catch (Exception $e) {
                     }
                     throw new TwitterException($errorCode);// その他例外
