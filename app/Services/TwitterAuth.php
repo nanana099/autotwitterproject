@@ -13,21 +13,21 @@ class TwitterAuth
      */
     private static function getApiKey()
     {
-        return env('TWITTER_API_KEY');
+        return config('app.twitter_api_key');
     }
     /**
      * @return string TwitterAPIのAPI secret key
      */
     private static function getApiSecretKey()
     {
-        return env('TWITTER_API_SECRET_KEY');
+        return config('app.twitter_api_secret_key');
     }
     /**
      * @return string 認証ページのCallback URL
      */
     private static function getCallbackUrl()
     {
-        return env('TWITTER_OAUTH_CALLBACK_URL');
+        return config('app.twitter_oauth_callback_url');
     }
 
     /**
