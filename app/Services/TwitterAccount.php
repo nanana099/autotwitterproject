@@ -28,7 +28,7 @@ class TwitterAccount
         $this->user_id = $access_token_ary['user_id'];
         $this->screen_name = $access_token_ary['screen_name'];
         $this->twitter = new TwitterOAuth(
-            config('app.twitter_api_secret_key'),
+            config('app.twitter_api_key'),
             config('app.twitter_api_secret_key'),
             $access_token_ary['oauth_token'],
             $access_token_ary['oauth_token_secret']
