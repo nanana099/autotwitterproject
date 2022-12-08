@@ -30,6 +30,8 @@ class TwitterRestrictManager
     private const STATUSES_UPDATE_LIMIT_PER_3HOUR_APP = 300;            // statuss/updateの上限（アプリ全体）
     // favorites/createの上限
     private const FAVORITES_CREATE_LIMIT_PER_24HOUR_APP = 1000;         // favorites/createの24時間上限（アプリ全体）
+    // アプリ全体の制限の試用はは以下を参照。
+    // https://blog.twitter.com/developer/ja_jp/topics/tools/2018/jp-new-developer-requirements-to-protect-our-platform
 
     // friendships/createの利用回数格納用
     private $calledCountFriendshipsCreateBefore15Minute;
